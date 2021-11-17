@@ -1,0 +1,141 @@
+@import "../style/color.scss";
+
+.header {
+  position: fixed;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  background: #fcacc7;
+  height: 56px;
+
+  .side-btn {
+    display: none;
+
+    .side-icon {
+      width: 26px;
+      height: 26px;
+    }
+
+    @media (max-width: 1023px) {
+      display: block;
+    }
+  }
+
+  .logo {
+    margin: 0 10px;
+    font-size: 26px;
+    width: 180px;
+  }
+
+  .create-btn {
+    cursor: pointer;
+    background: #ffd6e4;
+    border-radius: 3px;
+    line-height: 36px;
+    text-align: center;
+    width: 100px;
+    margin-right: 12px;
+
+    &:hover {
+      background: #fff3f7;
+    }
+
+    @media (max-width: 1023px) {
+      display: none;
+    }
+  }
+
+  .search-bar {
+    flex-grow: 1;
+    padding: 0 12px;
+    display: flex;
+    align-items: center;
+    background: #ffd6e4;
+    border-radius: 3px;
+
+    input {
+      flex-grow: 1;
+      background: #ffd6e4;
+      line-height: 36px;
+      font-size: 16px;
+    }
+
+    .search-icon {
+      width: 20px;
+      height: 20px;
+      color: #8b808b;
+    }
+
+    @media (max-width: 739px) {
+      display: none;
+    }
+  }
+
+  .btn-group {
+    display: flex;
+    margin-right: 10px;
+
+    .enter-code-btn {
+      cursor: pointer;
+      margin-left: 12px;
+      background: #ffd6e4;
+      border-radius: 3px;
+      line-height: 36px;
+      text-align: center;
+      width: 100px;
+
+      &:hover {
+        background: #fff3f7;
+      }
+    }
+
+    .avatar,
+    .search-btn,
+    .notifications {
+      cursor: pointer;
+      position: relative;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #ffd6e4;
+      margin-left: 10px;
+
+      .notification-icon {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 36px;
+        height: 24px;
+      }
+
+      &:hover {
+        background: #fff3f7;
+      }
+    }
+
+    .search-btn {
+      display: none;
+
+      .search-icon {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 36px;
+        height: 22px;
+      }
+
+      @media (max-width: 739px) {
+        display: block;
+      }
+    }
+
+    .notifications {
+    }
+
+    .avatar {
+      @media (max-width: 1023px) {
+        display: none;
+      }
+    }
+  }
+}
