@@ -1,0 +1,30 @@
+const subjects = [
+  'Education',
+  'Languages',
+  'Mathematics',
+  'English',
+  'Physics',
+  'Chemistry',
+  'Biology',
+  'Science',
+  'Technology',
+  'Programming',
+  'History',
+  'Geography',
+  'Computers',
+  'Physical Ed',
+  'Fun',
+  'Arts',
+  'Design',
+  'Architecture',
+  'Business',
+  'Journalism',
+  'Life Skills',
+  'Specialty',
+  'Philosophy',
+  'Psychology',
+  'Special Education',
+  'Other'
+];
+
+export default subjects;

@@ -1,0 +1,114 @@
+@import "../../style/color.scss";
+@import "../../style/common.scss";
+
+@import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&display=swap");
+
+#quiz-creation-form {
+  font-family: "Josefin Sans", sans-serif;
+
+  #overlay {
+    @include overlay;
+    animation: fadeIn 0.3s ease-out;
+  }
+
+  .form-container {
+    @include popup(8px);
+    background: $white;
+    width: 480px;
+    padding: 24px;
+    animation: fadeIn 0.2s ease-in;
+
+    h3 {
+      text-align: center;
+      margin-bottom: 24px;
+      font-size: 28px;
+      color: $salmon;
+    }
+
+    .form-control {
+      margin-bottom: 20px;
+
+      label {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 18px;
+        margin-left: 2px;
+        color: $darkgrey;
+      }
+
+      input {
+        font-family: "Josefin Sans", sans-serif;
+        width: 100%;
+        border-radius: 5px;
+        border: 2px solid $mediumgrey;
+        padding: 8px 8px 6px;
+        font-size: 18px;
+
+        &:focus {
+          border-color: $salmon;
+          box-shadow: 0px 0px 0.5px 0.5px $darkblursalmon, 0px 0px 1px 1px $blursalmon;
+        }
+      }
+
+      .subjects-list {
+        margin-top: 10px;
+        display: flex;
+        flex-wrap: wrap;
+
+        .subject {
+          cursor: pointer;
+          background: $lightgrey;
+          border-radius: 20px;
+          font-size: 14px;
+          padding: 6px 12px 5px;
+          margin-bottom: 6px;
+          margin-right: 6px;
+        }
+
+        input[type="checkbox"] {
+          display: none;
+        }
+
+        input[type="checkbox"]:checked + label {
+          color: $white;
+          background: $salmon;
+        }
+      }
+    }
+
+    .btn-group {
+      display: flex;
+      justify-content: flex-end;
+
+      .next-btn,
+      .cancel-btn {
+        font-family: "Josefin Sans", sans-serif;
+        cursor: pointer;
+        border-radius: 5px;
+        font-size: 15px;
+        width: 74px;
+        line-height: 32px;
+        padding-top: 2px;
+        font-weight: 500;
+      }
+
+      .cancel-btn {
+        background: $lightgrey;
+
+        &:hover {
+          background: $d-lightgrey;
+        }
+      }
+
+      .next-btn {
+        color: $white;
+        background: $salmon;
+        margin-left: 8px;
+
+        &:hover {
+          background: $darksalmon;
+        }
+      }
+    }
+  }
+}

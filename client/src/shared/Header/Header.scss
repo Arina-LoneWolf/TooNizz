@@ -7,7 +7,7 @@
   width: 100%;
   display: flex;
   align-items: center;
-  background: #000;
+  background: $black;
   height: 58px;
 
   .side-btn {
@@ -108,7 +108,7 @@
     }
   }
 
-  .btn-group {
+  .user-btn-group {
     display: flex;
     justify-content: flex-end;
     margin-right: 20px;
@@ -136,12 +136,12 @@
     .search-btn {
       display: none;
 
-      color: $darksalmon;
+      color: $lightsalmon;
       width: 40px;
       height: 40px;
 
       &:hover {
-        background: #fff3f7;
+        color: $darksalmon;
       }
 
       @media (max-width: 739px) {
