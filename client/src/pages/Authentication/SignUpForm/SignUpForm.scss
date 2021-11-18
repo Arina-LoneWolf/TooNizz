@@ -1,0 +1,146 @@
+@import "../../../shared/style/color.scss";
+@import "../../../shared/style/common.scss";
+
+#sign-up-form {
+  * {
+    font-family: "Josefin Sans", sans-serif;
+  }
+
+  @include popup(10px);
+  width: 480px;
+  padding: 24px;
+  color: $textwhite;
+
+  background: rgba(0, 0, 0, 0.5);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(18.5px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+
+  h3 {
+    text-align: center;
+    margin-bottom: 24px;
+    font-size: 28px;
+    color: $lightsalmon;
+  }
+
+  .google-submit-btn {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    line-height: 40px;
+
+    background: rgba(0, 0, 0, 0.15);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+
+    .google-icon {
+      width: 24px;
+      height: 24px;
+      margin-right: 8px;
+    }
+
+    span {
+      margin-top: 3px;
+    }
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.35);
+      box-shadow: 0 1px 10px 0 rgba(255, 255, 255, 0.4);
+    }
+  }
+
+  .strike {
+    display: block;
+    text-align: center;
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: 20px;
+  }
+
+  .strike > span {
+    position: relative;
+    display: inline-block;
+    font-size: 12px;
+    color: $darkgrey;
+    font-weight: 600;
+  }
+
+  .strike {
+    margin-top: 8px;
+    margin-bottom: 20px;
+
+    span:before,
+    span:after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      width: 9999px;
+      /* Here is the modification */
+      border-top: 1px solid $darkgrey;
+    }
+
+    span:before {
+      right: 100%;
+      margin-right: 15px;
+    }
+
+    span:after {
+      left: 100%;
+      margin-left: 15px;
+    }
+  }
+
+  .form-control {
+    margin-bottom: 20px;
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 18px;
+      margin-left: 2px;
+      color: $labelsalmon;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px 16px 12px;
+      font-size: 18px;
+      color: $white;
+
+      background: rgba(0, 0, 0, 0.15);
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+
+      // &:focus {
+      //   box-shadow: 0 0 6px 0 rgba(255, 255, 255, 0.5);
+      // }
+    }
+  }
+
+  .submit-btn {
+    cursor: pointer;
+    width: 100%;
+    border-radius: 6px;
+    font-size: 18px;
+    line-height: 40px;
+    font-weight: 600;
+    background: $salmon;
+    color: $white;
+
+    &:hover {
+      background: $darksalmon;
+    }
+  }
+
+  .no-account-ask {
+    text-align: center;
+    margin-top: 20px;
+
+    .go-sign-up {
+      color: $lightsalmon;
+    }
+  }
+}

@@ -1,6 +1,6 @@
 import './Header.scss';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useMatch } from 'react-router-dom';
 import { IoSearchOutline } from 'react-icons/io5';
 import { BsList } from 'react-icons/bs';
 import { IoNotificationsOutline } from 'react-icons/io5';
@@ -14,6 +14,12 @@ function Header() {
   const goToGameEntry = () => {
     navigate('/');
   }
+
+  const atEntry = useMatch('/');
+  const atAuthentication = useMatch('/authentication');
+
+
+  if (atEntry || atAuthentication) return null;
 
   return (
     <div className="header">

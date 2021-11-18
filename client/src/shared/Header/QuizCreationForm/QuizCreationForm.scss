@@ -1,8 +1,6 @@
 @import "../../style/color.scss";
 @import "../../style/common.scss";
 
-@import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&display=swap");
-
 #quiz-creation-form {
   font-family: "Josefin Sans", sans-serif;
 
@@ -93,6 +91,7 @@
       }
 
       .cancel-btn {
+        color: $darkgrey;
         background: $lightgrey;
 
         &:hover {
