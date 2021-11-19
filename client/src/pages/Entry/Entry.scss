@@ -1,47 +1,83 @@
 @import "../../shared/style/color.scss";
+@import "../../shared/style/common.scss";
 
 .entry {
-  background: orange;
   position: fixed;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
+  background: {
+    repeat: no-repeat;
+    size: cover;
+    position: center;
+    attachment: fixed;
+  }
+
+  .blur-overlay {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba( 0, 0, 0, 0.4 );
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(17px);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+  }
 
   .entry-wrapper {
-    width: 300px;
-    background: #ccc;
-    margin: 0 auto;
-    margin-top: 50vh;
-    transform: translateY(-50%);
-    padding: 8px;
-    border-radius: 6px;
-
-    .join-btn,
-    .code-entering {
-      font-size: 20px;
-      // height: 40px;
-      width: 100%;
-      border-radius: 6px;
-      text-align: center;
-      line-height: 56px;
+    * {
+      font-family: "Josefin Sans", sans-serif;
     }
 
+    @include popup(10px);
+    width: 340px;
+    padding: 24px;
+    color: $textwhite;
+
+    background: rgba(0, 0, 0, 0.4);
+    box-shadow: 0 1px 10px 0 rgba(255, 255, 255, 1);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+
     .code-entering {
-      display: block;
-      margin-bottom: 8px;
+      width: 100%;
+      padding: 14px 16px 12px;
+      font-size: 18px;
+      color: $white;
+      margin-bottom: 20px;
+      text-align: center;
+
+      background: rgba(0, 0, 0, 0.15);
+      box-shadow: 0 1px 10px 0 rgba(255, 255, 255, 0.4);
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
 
       &::placeholder {
         color: $grey;
+      }
+
+      &:focus {
+        box-shadow: 0 1px 10px 0 rgba(255, 255, 255, 0.75);
       }
     }
 
     .join-btn {
       cursor: pointer;
       text-transform: uppercase;
+      width: 100%;
+      border-radius: 6px;
+      font-size: 18px;
+      line-height: 38px;
+      padding-top: 4px;
+      font-weight: 600;
+      background: $khaki;
+      color: $darkslatebrown;
 
       &:hover {
-        background: #adacac;
+        background: $darkkhaki;
       }
     }
   }

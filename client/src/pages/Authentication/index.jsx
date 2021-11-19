@@ -7,10 +7,9 @@ import background from '../../assets/images/auth-background-4.png';
 function Authentication() {
   return (
     <div className="authentication" style={{ backgroundImage: `url(${background})` }}>
-      <div className="blur-overlay">
-        <LoginForm />
-        {/* <SignUpForm /> */}
-      </div>
+      <div className="blur-overlay" />
+      <LoginForm />
+      {/* <SignUpForm /> */}
     </div>
   );
 }
