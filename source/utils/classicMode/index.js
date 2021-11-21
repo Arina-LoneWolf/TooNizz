@@ -171,6 +171,13 @@ export const classisModeAll = (io, socket, players, games) => {
 		let allPlayersInRoom = players.filter(
 			(player) => player.gamePin === socket.infoRoom?.gamePin,
 		);
+		//ng chơi hiện tại
+		let currentPlayer = allPlayersInRoom.filter(
+			(player) => player.id === socket.id,
+		)[0];
+
+		// console.log('all-player', allPlayersInRoom);
+		// console.log('current-player', currentPlayer);
 
 		// cộng số player đã trả lời câu hỏi này
 		infoGame.gameData.numberPlayerAnswered += 1;
@@ -181,27 +188,27 @@ export const classisModeAll = (io, socket, players, games) => {
 			currentQuestion.listPlayersAnswer = [];
 			currentQuestion.countPlayerNoAnswer = 0;
 			for (let i = 0; i < currentQuestion.answers.length; i++) {
-				if (currentQuestion.answers[i].countPlayerAnswer === 'undefined') {
+				// console.log('answer', currentQuestion.answers[i].countPlayerAnswer);
+				if (
+					typeof currentQuestion.answers[i].countPlayerAnswer === 'undefined'
+				) {
 					currentQuestion.answers[i].countPlayerAnswer = 0;
 				}
 			}
 		}
 
-		//nếu mọi ng trả lời xong
-		if (allPlayersInRoom.length === infoGame.gameData.numberPlayerAnswered) {
-		}
-		console.log('số ng đa trả lời', infoGame.gameData.numberPlayerAnswered);
-
 		if (data.length === 0) {
 			//những ng ko trả lời
 			currentQuestion.listPlayersAnswer.push({
+				id: socket.id,
 				indexQuestion,
 				name: socket.infoRoom?.name,
 				answer: 'No answer',
 				correct: false,
 				time: -1,
-				point: 0,
+				score: 0,
 			});
+
 			//đếm có bao nhiêu ng chơi đã KHÔNG trả lời câu này
 			currentQuestion.countPlayerNoAnswer += 1;
 		} else {
@@ -212,30 +219,36 @@ export const classisModeAll = (io, socket, players, games) => {
 				let answer = currentQuestion.answers.filter(
 					(answer) => answer._id == data[0].id,
 				)[0];
+
 				//nếu player trả lời đúng
 				if (answer.isCorrect) {
+					let score = currentQuestion.doubleScore
+						? Math.ceil(data[0].time * 100 * 2)
+						: Math.ceil(data[0].time * 100);
 					currentQuestion.listPlayersAnswer.push({
+						id: socket.id,
 						indexQuestion,
 						name: socket.infoRoom?.name,
 						answer: answer.content,
 						correct: true,
 						time: data[0].time,
-						point: currentQuestion.doubleScore
-							? Math.ceil(data[0].time * 100 * 2)
-							: Math.ceil(data[0].time * 100),
+						score,
 					});
+
+					currentPlayer.totalScore += score;
 
 					//đếm số lượng ng chơi chọn câu này
 					answer.countPlayerAnswer += 1;
 				} else {
 					//nếu player trả lời sai
 					currentQuestion.listPlayersAnswer.push({
+						id: socket.id,
 						indexQuestion,
 						name: socket.infoRoom?.name,
 						answer: answer.content,
 						correct: false,
 						time: data[0].time,
-						point: 0,
+						score: 0,
 					});
 					//đếm số lượng ng chơi chọn câu này
 					answer.countPlayerAnswer += 1;
@@ -244,6 +257,48 @@ export const classisModeAll = (io, socket, players, games) => {
 			} else if (currentQuestion.type === 4) {
 			} else if (currentQuestion.type === 5) {
 			}
+
+			//nếu mọi ng trả lời xong
+			if (allPlayersInRoom.length === infoGame.gameData.numberPlayerAnswered) {
+				for (let i = 0; i < currentQuestion.listPlayersAnswer.length; i++) {
+					io.to(currentQuestion.listPlayersAnswer[i].id).emit(
+						'classic:allPlayers-answered',
+						currentQuestion.listPlayersAnswer[i].score,
+					);
+				}
+
+				let sortScore = allPlayersInRoom.sort((a, b) =>
+					a.score < b.score ? 1 : -1,
+				);
+				if (sortScore.length < 5) {
+					sortScore = sortScore.slice(0, sortScore.length);
+				} else {
+					sortScore = sortScore.slice(0, 5);
+				}
+				sortScore = sortScore.map((player) => {
+					return { name: player.name, score: player.totalScore };
+				});
+
+				let dataPlayersAnswered = [];
+				let correctAnswer = [];
+				//if (currentQuestion.type === 1 || currentQuestion.type === 3) {
+				for (let i = 0; i < currentQuestion.answers.length; i++) {
+					if (currentQuestion.answers[i].isCorrect) {
+						correctAnswer.push(currentQuestion.answers[i]);
+					}
+					dataPlayersAnswered.push(currentQuestion.answers[i]);
+				}
+				//}
+
+				io.to(infoGame.idHost).emit('classic:time-up', {
+					correctAnswer,
+					countAnswer: dataPlayersAnswered,
+					playerRank: sortScore,
+				});
+				console.log('countAnswer', dataPlayersAnswered);
+			} else {
+			}
+			console.log('số ng đa trả lời', infoGame.gameData.numberPlayerAnswered);
 		}
 	});
 };

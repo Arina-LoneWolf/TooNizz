@@ -16,9 +16,6 @@ import { schemaDirectives } from './source/graphql/directive/index.js';
 import http from 'http';
 import { Server } from 'socket.io';
 import { classisModeAll } from './source/utils/classicMode/index.js';
-//console.log('resolver', resolvers);
-//console.log('type', typeDefs);
-//console.log(appModels);
 
 let players = [];
 let games = [];
