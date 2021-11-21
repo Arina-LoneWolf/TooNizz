@@ -10,14 +10,10 @@ import Collections from '../pages/Collections';
 import Reports from '../pages/Reports';
 import Settings from '../pages/Settings';
 import GetExchangeRates from './ExchangeRates';
-import Header from '../shared/Header';
-import Sidebar from '../shared/Sidebar';
 
 function App() {
   return (
     <Router>
-      {/* <Header /> */}
-      {/* <Sidebar /> */}
       <Routes>
         <Route path='/' element={<Entry />} />
         <Route path='/lobby' element={<PlayerGameWaiting />} />
