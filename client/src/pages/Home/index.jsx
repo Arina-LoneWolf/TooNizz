@@ -1,10 +1,11 @@
 import React from 'react';
+import TopQuizSets from'./TopQuizSets';
 
 function Home() {
   return (
-    <div>
-      {/* <h1>Home</h1> */}
-    </div>
+    <React.Fragment>
+      <TopQuizSets />
+    </React.Fragment>
   );
 }
 

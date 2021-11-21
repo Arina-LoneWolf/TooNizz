@@ -1,6 +1,8 @@
 import './App.scss';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Entry from '../pages/Entry';
+import PlayerGameWaiting from '../pages/PlayerGameWaiting';
+import HostGameWaiting from '../pages/HostGameWaiting';
 import Home from '../pages/Home';
 import Authentication from '../pages/Authentication';
 import Creator from '../pages/Creator';
@@ -9,13 +11,17 @@ import Reports from '../pages/Reports';
 import Settings from '../pages/Settings';
 import GetExchangeRates from './ExchangeRates';
 import Header from '../shared/Header';
+import Sidebar from '../shared/Sidebar';
 
 function App() {
   return (
     <Router>
-      <Header />
+      {/* <Header /> */}
+      {/* <Sidebar /> */}
       <Routes>
         <Route path='/' element={<Entry />} />
+        <Route path='/lobby' element={<PlayerGameWaiting />} />
+        <Route path='/lobby/admin' element={<HostGameWaiting />} />
         <Route path='/home' element={<Home />} />
         <Route path='/authentication' element={<Authentication />} />
         <Route path='/creator' element={<Creator />} />

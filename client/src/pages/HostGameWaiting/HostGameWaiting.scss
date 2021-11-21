@@ -1,0 +1,152 @@
+@import "../../shared/style/color.scss";
+
+@import url('https://fonts.googleapis.com/css2?family=Paytone+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Gluten:wght@400;500;600;700;800&display=swap');
+
+.host-game-waiting {
+  color: $white;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: {
+    repeat: no-repeat;
+    size: cover;
+    // position: center;
+    attachment: fixed;
+  }
+
+  .game-code-title {
+    font-family: 'Paytone One', sans-serif;
+    display: inline-block;
+    font-size: 20px;
+    text-align: center;
+    padding: 0 28px 6px;
+    margin-top: 36px;
+    margin-left: 50vw;
+    transform: translateX(-50%);
+    box-shadow: 0 -2px 10px 0 rgba(255, 255, 255, 1);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-bottom: none;
+    border-top-left-radius: 36px;
+    border-top-right-radius: 36px;
+    background: #ffffff2e;
+    // clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);
+  }
+
+  .game-code-wrapper {
+    cursor: text;
+    margin: 0 auto 0;
+    padding: 12px 0 20px;
+    text-align: center;
+    width: 340px;
+    color: $textwhite;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 1px 10px 0 rgba(255, 255, 255, 1);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+
+    .game-code-number {
+      // margin-top: 6px;
+      font-family: 'Paytone One', sans-serif;
+      font-size: 56px;
+      text-shadow: 0px 0px 10px #9c90c5;
+    }
+  }
+
+  .control-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+
+    .control-wrapper {
+      border-radius: 50%;
+      border: 1px solid $white;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      &:nth-child(2) {
+        margin: 0 8px;
+      }
+
+      .music-icon {
+        width: 22px;
+        height: 22px;
+      }
+
+      .volume-icon {
+        width: 23px;
+        height: 23px;
+      }
+
+      .lock-icon {
+        width: 18px;
+        height: 18px;
+      }
+    }
+  }
+
+  .start-btn {
+    font-family: 'Paytone One', sans-serif;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin: 52px auto 0;
+    padding: 7px 30px 11px;
+    display: block;
+    background: transparent;
+    color: $white;
+    font-size: 36px;
+    border: 1px solid $white;
+    border-radius: 10px;
+  }
+
+  .members-wrapper {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid $white;
+    border-radius: 6px;
+    margin-left: 50vw;
+    margin-top: 14px;
+    padding: 8px 8px;
+    transform: translateX(-50%);
+
+    .members-icon {
+      width: 28px;
+      height: 28px;
+    }
+
+    .members-count {
+      margin-left: 6px;
+      font-size: 22px;
+    }
+  }
+
+  .members-display-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 56px 16px 0;
+    // max-width: 500px;
+
+    .member-block {
+      cursor: pointer;
+      border-radius: 20px;
+      font-size: 20px;
+      margin-bottom: 12px;
+      margin-right: 16px;
+      border: 1px solid $white;
+      padding: 4px 18px;
+
+      &:hover {
+        text-decoration: line-through;
+      }
+    }
+  }
+}

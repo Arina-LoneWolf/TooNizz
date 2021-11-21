@@ -44,7 +44,7 @@ function Header() {
         <div className="avatar" style={{ backgroundImage: `url(${avatar})` }}></div>
       </div>
 
-      <QuizCreationForm />
+      {/* <QuizCreationForm /> */}
     </div>
   );
 }

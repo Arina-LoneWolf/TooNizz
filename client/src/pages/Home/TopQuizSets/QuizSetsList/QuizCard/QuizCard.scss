@@ -1,0 +1,20 @@
+@import '../../../../../shared/style/color.scss';
+
+.quiz-card {
+  border-radius: 8px;
+  width: 260px;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
+      rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+
+  .card-image {
+    // padding-top: 100%;
+    height: 230px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    background: {
+      repeat: no-repeat;
+      size: cover;
+      position: center;
+    }
+  }
+}
