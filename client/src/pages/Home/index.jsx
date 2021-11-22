@@ -6,9 +6,9 @@ import Sidebar from '../../shared/Sidebar';
 function Home() {
   return (
     <React.Fragment>
-      <Header />
       <Sidebar />
-      <TopQuizSets />
+      <Header />
+      {/* <TopQuizSets /> */}
     </React.Fragment>
   );
 }

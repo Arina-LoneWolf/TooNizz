@@ -1,10 +1,15 @@
 import './QuizCreationForm.scss';
-import { useNavigate } from 'react-router-dom';
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { quizCreationShowVar } from '../../apolloLocalState/popupFormState'
 import subjects from '../../data/subjects';
 
 function QuizCreationForm() {
   const navigate = useNavigate();
+
+  const closeForm = () => {
+    quizCreationShowVar(false);
+  }
 
   const onSubmit = (values) => {
     // handle data here
@@ -35,7 +40,7 @@ function QuizCreationForm() {
         </div>
 
         <div className="btn-group">
-          <button type="button" className="cancel-btn">Cancel</button>
+          <button type="button" className="cancel-btn" onClick={closeForm}>Cancel</button>
           <button type="submit" className="next-btn">Next</button>
         </div>
       </form>

@@ -42,12 +42,17 @@
     backdrop-filter: blur(4px);
     border: 1px solid rgba(255, 255, 255, 0.18);
 
+    input:-webkit-autofill {
+      -webkit-text-fill-color: $textwhite;
+      background-clip: text;
+    }
+
     .code-entering {
       width: 100%;
       padding: 14px 16px 12px;
       font-size: 18px;
       color: $white;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
       text-align: center;
 
       background: rgba(0, 0, 0, 0.15);
@@ -65,6 +70,7 @@
     }
 
     .join-btn {
+      margin-top: 10px;
       cursor: pointer;
       text-transform: uppercase;
       width: 100%;

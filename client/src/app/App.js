@@ -19,7 +19,7 @@ function App() {
         <Route path='/lobby' element={<PlayerGameWaiting />} />
         <Route path='/lobby/admin' element={<HostGameWaiting />} />
         <Route path='/home' element={<Home />} />
-        <Route path='/authentication' element={<Authentication />} />
+        <Route path='/authentication/:formType' element={<Authentication />} />
         <Route path='/creator' element={<Creator />} />
         <Route path='/collections' element={<Collections />} />
         <Route path='/reports' element={<Reports />} />

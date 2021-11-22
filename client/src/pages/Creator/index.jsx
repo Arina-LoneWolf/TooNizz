@@ -1,10 +1,13 @@
 import React from 'react';
+import Header from '../../shared/Header';
+import Sidebar from '../../shared/Sidebar';
 
 function Creator() {
   return (
-    <div>
-      <h1>Creator</h1>
-    </div>
+    <React.Fragment>
+      <Sidebar />
+      <Header />
+    </React.Fragment>
   );
 }
 

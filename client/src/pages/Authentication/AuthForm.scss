@@ -12,7 +12,7 @@
   padding: 24px;
   color: $textwhite;
 
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.6);
   box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
   backdrop-filter: blur(18.5px);
   border: 1px solid rgba(255, 255, 255, 0.18);
@@ -94,7 +94,7 @@
   }
 
   .form-control {
-    margin-bottom: 20px;
+    margin-bottom: 12px;
 
     label {
       display: block;
@@ -104,11 +104,17 @@
       color: $labelsalmon;
     }
 
+    input:-webkit-autofill {
+      -webkit-text-fill-color: $textwhite;
+      background-clip: text;
+    }
+
     input {
+      margin-bottom: 8px;
       width: 100%;
       padding: 14px 16px 12px;
       font-size: 18px;
-      color: $white;
+      color: $textwhite;
 
       background: rgba(0, 0, 0, 0.15);
       box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
@@ -118,6 +124,15 @@
       // &:focus {
       //   box-shadow: 0 0 6px 0 rgba(255, 255, 255, 0.5);
       // }
+    }
+
+    .forgot-password {
+      color: $textwhite;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
     }
   }
 
@@ -142,6 +157,7 @@
 
     .switch-form {
       color: $lightsalmon;
+      text-decoration: none;
     }
   }
 }

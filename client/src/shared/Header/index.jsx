@@ -1,6 +1,8 @@
 import './Header.scss';
 import React from 'react';
 import { useNavigate, useMatch } from 'react-router-dom';
+import { useReactiveVar } from '@apollo/client';
+import { quizCreationShowVar } from '../apolloLocalState/popupFormState';
 import { IoSearchOutline } from 'react-icons/io5';
 import { BsList } from 'react-icons/bs';
 import { IoNotificationsOutline } from 'react-icons/io5';
@@ -11,15 +13,21 @@ const avatar = 'https://i.pinimg.com/564x/0b/97/f5/0b97f53a14d3b0698c1388b013eca
 function Header() {
   const navigate = useNavigate();
 
+  const quizCreationShow = useReactiveVar(quizCreationShowVar);
+
   const goToGameEntry = () => {
     navigate('/');
   }
 
-  const atEntry = useMatch('/');
-  const atAuthentication = useMatch('/authentication');
+  const showQuizCreationForm = () => {
+    quizCreationShowVar(true);
+  }
+
+  // const atEntry = useMatch('/');
+  // const atAuthentication = useMatch('/authentication');
 
 
-  if (atEntry || atAuthentication) return null;
+  // if (atEntry || atAuthentication) return null;
 
   return (
     <div className="header">
@@ -27,7 +35,7 @@ function Header() {
 
       <div className="logo">LOGO</div>
 
-      <div className="create-btn">Create +</div>
+      <div className="create-btn" onClick={showQuizCreationForm}>Create +</div>
 
       <div className="search-bar">
         <input placeholder="Search" />
@@ -44,7 +52,7 @@ function Header() {
         <div className="avatar" style={{ backgroundImage: `url(${avatar})` }}></div>
       </div>
 
-      {/* <QuizCreationForm /> */}
+      {quizCreationShow && <QuizCreationForm />}
     </div>
   );
 }

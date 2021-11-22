@@ -1,16 +1,84 @@
 import '../AuthForm.scss';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useQuery, useMutation } from "@apollo/client";
+import { REGISTER } from '../../../apis/userApi';
+import { Link } from 'react-router-dom';
+import GoogleLogin from 'react-google-login';
+import TextError from '../../../shared/alerts/TextError';
 import { FcGoogle } from "react-icons/fc";
+import { useForm } from "react-hook-form";
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+
+const schema = yup.object({
+  email: yup.string()
+    .required('*Required')
+    .email('Invalid email'),
+  name: yup.string().required('*Required'),
+  password: yup.string()
+    .required('*Required')
+    .min(6, 'Password must be at least 6 characters'),
+  confirmPassword: yup.string()
+    .required('*Required')
+    .oneOf([yup.ref('password'), ''], 'Password does not match'),
+});
 
 function SignUpForm() {
+  const [registerAccount, { data, loading, error }] = useMutation(REGISTER);
+
+  const onGoogleSuccess = (res) => {
+    console.log(res);
+    const request = { tokenId: res.tokenId };
+  }
+
+  const onGoogleFailure = (res) => { }
+
+  const { register, handleSubmit, formState: { errors } } = useForm({
+    resolver: yupResolver(schema)
+  });
+
+  const onSubmit = (values) => {
+    const request = {
+      email: values.email,
+      name: values.name,
+      password: values.password
+    }
+    console.log(request);
+    registerAccount({
+      variables: {
+        email: values.email,
+        name: values.name,
+        password: values.password
+      }
+    });
+  }
+
+  useEffect(() => {
+    if (data) {
+      console.log('Dang ky thanh cong');
+      console.log(data)
+    }
+  }, [data]);
+
   return (
-    <form id="sign-up-form">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      id="sign-up-form"
+    >
       <h3>Welcome to TooNizz</h3>
 
-      <div className="google-submit-btn">
-        <FcGoogle className="google-icon" />
-        <span>Continue with Google</span>
-      </div>
+      <GoogleLogin
+        clientId="941926115379-6cbah41jf83kjm236uimrtjdr62t7k71.apps.googleusercontent.com"
+        cookiePolicy={'single_host_origin'}
+        onSuccess={onGoogleSuccess}
+        onFailure={onGoogleFailure}
+        render={renderProps => (
+          <div onClick={renderProps.onClick} className="google-submit-btn">
+            <FcGoogle className="google-icon" />
+            <span>Continue with Google</span>
+          </div>
+        )}
+      />
 
       <div className="strike">
         <span>OR</span>
@@ -18,27 +86,31 @@ function SignUpForm() {
 
       <div className="form-control">
         <label>Sign up with email</label>
-        <input type="email" name="email" />
+        <input {...register("email")} type="email" />
+        <TextError>{errors.email?.message}</TextError>
       </div>
 
       <div className="form-control">
         <label>Your name</label>
-        <input name="name" />
+        <input {...register("name")} />
+        <TextError>{errors.name?.message}</TextError>
       </div>
 
       <div className="form-control">
         <label>Password</label>
-        <input type="password" name="password" />
+        <input {...register("password")} type="password" />
+        <TextError>{errors.password?.message}</TextError>
       </div>
 
       <div className="form-control">
         <label>Confirm Password</label>
-        <input type="password" name="confirmPassword" />
+        <input {...register("confirmPassword")} type="password" />
+        <TextError>{errors.confirmPassword?.message}</TextError>
       </div>
 
       <button type="submit" className="submit-btn">Sign up</button>
 
-      <div className="have-account-ask">Have an account? <span className="switch-form">Login</span></div>
+      <div className="have-account-ask">Have an account? <Link to="/authentication/login" className="switch-form">Login</Link></div>
     </form>
   );
 }

@@ -1,7 +1,7 @@
 @import '../style/color.scss';
 
 .navigation {
-  list-style: none;
+  // list-style: none;
   margin-left: 20px;
   position: fixed;
   display: flex;
@@ -14,7 +14,7 @@
   transform: translateY(-50%);
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 
-  li {
+  a {
     padding: 4px;
     border-radius: 50%;
     width: 36px;

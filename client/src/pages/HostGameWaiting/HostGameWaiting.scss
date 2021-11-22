@@ -107,6 +107,14 @@
     border-radius: 10px;
   }
 
+  .waiting-players {
+    font-family: 'Paytone One', sans-serif;
+    font-size: 40px;
+    color: $textwhite;
+    margin-top: 52px;
+    text-align: center;
+  }
+
   .members-wrapper {
     display: inline-flex;
     align-items: center;

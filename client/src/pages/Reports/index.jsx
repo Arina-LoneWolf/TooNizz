@@ -1,10 +1,13 @@
 import React from 'react';
+import Sidebar from '../../shared/Sidebar';
+import Header from '../../shared/Header';
 
 function Reports() {
   return (
-    <div>
-      <h1>Reports</h1>
-    </div>
+    <React.Fragment>
+      <Sidebar />
+      <Header />
+    </React.Fragment>
   );
 }
 
