@@ -45,11 +45,7 @@ function SignUpForm() {
     }
     console.log(request);
     registerAccount({
-      variables: {
-        email: values.email,
-        name: values.name,
-        password: values.password
-      }
+      variables: { user: request }
     });
   }
 

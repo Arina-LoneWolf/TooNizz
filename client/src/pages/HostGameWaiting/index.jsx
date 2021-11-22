@@ -1,8 +1,6 @@
 import './HostGameWaiting.scss';
 import React, { useEffect, useState } from 'react';
 import socket from '../../shared/socket';
-// import { useReactiveVar } from '@apollo/client';
-// import { socketVar } from '../../shared/apolloLocalState/socketState';
 import { MdGroup, MdMusicNote } from 'react-icons/md';
 import { RiMusic2Line, RiMusic2Fill } from 'react-icons/ri';
 import { BsMusicNoteBeamed, BsFillVolumeDownFill } from 'react-icons/bs';
@@ -17,8 +15,6 @@ function HostGameWaiting() {
   const [gameCode, setGameCode] = useState('');
   const [players, setPlayers] = useState([]);
 
-  // const socket = useReactiveVar(socketVar);
-
   useEffect(() => {
     socket.emit('classic:host-join', quizSetId);
 
@@ -28,7 +24,7 @@ function HostGameWaiting() {
 
     socket.on('classic:update-listPlayers', (playerList) => {
       setPlayers(playerList);
-    })
+    });
   }, []);
 
   return (

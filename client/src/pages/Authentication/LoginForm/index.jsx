@@ -1,6 +1,8 @@
 import '../AuthForm.scss';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useQuery, useMutation } from "@apollo/client";
+import { LOGIN } from '../../../apis/userApi';
 import GoogleLogin from 'react-google-login';
 import TextError from '../../../shared/alerts/TextError';
 import { FcGoogle } from "react-icons/fc";
@@ -18,6 +20,8 @@ const schema = yup.object({
 });
 
 function LoginForm() {
+  const [login, { data, loading, error }] = useMutation(LOGIN);
+
   const onGoogleSuccess = (res) => {
     console.log(res);
     const request = { tokenId: res.tokenId };
@@ -35,7 +39,17 @@ function LoginForm() {
       password: values.password
     }
     console.log(request);
+    login({
+      variables: request
+    });
   }
+
+  useEffect(() => {
+    if (data) {
+      console.log('Dang nhap thanh cong');
+      console.log(data)
+    }
+  }, [data]);
 
   return (
     <form

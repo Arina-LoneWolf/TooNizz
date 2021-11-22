@@ -54,6 +54,7 @@ export const classisModeAll = (io, socket, players, games) => {
 	});
 
 	socket.on('classic:player-join', (gamePin) => {
+		console.log('gamePin', gamePin);
 		let checkGamePin = false;
 		if (games.length !== 0) {
 			for (let i = 0; i < games.length; i++) {
@@ -69,7 +70,9 @@ export const classisModeAll = (io, socket, players, games) => {
 			}
 		}
 		if (!checkGamePin) {
+			console.log('vao loi gamePin 1')
 			socket.emit('classic:check-gamePin', 'gamePin wrong');
+			console.log('vao loi gamePin 2')
 		}
 	});
 
