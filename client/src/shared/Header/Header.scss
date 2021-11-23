@@ -12,6 +12,7 @@
   align-items: center;
   background: $black;
   height: 58px;
+  z-index: 1;
 
   .side-btn {
     display: none;
@@ -66,12 +67,13 @@
     display: flex;
     align-items: center;
     background: #f4d6d6;
+    background: #fefefe;
     border-radius: 5px;
 
     input {
       flex-grow: 1;
-      background: #ffd6e4;
       background: #f4d6d6;
+      background: #fefefe;
       line-height: 40px;
       font-size: 16px;
     }
@@ -108,6 +110,31 @@
     @media (max-width: 739px) {
       margin-right: 12px;
       flex-grow: 1;
+    }
+  }
+
+  .auth-btn-group {
+    cursor: pointer;
+    display: flex;
+    justify-content: flex-end;
+    font-family: "Fredoka One", cursive;
+    margin-right: 20px;
+    width: 156px;
+
+    a {
+      text-decoration: none;
+    }
+
+    .login-btn {
+      padding-right: 6px;
+      color: #fff;
+    }
+
+    .signup-btn {
+      // margin-left: 6px;
+      padding-left: 6px;
+      border-left: 2px solid $white;
+      color: $salmon;
     }
   }
 

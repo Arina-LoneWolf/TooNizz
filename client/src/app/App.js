@@ -6,7 +6,7 @@ import HostGameWaiting from '../pages/HostGameWaiting';
 import Home from '../pages/Home';
 import Authentication from '../pages/Authentication';
 import Creator from '../pages/Creator';
-import Collections from '../pages/Collections';
+import Collection from '../pages/Collection';
 import Reports from '../pages/Reports';
 import Settings from '../pages/Settings';
 import GetExchangeRates from './ExchangeRates';
@@ -21,7 +21,7 @@ function App() {
         <Route path='/home' element={<Home />} />
         <Route path='/authentication/:formType' element={<Authentication />} />
         <Route path='/creator' element={<Creator />} />
-        <Route path='/collections' element={<Collections />} />
+        <Route path='/collection' element={<Collection />} />
         <Route path='/reports' element={<Reports />} />
         <Route path='/settings' element={<Settings />} />
         <Route path='/get-exchange-rates' element={<GetExchangeRates />} />

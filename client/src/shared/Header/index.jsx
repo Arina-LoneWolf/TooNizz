@@ -1,7 +1,8 @@
 import './Header.scss';
-import React from 'react';
-import { useNavigate, useMatch } from 'react-router-dom';
-import { useReactiveVar } from '@apollo/client';
+import React, { useEffect } from 'react';
+import { useNavigate, useMatch, Link } from 'react-router-dom';
+import { USER_INFO } from '../../apis/userApi';
+import { useReactiveVar, useQuery, useApolloClient } from '@apollo/client';
 import { quizCreationShowVar } from '../apolloLocalState/popupFormState';
 import { IoSearchOutline } from 'react-icons/io5';
 import { BsList } from 'react-icons/bs';
@@ -11,6 +12,10 @@ import QuizCreationForm from './QuizCreationForm';
 const avatar = 'https://i.pinimg.com/564x/0b/97/f5/0b97f53a14d3b0698c1388b013ecabfa.jpg';
 
 function Header() {
+  const { data, loading, error, refetch } = useQuery(USER_INFO);
+
+  const client = useApolloClient();
+
   const navigate = useNavigate();
 
   const quizCreationShow = useReactiveVar(quizCreationShowVar);
@@ -22,6 +27,34 @@ function Header() {
   const showQuizCreationForm = () => {
     quizCreationShowVar(true);
   }
+
+  useEffect(() => {
+    if (data) {
+      console.log(data)
+    }
+  }, [data]);
+
+  useEffect(() => {
+    const handleAuthentication = (e) => {
+      console.log(e)
+      if (e.key === 'token') {
+        console.log('wfeqgwhw');
+        if (e.oldValue && !e.newValue) {
+          refetch();
+          client.clearStore();
+        } else if (e.newValue) {
+          console.log('refetch');
+          refetch();
+        }
+      }
+    }
+
+    window.addEventListener('storage', handleAuthentication)
+
+    return function cleanup() {
+      window.removeEventListener('storage', handleAuthentication)
+    }
+  }, []);
 
   // const atEntry = useMatch('/');
   // const atAuthentication = useMatch('/authentication');
@@ -44,13 +77,20 @@ function Header() {
 
       <div className="join-btn" onClick={goToGameEntry}>Join</div>
 
-      <div className="user-btn-group">
-        <IoSearchOutline className="search-btn" />
+      {!data &&
+        <div className="auth-btn-group">
+          <Link to="/authentication/login" className="login-btn">Login</Link>
+          <Link to="/authentication/signup" className="signup-btn">Sign up</Link>
+        </div>}
 
-        <IoNotificationsOutline className="noti-icon" />
+      {data &&
+        <div className="user-btn-group">
+          <IoSearchOutline className="search-btn" />
 
-        <div className="avatar" style={{ backgroundImage: `url(${avatar})` }}></div>
-      </div>
+          <IoNotificationsOutline className="noti-icon" />
+
+          <div className="avatar" style={{ backgroundImage: `url(${avatar})` }}></div>
+        </div>}
 
       {quizCreationShow && <QuizCreationForm />}
     </div>

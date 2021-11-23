@@ -1,0 +1,126 @@
+@import "../../../../shared/style/color.scss";
+
+.my-quiz-card {
+  font-family: "Josefin Sans", sans-serif;
+  cursor: pointer;
+  position: relative;
+  width: 100%;
+  display: flex;
+  border-radius: 4px;
+  padding: 4px;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+
+  &:not(:last-child) {
+    margin-bottom: 8px;
+  }
+
+  &:hover {
+    background: #f5f5f5;
+    transform: scale(1.01);
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  }
+
+  .quiz-cover {
+    width: 130px;
+    height: 130px;
+    background: {
+      repeat: no-repeat;
+      size: cover;
+      position: center;
+    }
+  }
+
+  .quiz-info {
+    position: relative;
+    flex-grow: 1;
+    padding: 10px 0;
+    margin: 0 16px;
+
+    .quiz-name {
+      font-size: 20px;
+    }
+
+    .quiz-plays {
+      margin-top: 9px;
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    .quiz-updated-date {
+      color: #b1afaf;
+      margin-top: 7px;
+      font-size: 15px;
+    }
+
+    .footer {
+      position: absolute;
+      bottom: 10px;
+      width: 100%;
+      display: flex;
+
+      .quiz-creator {
+        display: flex;
+        align-items: center;
+        flex-grow: 1;
+
+        .creator-avatar {
+          border-radius: 50%;
+          width: 22px;
+          height: 22px;
+          background: {
+            repeat: no-repeat;
+            size: cover;
+            position: center;
+          }
+        }
+
+        .creator-name {
+          margin-left: 6px;
+          margin-bottom: -4px;
+          font-weight: 500;
+        }
+      }
+
+      .btn-group {
+        display: flex;
+
+        .edit-btn,
+        .play-btn {
+          cursor: pointer;
+          color: $white;
+          border-radius: 4px;
+          padding-top: 7.5px;
+          height: 28px;
+          width: 64px;
+          text-align: center;
+        }
+
+        .edit-btn {
+          background: $black;
+
+          &:hover {
+            background: $darkslategray;
+          }
+        }
+
+        .play-btn {
+          background: $salmon;
+          margin-left: 4px;
+
+          &:hover {
+            background: $darksalmon;
+          }
+        }
+      }
+    }
+  }
+
+  .manipulation-btn {
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 9px;
+    width: 24px;
+    height: 24px;
+  }
+}

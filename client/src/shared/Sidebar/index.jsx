@@ -11,11 +11,11 @@ function Navigation() {
       <NavLink to="/home" activeClassName="active">
         <img src={explore} alt="explore_icon" />
       </NavLink>
-      <NavLink to="/collections" activeClassName="active">
-        <img src={report} alt="collection_icon" />
-      </NavLink>
       <NavLink to="/reports" activeClassName="active">
-        <img src={collection} alt="report_icon" />
+        <img src={report} alt="report_icon" />
+      </NavLink>
+      <NavLink to="/collection" activeClassName="active">
+        <img src={collection} alt="collection_icon" />
       </NavLink>
     </div>
   );

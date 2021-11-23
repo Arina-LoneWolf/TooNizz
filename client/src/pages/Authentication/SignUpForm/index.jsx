@@ -1,8 +1,8 @@
 import '../AuthForm.scss';
 import React, { useEffect } from 'react';
-import { useQuery, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { REGISTER } from '../../../apis/userApi';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import GoogleLogin from 'react-google-login';
 import TextError from '../../../shared/alerts/TextError';
 import { FcGoogle } from "react-icons/fc";
@@ -26,6 +26,8 @@ const schema = yup.object({
 function SignUpForm() {
   const [registerAccount, { data, loading, error }] = useMutation(REGISTER);
 
+  const navigate = useNavigate();
+
   const onGoogleSuccess = (res) => {
     console.log(res);
     const request = { tokenId: res.tokenId };
@@ -38,21 +40,21 @@ function SignUpForm() {
   });
 
   const onSubmit = (values) => {
-    const request = {
-      email: values.email,
-      name: values.name,
-      password: values.password
-    }
-    console.log(request);
     registerAccount({
-      variables: { user: request }
+      variables: {
+        user: {
+          email: values.email,
+          name: values.name,
+          password: values.password
+        }
+      }
     });
   }
 
   useEffect(() => {
     if (data) {
-      console.log('Dang ky thanh cong');
       console.log(data)
+      alert('Register successfully');
     }
   }, [data]);
 

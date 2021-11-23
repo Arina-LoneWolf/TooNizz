@@ -1,0 +1,21 @@
+@import '../../../shared/style/color.scss';
+
+.quiz-collection {
+  font-family: "Josefin Sans", sans-serif;
+  margin: 58px auto 0;
+  width: 60%;
+  // max-width: 1100px;
+
+  h1 {
+    display: inline-block;
+    font-size: 28px;
+    width: 100%;
+    margin-top: 24px;
+    padding-bottom: 4px;
+    border-bottom: 2px solid #e0e0e0;
+  }
+
+  .quiz-list {
+    margin-top: 20px;
+  }
+}
