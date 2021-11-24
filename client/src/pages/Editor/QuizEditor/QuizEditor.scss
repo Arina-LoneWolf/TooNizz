@@ -1,0 +1,46 @@
+@import '../../../shared/style/color.scss';
+
+.quiz-editor {
+  .questions-list {
+    .question-choice {
+      .question-header {
+        display: flex;
+        align-items: center;
+
+        .question-number {
+
+        }
+
+        .question-type {
+
+        }
+
+        .question-mani {
+          .duplicate-icon {
+
+          }
+
+          .delete-icon {
+
+          }
+        }
+      }
+    }
+  }
+
+  .question-settings {
+    label {
+
+    }
+
+    .question-manipulation {
+      .delete-btn {
+
+      }
+
+      .duplicate-ntn {
+        
+      }
+    }
+  }
+}

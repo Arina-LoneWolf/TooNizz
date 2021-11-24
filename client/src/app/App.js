@@ -5,7 +5,7 @@ import PlayerGameWaiting from '../pages/PlayerGameWaiting';
 import HostGameWaiting from '../pages/HostGameWaiting';
 import Home from '../pages/Home';
 import Authentication from '../pages/Authentication';
-import Creator from '../pages/Creator';
+import Editor from '../pages/Editor';
 import Collection from '../pages/Collection';
 import Reports from '../pages/Reports';
 import Settings from '../pages/Settings';
@@ -20,7 +20,7 @@ function App() {
         <Route path='/lobby/admin' element={<HostGameWaiting />} />
         <Route path='/home' element={<Home />} />
         <Route path='/authentication/:formType' element={<Authentication />} />
-        <Route path='/creator' element={<Creator />} />
+        <Route path='/editor' element={<Editor />} />
         <Route path='/collection' element={<Collection />} />
         <Route path='/reports' element={<Reports />} />
         <Route path='/settings' element={<Settings />} />

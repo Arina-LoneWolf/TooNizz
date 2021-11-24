@@ -1,8 +1,21 @@
 import './QuizCreationForm.scss';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { quizCreationShowVar } from '../../apolloLocalState/popupFormState'
+import { quizCreationShowVar } from '../../apolloLocalState/popupFormState';
+import TextError from '../../../shared/alerts/TextError';
+import { useForm } from "react-hook-form";
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 import subjects from '../../data/subjects';
+
+const schema = yup.object({
+  quizName: yup.string().required('*Required'),
+  quizSubject: yup.array().min(1, '*Please choose at least one relevant subject')
+});
+
+const defaultValues = {
+  quizSubject: []
+}
 
 function QuizCreationForm() {
   const navigate = useNavigate();
@@ -11,20 +24,29 @@ function QuizCreationForm() {
     quizCreationShowVar(false);
   }
 
+  const { register, handleSubmit, formState: { errors } } = useForm({
+    defaultValues,
+    resolver: yupResolver(schema)
+  });
+
   const onSubmit = (values) => {
-    // handle data here
-    // navigate('/creator');
+    console.log(values)
+    navigate('/editor', { state: values }); // nên push hay replace?
   }
 
   return (
     <div id="quiz-creation-form">
       <div id="overlay" />
-      <form className="form-container">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="form-container"
+      >
         <h3>Create a quiz</h3>
 
         <div className="form-control">
           <label>Quiz name</label>
-          <input />
+          <input {...register("quizName")} />
+          <TextError>{errors.quizName?.message}</TextError>
         </div>
 
         <div className="form-control">
@@ -32,11 +54,12 @@ function QuizCreationForm() {
           <div className="subjects-list">
             {subjects.map(subject => (
               <React.Fragment key={subject}>
-                <input type="checkbox" name="subjects" id={subject} value={subject} />
+                <input {...register("quizSubject")} type="checkbox" id={subject} value={subject} />
                 <label for={subject} className="subject">{subject}</label>
               </React.Fragment>
             ))}
           </div>
+          <TextError>{errors.quizSubject?.message}</TextError>
         </div>
 
         <div className="btn-group">

@@ -1,0 +1,47 @@
+@import '../../../shared/style/color.scss';
+
+.quiz-editor-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  background: $black;
+  height: 58px;
+  z-index: 1;
+
+  .left-part {
+    .logo {
+
+    }
+
+    .quiz-title-mani {
+      display: flex;
+      align-items: center;
+
+      .quiz-title {
+
+      }
+
+      .title-edit-icon {
+
+      }
+    }
+  }
+
+  .right-part {
+    .settings-btn {
+
+    }
+
+    .save-btn {
+
+    }
+
+    .exit-btn {
+      
+    }
+  }
+}
