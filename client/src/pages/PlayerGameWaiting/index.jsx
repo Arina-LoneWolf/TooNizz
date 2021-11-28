@@ -2,7 +2,7 @@
 import './PlayerGameWaiting.scss';
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import background from '../../assets/images/space-bg-1.jpg'
+import background from '../../assets/images/space-bg-3.jpg'
 
 // const name = 'Trinh';
 

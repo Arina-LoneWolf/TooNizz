@@ -1,5 +1,6 @@
 import './HostGameWaiting.scss';
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import socket from '../../shared/socket';
 import { MdGroup, MdMusicNote } from 'react-icons/md';
 import { RiMusic2Line, RiMusic2Fill } from 'react-icons/ri';
@@ -8,10 +9,10 @@ import { IoLockOpen, IoLockClosed, IoLockOpenOutline, IoLockClosedOutline } from
 import background from '../../assets/images/space-bg-5.jpg';
 
 const quizSetId = '619b6629ad2e4c2a48924f7f';
-// const players = ['Tran', 'Hung', 'Phi Long', 'Trinh', 'YasuoGankTem15p', 'Tho bay mau', 'chim en', 'blue', 'kakakak', 'syndra', 'annie', 'Ju Dan Te', 'Oh Yoon Hi', 'Ju Seokyung', 'Lee Suho', 'Im Ju Gyeong'];
-// chưa xong UI
-// 7219348
+
 function HostGameWaiting() {
+  const navigate = useNavigate();
+
   const [gameCode, setGameCode] = useState('');
   const [players, setPlayers] = useState([]);
 
@@ -26,6 +27,10 @@ function HostGameWaiting() {
       setPlayers(playerList);
     });
   }, []);
+
+  const handleStartGame = () => {
+    navigate('/gameplay/admin', { replace: true });
+  }
 
   return (
     <div className="host-game-waiting" style={{ backgroundImage: `url(${background})` }}>
@@ -48,7 +53,7 @@ function HostGameWaiting() {
 
       {players.length === 0 && <div className="waiting-players">Waiting for players...</div>}
 
-      {players.length > 0 && <button className="start-btn">Start</button>}
+      {players.length > 0 && <button className="start-btn" onClick={handleStartGame}>Start</button>}
 
       {players.length > 0 &&
         <div className="members-wrapper">

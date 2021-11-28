@@ -2,6 +2,8 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Paytone+One&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Gluten:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Itim&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Mali:wght@500;600;700&display=swap');
 
 .host-game-waiting {
   color: $white;
@@ -103,7 +105,7 @@
     background: transparent;
     color: $white;
     font-size: 36px;
-    border: 1px solid $white;
+    border: 2px solid $white;
     border-radius: 10px;
   }
 
@@ -118,7 +120,8 @@
   .members-wrapper {
     display: inline-flex;
     align-items: center;
-    border: 1px solid $white;
+    // border: 2px solid $white;
+    background: rgba(255, 255, 255, 0.1);
     border-radius: 6px;
     margin-left: 50vw;
     margin-top: 14px;
@@ -144,13 +147,14 @@
     // max-width: 500px;
 
     .member-block {
+      font-family: 'Itim', cursive;
+      // font-family: 'Mali', cursive;
       cursor: pointer;
       border-radius: 20px;
-      font-size: 20px;
-      margin-bottom: 12px;
-      margin-right: 16px;
-      border: 1px solid $white;
-      padding: 4px 18px;
+      font-size: 21px;
+      margin: 0 8px 12px;
+      border: 2px solid $white;
+      padding: 3px 18px;
 
       &:hover {
         text-decoration: line-through;

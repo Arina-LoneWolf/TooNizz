@@ -1,5 +1,5 @@
 import './Sidebar.scss';
-import React, { useRef } from 'react';
+import React from 'react';
 import { NavLink } from 'react-router-dom';
 import explore from '../../assets/icons/search_fill.svg';
 import collection from '../../assets/icons/folder.svg';

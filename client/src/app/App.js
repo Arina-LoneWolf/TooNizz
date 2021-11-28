@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Entry from '../pages/Entry';
 import PlayerGameWaiting from '../pages/PlayerGameWaiting';
 import HostGameWaiting from '../pages/HostGameWaiting';
+import HostGamePlay from '../pages/HostGamePlay';
+import PlayerGamePlay from '../pages/PlayerGamePlay';
 import Home from '../pages/Home';
 import Authentication from '../pages/Authentication';
 import Editor from '../pages/Editor';
@@ -18,6 +20,8 @@ function App() {
         <Route path='/' element={<Entry />} />
         <Route path='/lobby' element={<PlayerGameWaiting />} />
         <Route path='/lobby/admin' element={<HostGameWaiting />} />
+        <Route path='/gameplay/' element={<PlayerGamePlay />} />
+        <Route path='/gameplay/admin/*' element={<HostGamePlay />} />
         <Route path='/home' element={<Home />} />
         <Route path='/authentication/:formType' element={<Authentication />} />
         <Route path='/editor' element={<Editor />} />
