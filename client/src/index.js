@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import ReactDOM from 'react-dom';
-import App from './app/App';
+// import App from './app/App';
+import Preloader from './shared/Preloader'
 import reportWebVitals from './reportWebVitals';
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 
@@ -12,10 +13,14 @@ const client = new ApolloClient({
   }
 });
 
+const App = lazy(() => import('./app/App'));
+
 ReactDOM.render(
   <React.StrictMode>
     <ApolloProvider client={client}>
-      <App />
+      <Suspense fallback={<Preloader />}>
+        <App />
+      </Suspense>
     </ApolloProvider>
   </React.StrictMode>,
   document.getElementById('root')

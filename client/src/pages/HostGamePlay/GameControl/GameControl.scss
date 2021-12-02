@@ -77,10 +77,13 @@
 
     .answer {
       padding: 6px 8px;
-      cursor: pointer;
       height: 100px;
       font-size: 24px;
       color: $white;
+
+      .correct {
+        font-weight: bold;
+      }
 
       &.option-1 {
         background: red;

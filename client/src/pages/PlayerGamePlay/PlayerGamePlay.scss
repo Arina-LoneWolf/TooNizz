@@ -1,0 +1,33 @@
+.player-game-play {
+  .answer-options {
+    width: 100vw;
+    height: 100vh;
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 10px;
+
+    .answer {
+      padding: 6px 8px;
+      cursor: pointer;
+      height: calc((100vh - 10px) / 2);
+      font-size: 24px;
+      color: white;
+
+      &.option-1 {
+        background: red;
+      }
+
+      &.option-2 {
+        background: blue;
+      }
+
+      &.option-3 {
+        background: green;
+      }
+
+      &.option-4 {
+        background: #ffdf27;
+      }
+    }
+  }
+}

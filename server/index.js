@@ -52,6 +52,7 @@ const onConnectionClassicMode = (socket) => {
 	classisModeAll(classicMode, socket, players, games);
 };
 classicMode.on('connection', onConnectionClassicMode);
+io.listen(httpServer);
 
 app.use(express.json());
 server.start();

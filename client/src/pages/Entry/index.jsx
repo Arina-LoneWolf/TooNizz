@@ -1,14 +1,13 @@
 import './Entry.scss';
+import { gsap } from 'gsap';
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import socket from '../../shared/socket';
-import { useReactiveVar } from '@apollo/client';
-import { socketVar } from '../../shared/apolloLocalState/socketState';
 import TextError from '../../shared/alerts/TextError';
 import { useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import background from '../../assets/images/entry-bg-4.png';
+import background from '../../assets/images/entry-bg-4-optimize.png';
 
 const schema = yup.object({
   input: yup.string().required('Please enter code')
@@ -16,6 +15,7 @@ const schema = yup.object({
 
 function Entry() {
   const inputRef = useRef(null);
+  const overlayRef = useRef();
 
   const navigate = useNavigate();
 
@@ -45,7 +45,11 @@ function Entry() {
   }
 
   useEffect(() => {
-    socket.on('classic:check-gamePin', (res) => {
+    gsap.timeline()
+      .to(overlayRef.current, { opacity: 0, duration: 0.5 })
+      .to(overlayRef.current, { display: 'none' })
+
+    socket.on('classic:check-game-pin', (res) => {
       if (res === 'PASS') {
         reset();
         setPlaceholder('Nickname');
@@ -85,6 +89,7 @@ function Entry() {
         <TextError>{errors.input?.message}</TextError>
         <button type="submit" className="join-btn">{buttonInnerText}</button>
       </form>
+      <div className="overlay" ref={overlayRef} />
     </div>
   );
 }
