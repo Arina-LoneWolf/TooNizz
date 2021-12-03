@@ -1,32 +1,138 @@
+@import "../../shared/style/color.scss";
+
+@import url("https://fonts.googleapis.com/css2?family=Mali:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&display=swap");
+
+$alpha: 0.55;
+
 .player-game-play {
+  height: 100vh;
+  color: white;
+
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: {
+    repeat: no-repeat;
+    size: cover;
+    // position: center;
+    attachment: fixed;
+  }
+
+  .blur-overlay {
+    padding: 2px 2px 4px;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.6);
+  }
+
+  .status-bar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Mali", cursive;
+    margin-bottom: 16px;
+    height: 70px;
+    border-radius: 5px;
+    backdrop-filter: blur(1px);
+    background: rgba(white, 0.1);
+    box-shadow: inset 0 1px 10px 0 rgba(255, 255, 255, 0.73);
+    border: 1px solid rgba(255, 255, 255, 0.42);
+
+    .question-number {
+      position: absolute;
+      left: 16px;
+      font-size: 20px;
+    }
+
+    .question-type {
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    .score-wrapper {
+      display: flex;
+      align-items: center;
+      font-size: 20px;
+      position: absolute;
+      right: 16px;
+
+      .score-lb {
+        margin-right: 12px;
+      }
+
+      .player-score {
+        margin-top: 2px;
+        width: 75px;
+        line-height: 29px;
+        font-weight: 600;
+        text-align: center;
+        border-radius: 5px;
+        box-shadow: 0 0 8px 0 rgba(255, 255, 255, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.22);
+      }
+    }
+  }
+
   .answer-options {
-    width: 100vw;
-    height: 100vh;
+    flex-grow: 1;
     display: grid;
-    grid-template-columns: auto auto;
-    gap: 10px;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
 
     .answer {
-      padding: 6px 8px;
       cursor: pointer;
-      height: calc((100vh - 10px) / 2);
-      font-size: 24px;
-      color: white;
+      border-radius: 5px;
+      backdrop-filter: blur(5px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
-      &.option-1 {
-        background: red;
+      .answer-icon {
+        opacity: 0.5;
       }
+    }
 
-      &.option-2 {
-        background: blue;
+    .opt-1 {
+      background: rgba($pal3, $alpha);
+
+      .answer-icon {
+        width: 93px;
+        height: 93px;
       }
+    }
 
-      &.option-3 {
-        background: green;
+    .opt-2 {
+      background: rgba($pal2, $alpha);
+
+      .answer-icon {
+        width: 85px;
+        height: 85px;
       }
+    }
 
-      &.option-4 {
-        background: #ffdf27;
+    .opt-3 {
+      background: rgba($pal5, $alpha);
+
+      .answer-icon {
+        width: 100px;
+        height: 100px;
+      }
+    }
+
+    .opt-4 {
+      background: rgba($goldenrod, $alpha);
+
+      .answer-icon {
+        width: 95px;
+        height: 95px;
       }
     }
   }

@@ -3,7 +3,7 @@ import { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import PlayerGameWaiting from '../pages/PlayerGameWaiting';
 import HostGamePlay from '../pages/HostGamePlay';
-import PlayerGamePlay from '../pages/PlayerGamePlay';
+// import PlayerGamePlay from '../pages/PlayerGamePlay';
 import Home from '../pages/Home';
 import Authentication from '../pages/Authentication';
 import Editor from '../pages/Editor';
@@ -16,6 +16,7 @@ import GetExchangeRates from './ExchangeRates';
 const Entry = lazy(() => import('../pages/Entry'));
 const HostGameWaiting = lazy(() => import('../pages/HostGameWaiting'));
 const HostGameControl = lazy(() => import('../pages/HostGameControl'));
+const PlayerGamePlay = lazy(() => import('../pages/PlayerGamePlay'));
 
 function App() {
   return (
