@@ -17,6 +17,7 @@ const Entry = lazy(() => import('../pages/Entry'));
 const HostGameWaiting = lazy(() => import('../pages/HostGameWaiting'));
 const HostGameControl = lazy(() => import('../pages/HostGameControl'));
 const PlayerGamePlay = lazy(() => import('../pages/PlayerGamePlay'));
+const LeaderBoard = lazy(() => import('../pages/LeaderBoard')); // tạm
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
           <Route path='/settings' element={<Settings />} />
           <Route path='/get-exchange-rates' element={<GetExchangeRates />} />
           <Route path='/preloader' element={<Preloader />} />
+          <Route path='leaders' element={<LeaderBoard />} />
         </Routes>
       </Suspense>
     </Router>

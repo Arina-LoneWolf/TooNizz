@@ -1,0 +1,93 @@
+@import "../../shared/style/color.scss";
+
+@import url("https://fonts.googleapis.com/css2?family=Paytone+One&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Gluten:wght@400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Itim&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Mali:wght@500;600;700&display=swap");
+
+.temporary-container {
+  height: 100vh;
+  color: white;
+
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: {
+    repeat: no-repeat;
+    size: cover;
+    // position: center;
+    attachment: fixed;
+  }
+
+  .blur-overlay {
+    padding: 2px 2px 4px;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.6);
+  }
+
+  .leader-board-lb {
+    position: relative;
+    top: -2px;
+    margin: 0 auto 0;
+    padding: 4px 0 20px;
+    text-align: center;
+    width: 480px;
+    color: $textwhite;
+    // border-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    background: rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 1px 10px 0 rgba(255, 255, 255, 1);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+
+    font-size: 52px;
+    text-shadow: 0px 0px 10px #9c90c5;
+    font-family: "Paytone One", sans-serif;
+  }
+
+  .leaders-list {
+    position: fixed;
+    top: 50vh;
+    left: 50vw;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .top-player-card {
+      font-family: "Itim", cursive;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      backdrop-filter: blur(4px);
+      background: rgba(white, 0.06);
+      box-shadow: 0 1.5px 5px 0 rgba(255, 255, 255, 0.8);
+      // box-shadow: inset 0 0 20px 0 rgba(255, 255, 255, 0.58);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 8px;
+      width: 800px;
+      font-size: 32px;
+      padding: 10px 18px;
+
+      &:not(:last-child) {
+        margin-bottom: 16px;
+      }
+
+      .player-name {
+      }
+
+      .player-score {
+      }
+    }
+  }
+}
