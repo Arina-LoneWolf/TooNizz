@@ -7,7 +7,7 @@
 
   .question {
     padding: 4px 16px;
-    background: $white;
+    background: white;
     text-align: center;
     font-size: 36px;
     width: 100vw;
@@ -27,7 +27,7 @@
       font-size: 22px;
       line-height: 42px;
       width: 42px;
-      color: $white;
+      color: white;
       background: $black;
       border-radius: 50%;
     }
@@ -37,7 +37,7 @@
     }
 
     .answered-counter {
-      color: $white;
+      color: white;
       font-size: 22px;
       width: 66px;
       text-align: center;
@@ -52,7 +52,7 @@
       width: 60px;
       text-align: center;
       background: purple;
-      color: $white;
+      color: white;
       cursor: pointer;
     }
 
@@ -79,7 +79,7 @@
       padding: 6px 8px;
       height: 100px;
       font-size: 24px;
-      color: $white;
+      color: white;
 
       .correct {
         font-weight: bold;
@@ -104,7 +104,7 @@
   }
 
   .current-question {
-    color: $white;
+    color: white;
     text-align: center;
     font-size: 32px;
     margin-top: 20px;

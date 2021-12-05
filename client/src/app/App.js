@@ -6,7 +6,7 @@ import HostGamePlay from '../pages/HostGamePlay';
 // import PlayerGamePlay from '../pages/PlayerGamePlay';
 import Home from '../pages/Home';
 import Authentication from '../pages/Authentication';
-import Editor from '../pages/Editor';
+// import Editor from '../pages/Editor';
 import Collection from '../pages/Collection';
 import Reports from '../pages/Reports';
 import Settings from '../pages/Settings';
@@ -17,6 +17,7 @@ const Entry = lazy(() => import('../pages/Entry'));
 const HostGameWaiting = lazy(() => import('../pages/HostGameWaiting'));
 const HostGameControl = lazy(() => import('../pages/HostGameControl'));
 const PlayerGamePlay = lazy(() => import('../pages/PlayerGamePlay'));
+const Editor = lazy(() => import('../pages/Editor'));
 const LeaderBoard = lazy(() => import('../pages/LeaderBoard')); // tạm
 const PlayerQuestionResult = lazy(() => import('../pages/PlayerQuestionResult')) // tạm
 

@@ -2,7 +2,7 @@ import './PlayerQuestionResult.scss';
 import React from 'react';
 import background from '../../assets/images/space-bg-13.jpg';
 import { BiBadgeCheck } from 'react-icons/bi';
-import { RiEmotionSadFill, RiMedalFill, RiMedalLine } from 'react-icons/ri';
+import { RiEmotionSadFill, RiEmotionLaughFill, RiMedalFill, RiMedalLine } from 'react-icons/ri';
 
 // tạm thui, mốt gộp vô PlayerGamePlay
 

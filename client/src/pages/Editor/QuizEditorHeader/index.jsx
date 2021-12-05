@@ -6,7 +6,7 @@ function QuizEditorHeader() {
   return (
     <div className="quiz-editor-header">
       <div className="left-part">
-        <div className="logo"></div>
+        <div className="logo">TooNizz</div>
         <div className="quiz-title-mani">
           <div className="quiz-title">Chemistry Test</div>
           <MdEdit className="title-edit-icon" />

@@ -1,45 +1,158 @@
-@import '../../../shared/style/color.scss';
+@import "../../../shared/style/color.scss";
+
+@import url("https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400;500;600;700;800&display=swap");
 
 .quiz-editor {
+  font-family: "Baloo Bhaijaan 2", cursive;
+  display: flex;
+  margin-top: 54px;
+  position: relative;
+
   .questions-list {
+    box-shadow: rgba(0, 0, 0, 0.15) 2px 0px 4px 0px;
+    width: 210px;
+    padding-left: 12px;
+    padding-right: 14px;
+    position: relative;
+    height: calc(100vh - 54px);
+    overflow: auto;
+
     .question-choice {
+      margin-bottom: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      color: $darkgrey;
+
       .question-header {
         display: flex;
         align-items: center;
+        justify-content: space-between;
 
-        .question-number {
+        .question-heading {
+          display: flex;
+          align-items: center;
 
-        }
+          .question-number {
+          }
 
-        .question-type {
-
+          .question-type {
+            margin-left: 6px;
+          }
         }
 
         .question-mani {
-          .duplicate-icon {
+          display: flex;
+          align-items: center;
 
+          .duplicate-btn-icon {
+            cursor: pointer;
+            margin-right: 3px;
           }
 
-          .delete-icon {
-
+          .delete-btn-icon {
+            cursor: pointer;
           }
         }
+      }
+
+      .question-preview {
+        margin-left: 11px;
+        width: calc(100% - 10px);
+        height: 110px;
+        background: $whitesmoke;
+        border-radius: 5px;
       }
     }
   }
 
-  .question-settings {
-    label {
+  .question-editor {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    background: $whitesmoke;
+    height: calc(100vh - 54px);
+    padding: 12px;
+  }
 
+  .question-settings {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: rgba(0, 0, 0, 0.15) -2px 0px 4px 0px;
+    width: 250px;
+    padding: 12px;
+    font-weight: 600;
+
+    .settings-group {
+      .settings-option {
+        margin-bottom: 16px;
+
+        .settings-opt-label {
+          display: flex;
+          align-items: center;
+          margin-bottom: 2px;
+          // line-height: 26px;
+
+          .question-type-icon {
+            width: 20px;
+            height: 18px;
+          }
+
+          .time-limit-icon {
+            width: 20px;
+            height: 21px;
+            padding-bottom: 2px;
+          }
+
+          .points-icon {
+            width: 20px;
+            height: 22px;
+            padding-bottom: 2px;
+          }
+
+          span {
+            font-size: 18px;
+            padding-top: 3px;
+            margin-left: 4px;
+          }
+        }
+
+        select {
+          border-radius: 4px;
+          border: 1px solid $mediumgrey;
+          padding: 4px;
+          width: 100%;
+          padding: 5px 6px 2px;
+          font-size: 15px;
+          color: $darkgrey;
+          font-family: "Baloo Bhaijaan 2", cursive;
+        }
+      }
     }
 
     .question-manipulation {
-      .delete-btn {
+      display: flex;
+      justify-content: space-between;
 
+      div {
+        cursor: pointer;
+        padding-top: 2px;
+        border: 1px solid black;
+        border-radius: 4px;
+        width: 106px;
+        line-height: 34px;
+        padding-top: 4px;
+        text-align: center;
+
+        &:hover {
+          background: $whitesmoke;
+        }
+      }
+
+      .delete-btn {
       }
 
       .duplicate-ntn {
-        
       }
     }
   }

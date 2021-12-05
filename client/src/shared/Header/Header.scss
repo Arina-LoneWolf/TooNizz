@@ -16,7 +16,7 @@
 
   .side-btn {
     display: none;
-    color: $white;
+    color: white;
     width: 34px;
     height: 34px;
 
@@ -29,7 +29,7 @@
     margin: 0 10px;
     font-size: 26px;
     width: 180px;
-    color: $white;
+    color: white;
 
     @media (max-width: 739px) {
       width: 100px;
@@ -95,7 +95,7 @@
     margin-left: 12px;
     margin-right: 24px;
     background: $salmon;
-    color: $white;
+    color: white;
     border-radius: 5px;
     line-height: 40px;
     text-align: center;
@@ -133,7 +133,7 @@
     .signup-btn {
       // margin-left: 6px;
       padding-left: 6px;
-      border-left: 2px solid $white;
+      border-left: 2px solid white;
       color: $salmon;
     }
   }

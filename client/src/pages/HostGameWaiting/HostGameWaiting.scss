@@ -7,7 +7,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Mali:wght@500;600;700&display=swap");
 
 .host-game-waiting {
-  color: $white;
+  color: white;
   position: fixed;
   top: 0;
   right: 0;
@@ -69,7 +69,7 @@
 
     .control-wrapper {
       border-radius: 50%;
-      border: 1px solid $white;
+      border: 1px solid white;
       width: 30px;
       height: 30px;
       display: flex;
@@ -105,9 +105,9 @@
     padding: 7px 30px 11px;
     display: block;
     background: transparent;
-    color: $white;
+    color: white;
     font-size: 36px;
-    border: 2px solid $white;
+    border: 2px solid white;
     border-radius: 10px;
   }
 
@@ -122,7 +122,7 @@
   .members-wrapper {
     display: inline-flex;
     align-items: center;
-    // border: 2px solid $white;
+    // border: 2px solid white;
     background: rgba(255, 255, 255, 0.1);
     border-radius: 6px;
     margin-left: 50vw;
@@ -155,7 +155,7 @@
       border-radius: 20px;
       font-size: 21px;
       margin: 0 8px 12px;
-      border: 2px solid $white;
+      border: 2px solid white;
       padding: 3px 18px;
 
       &:hover {
