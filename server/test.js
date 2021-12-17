@@ -60,5 +60,32 @@ delete test1.list[0].isCorrect;
 // for (let j = 0; j < test1.length; j++) {
 // 	delete test1.list[j].isCorrect;
 // }
-console.log('test1', test1);
-console.log('sad', sad);
+
+let kool11 = [
+	{
+		isCorrect: 0 === 'boolean' ? `0` : 0,
+		isFalse: false,
+	},
+	{
+		isCorrect: '10',
+		isFalse: false,
+	},
+	{
+		isCorrect: '30',
+		isFalse: true,
+	},
+	{
+		isCorrect: '50',
+		isFalse: false,
+	},
+];
+let koko = ['dasd', undefined, 'kol'];
+let countUn = 0;
+kool11 = kool11.filter((value) => {
+	if (value.isCorrect !== undefined) return value;
+});
+
+// console.log('dem un', 0 === undefined);
+console.log('kool11', kool11);
+
+//--inspect

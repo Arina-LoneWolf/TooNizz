@@ -1,5 +1,6 @@
 import { ApolloServer, SchemaDirectiveVisitor } from 'apollo-server-express';
 import { defaultFieldResolver } from 'graphql';
+import { graphqlUploadExpress } from 'graphql-upload';
 import express from 'express';
 import consola from 'consola';
 import { PORT, IN_PRO } from './source/config/index.js';
@@ -17,14 +18,15 @@ import http from 'http';
 import { Server } from 'socket.io';
 import { classisModeAll } from './source/utils/classicMode/index.js';
 
-let players = [];
-let games = [];
+const players = [];
+const games = [];
 
 const server = new ApolloServer({
 	typeDefs,
 	resolvers,
 	schemaDirectives,
 	playground: IN_PRO,
+	uploads: false,
 	context: ({ req }) => {
 		const token = req.headers.authorization || '';
 		return {
@@ -52,9 +54,10 @@ const onConnectionClassicMode = (socket) => {
 	classisModeAll(classicMode, socket, players, games);
 };
 classicMode.on('connection', onConnectionClassicMode);
-io.listen(httpServer);
+//io.listen(4000, httpServer);
 
 app.use(express.json());
+app.use(graphqlUploadExpress());
 server.start();
 server.applyMiddleware({ app });
 

@@ -3,4 +3,5 @@ import post from './post.js';
 import user from './user.js';
 import questionSet from './questionSet.js';
 import question from './question.js';
-export default [baseDefs, post, user, questionSet, question];
+import uploadFile from './uploadfile.js';
+export default [baseDefs, post, user, questionSet, question, uploadFile];

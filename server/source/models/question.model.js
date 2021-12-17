@@ -54,7 +54,6 @@ const questionSchema = new mongoose.Schema(
 		},
 		score: {
 			type: Number,
-			require: true,
 		},
 		typeAnswers: {
 			type: [String],
