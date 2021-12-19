@@ -1,6 +1,5 @@
 import './MultipleChoice.scss';
 import React from 'react';
-import { BsPeopleFill, BsStopFill, BsFillCaretRightFill, BsDisplayFill, BsLaptopFill } from 'react-icons/bs';
 
 const media = 'https://cdn.wallpapersafari.com/45/55/wjCLM0.png';
 

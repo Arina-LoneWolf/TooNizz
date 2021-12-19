@@ -19,7 +19,9 @@ const HostGameControl = lazy(() => import('../pages/HostGameControl'));
 const PlayerGamePlay = lazy(() => import('../pages/PlayerGamePlay'));
 const Editor = lazy(() => import('../pages/Editor'));
 const LeaderBoard = lazy(() => import('../pages/LeaderBoard')); // tạm
-const PlayerQuestionResult = lazy(() => import('../pages/PlayerQuestionResult')) // tạm
+const PlayerQuestionResult = lazy(() => import('../pages/PlayerQuestionResult')); // tạm
+const HostQuestionResult = lazy(() => import('../pages/HostQuestionResult')); // tạm
+const HostGameResult = lazy(() => import('../pages/HostGameResult')); // tạm
 
 function App() {
   return (
@@ -42,6 +44,8 @@ function App() {
           <Route path='/preloader' element={<Preloader />} />
           <Route path='leaders' element={<LeaderBoard />} />
           <Route path='q-result' element={<PlayerQuestionResult />} />
+          <Route path='q-result/admin' element={<HostQuestionResult />} />
+          <Route path='game-result/admin' element={<HostGameResult />} />
         </Routes>
       </Suspense>
     </Router>

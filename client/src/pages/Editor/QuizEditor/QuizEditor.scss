@@ -67,6 +67,7 @@
 
   .question-editor {
     flex-grow: 1;
+    flex-basis: 0px;
     display: flex;
     flex-direction: column;
     background: $whitesmoke;
@@ -137,7 +138,7 @@
       div {
         cursor: pointer;
         padding-top: 2px;
-        border: 1px solid black;
+        border: 1px solid $mediumgrey;
         border-radius: 4px;
         width: 106px;
         line-height: 34px;

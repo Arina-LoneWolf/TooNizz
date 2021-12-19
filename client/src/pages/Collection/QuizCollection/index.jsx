@@ -9,8 +9,8 @@ function QuizCollection() {
     <div className="quiz-collection">
       <h1>My collection</h1>
       <div className="quiz-list">
-        {quizzes.map(quiz => (
-          <MyQuizCard />
+        {quizzes.map((quiz, index) => (
+          <MyQuizCard key={index} />
         ))}
       </div>
     </div>
