@@ -22,6 +22,7 @@ const LeaderBoard = lazy(() => import('../pages/LeaderBoard')); // tạm
 const PlayerQuestionResult = lazy(() => import('../pages/PlayerQuestionResult')); // tạm
 const HostQuestionResult = lazy(() => import('../pages/HostQuestionResult')); // tạm
 const HostGameResult = lazy(() => import('../pages/HostGameResult')); // tạm
+const PlayerGameResult = lazy(() => import('../pages/PlayerGameResult')); // tạm
 
 function App() {
   return (
@@ -46,6 +47,7 @@ function App() {
           <Route path='q-result' element={<PlayerQuestionResult />} />
           <Route path='q-result/admin' element={<HostQuestionResult />} />
           <Route path='game-result/admin' element={<HostGameResult />} />
+          <Route path='game-result' element={<PlayerGameResult />} />
         </Routes>
       </Suspense>
     </Router>
