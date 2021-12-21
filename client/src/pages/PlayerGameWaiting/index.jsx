@@ -31,7 +31,7 @@ function PlayerGameWaiting() {
           intervalRef.current = setInterval(handleCountdown, 1000);
         }
       }).addLabel('countdownStart')
-        .to(messageRef.current, { opacity: 0, duration: 1 }, 'countdownStart')
+        .to(messageRef.current, { opacity: 0 }, 'countdownStart')
         .to(countdownRef.current, { display: 'block', width: '100vw', opacity: 1, duration: 0.8, ease: "circ.easeIn" })
         .to(countdownRef.current, { color: 'white', duration: 0.1 })
       // navigate('/gameplay', { replace: true, state: name });

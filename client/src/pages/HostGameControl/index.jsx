@@ -5,10 +5,12 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { BsPeopleFill, BsStopFill, BsFillCaretRightFill, BsDisplayFill, BsLaptopFill } from 'react-icons/bs';
 import background from '../../assets/images/space-bg-13.jpg';
 import alternative from '../../assets/images/alternative-media.png';
+import socket from '../../shared/socket';
 
 function HostGameControl() {
-  const { state: question } = useLocation();
-  const [currentQuestion, setCurrentQuestion] = useState(question);
+  const { state: firstQuestion } = useLocation();
+  const [currentQuestion, setCurrentQuestion] = useState(firstQuestion);
+  const [countdown, setCountdown] = useState(firstQuestion.time);
 
   const navigate = useNavigate();
 
@@ -21,7 +23,7 @@ function HostGameControl() {
     console.log(currentQuestion);
     gsap.timeline({
       onComplete: () => {
-
+        socket.emit('classic:countdown-start-host');
       }
     })
       .addLabel('fadeIn')
@@ -33,7 +35,27 @@ function HostGameControl() {
       .from(q('.media'), { opacity: 0, duration: 0.8 }, '<')
       .from(q('.question-time'), { opacity: 0, scale: 0, duration: 1 }, '<')
       .from(q('.question-time'), { color: 'transparent', duration: 1 })
+
+    socket.on('classic:countdown-start-player', () => {
+      intervalRef.current = setInterval(handleCountdown, 1000);
+    });
+
+    socket.on('classic:sv-send-question', (question) => {
+      console.log(question);
+      setCurrentQuestion(question);
+      setCountdown(question.time);
+    });
   }, []);
+
+  useEffect(() => {
+    if (countdown <= 0) {
+      clearInterval(intervalRef.current);
+    }
+  }, [countdown]);
+
+  const handleCountdown = () => {
+    setCountdown(prev => prev - 1);
+  }
 
   return (
     <div className="host-game-control" ref={el} style={{ backgroundImage: `url(${background})` }}>
@@ -41,7 +63,7 @@ function HostGameControl() {
         <div className="question">Which of the following statements are true?</div>
 
         <div className="middle-wrapper">
-          <div className="question-time">30</div>
+          <div className="question-time">{countdown}</div>
           <img src={alternative} alt="" className="media" />
           <div className="control-bar">
             <div className="question-number-display">
