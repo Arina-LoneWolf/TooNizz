@@ -1,4 +1,5 @@
 @import "../../shared/style/color.scss";
+@import "../../shared/style/common.scss";
 
 @import url('https://fonts.googleapis.com/css2?family=Grandstander:wght@900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Rowdies:wght@400;700&display=swap');
@@ -16,6 +17,25 @@
     attachment: fixed;
   }
 
+  .overlay {
+    @include intro-overlay;
+  }
+
+  .countdown-start {
+    position: fixed;
+    width: 0;
+    color: transparent;
+    text-align: center;
+    font-size: 68px;
+    line-height: 110px;
+    top: 50vh;
+    left: 50vw;
+    transform: translate(-50%, -50%);
+    background: black;
+    opacity: 0;
+    display: none;
+  }
+
   .blur-overlay {
     position: fixed;
     top: 0;
@@ -23,15 +43,18 @@
     bottom: 0;
     left: 0;
     background: rgba( 0, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   span {
+    opacity: 0;
+    transform: scale(0);
     color: white;
     display: block;
     font-size: 72px;
     text-align: center;
-    margin-top: 50vh;
-    transform: translateY(-50%);
     font-weight: 800;
     font-family: 'Grandstander', cursive;
     // font-family: 'Rowdies', cursive; //font này đẹp ghê

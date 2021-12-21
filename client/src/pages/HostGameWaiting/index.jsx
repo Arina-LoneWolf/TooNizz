@@ -1,5 +1,6 @@
 import './HostGameWaiting.scss';
 import { gsap } from 'gsap';
+import { TextPlugin } from "gsap/TextPlugin";
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import socket from '../../shared/socket';
@@ -14,9 +15,12 @@ const quizSetId = '619b6629ad2e4c2a48924f7f';
 function HostGameWaiting() {
   const navigate = useNavigate();
 
+  gsap.registerPlugin(TextPlugin);
+
   const [gameCode, setGameCode] = useState('');
   const [players, setPlayers] = useState([]);
   const [countdown, setCountdown] = useState(3);
+  const [firstQuestion, setFirstQuestion] = useState({});
   const intervalRef = useRef();
 
   const el = useRef();
@@ -25,8 +29,10 @@ function HostGameWaiting() {
 
   useEffect(() => {
     gsap.timeline()
-      .to(q('.overlay'), { opacity: 0, duration: 1 })
+      .addLabel('fadeIn')
+      .to(q('.overlay'), { opacity: 0, duration: 1 }, 'fadeIn')
       .to(q('.overlay'), { display: 'none' })
+      .to(q('.waiting-players'), { text: 'Waiting for players...', duration: 1.4, ease: "circ.out" }, 'fadeIn+=50%')
 
     // window.addEventListener('beforeunload', (e) => {
     //   return e.returnValue = '';
@@ -38,9 +44,38 @@ function HostGameWaiting() {
       setGameCode(code);
     });
 
+    socket.on('classic:sv-send-question', (question) => {
+      console.log(question.answers[0].content);
+      setFirstQuestion(question);
+    });
+
     socket.on('classic:update-list-players', (playerList) => {
       setPlayers(playerList);
+
+      if (playerList.length > 0) {
+        gsap.timeline()
+          .addLabel('playerJoin')
+          .to(q('.waiting-players'), { opacity: 0, duration: 0.5 }, 'playerJoin')
+          .to(q('.waiting-players'), { display: 'none'})
+          .from(q('.start-btn'), { opacity: 0, scale: 0, duration: 1, ease: "back.out(2.0)" }, 'playerJoin')
+          .from(q('.members-wrapper'), { opacity: 0, duration: 0.5 })
+          .from(q('.members-display-wrapper'), { opacity: 0, duration: 0.5 })
+      }
     });
+
+    socket.on('classic:player-start-game', () => {
+      gsap.timeline({
+        onComplete: () => {
+          intervalRef.current = setInterval(handleCountdown, 1000);
+        }
+      }).addLabel('start')
+        .to(q('.upper-half'), { y: '-100%' }, 'start')
+        .to(q('.start-btn'), { opacity: 0 }, 'start')
+        .to(q('.members-wrapper'), { opacity: 0 }, 'start')
+        .to(q('.members-display-wrapper'), { y: '50vh' }, 'start')
+        .to(q('.countdown-start'), { display: 'block', width: '100vw', opacity: 1, duration: 0.8, ease: "circ.easeIn" })
+        .to(q('.countdown-start'), { color: 'white', duration: 0.1 })
+    })
   }, []);
 
   const handleCopyToClipboard = (e) => {
@@ -54,31 +89,34 @@ function HostGameWaiting() {
   }
 
   useEffect(() => {
-    if (countdown < 1) {
+    if (countdown < 2) {
       clearInterval(intervalRef.current);
+      setTimeout(() => {
+        gsap.timeline({
+          onComplete: () => {
+            navigate('/gameplay/admin', { replace: true, state: firstQuestion });
+          }
+        })
+          .to(q('.overlay'), { opacity: 1, duration: 1 })
+      }, 1000);
     }
   }, [countdown]);
 
 
   const handleStartGame = () => {
-    tlStart.current = gsap.timeline({
-      onComplete: () => {
-        // navigate('/gameplay/admin', { replace: true });
-        console.log('countdown start');
-        intervalRef.current = setInterval(handleCountdown, 1000);
-      }
-    }).addLabel('start')
-      .to(q('.upper-half'), { y: '-100%' }, 'start')
-      .to(q('.start-btn'), { opacity: 0 }, 'start')
-      .to(q('.members-wrapper'), { opacity: 0 }, 'start')
-      .to(q('.members-display-wrapper'), { y: '50vh' }, 'start')
-      .to(q('.countdown-start'), { display: 'block', width: '100vw', opacity: 1, duration: 0.8, ease: "circ.easeIn" })
-      .to(q('.countdown-start'), { color: 'white', duration: 0.1 })
-    // .to(q('.host-game-waiting .overlay'), { display: 'block', opacity: 1, duration: 0.5 })
-      // console.log('line appear');
-    // gsap.timeline()
-      // .to(q('.countdown-start'), { display: 'block', opacity: 1, duration: 1.2, ease: "circ.easeIn" })
-      // .to(q('.countdown-start'), { color: 'white', duration: 0.2 }, '-=50%')
+    socket.emit('classic:host-start-game');
+
+    // tlStart.current = gsap.timeline({
+    //   onComplete: () => {
+    //     intervalRef.current = setInterval(handleCountdown, 1000);
+    //   }
+    // }).addLabel('start')
+    //   .to(q('.upper-half'), { y: '-100%' }, 'start')
+    //   .to(q('.start-btn'), { opacity: 0 }, 'start')
+    //   .to(q('.members-wrapper'), { opacity: 0 }, 'start')
+    //   .to(q('.members-display-wrapper'), { y: '50vh' }, 'start')
+    //   .to(q('.countdown-start'), { display: 'block', width: '100vw', opacity: 1, duration: 0.8, ease: "circ.easeIn" })
+    //   .to(q('.countdown-start'), { color: 'white', duration: 0.1 })
   }
 
   return (
@@ -102,21 +140,15 @@ function HostGameWaiting() {
         </div>
       </div>
 
-      {/* {players.length === 0 && <div className="waiting-players">Waiting for players...</div>} */}
+      {players.length === 0 && <div className="waiting-players"></div>}
 
-      {/* {players.length > 0 && <button className="start-btn" onClick={handleStartGame}>Start</button>} */}
-      <button className="start-btn" onClick={handleStartGame}>Start</button>
+      {players.length > 0 && <button className="start-btn" onClick={handleStartGame}>Start</button>}
 
-      {/* {players.length > 0 &&
+      {players.length > 0 &&
         <div className="members-wrapper">
           <MdGroup className="members-icon" />
           <span className="members-count">{players.length}</span>
-        </div>} */}
-
-      <div className="members-wrapper">
-        <MdGroup className="members-icon" />
-        <span className="members-count">{players.length}</span>
-      </div>
+        </div>}
 
       <div className="members-display-wrapper">
         {players.map(player => (

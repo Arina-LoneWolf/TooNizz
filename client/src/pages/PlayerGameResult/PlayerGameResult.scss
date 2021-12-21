@@ -1,7 +1,6 @@
 @import "../../shared/style/color.scss";
 
 @import url("https://fonts.googleapis.com/css2?family=Mali:wght@500;600;700&display=swap");
-@import url('https://fonts.googleapis.com/css2?family=IM+Fell+DW+Pica+SC&display=swap');
 
 .temporary-container {
   height: 100vh;
@@ -38,12 +37,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-
-    .finish-lb {
-      font-family: 'IM Fell DW Pica SC', serif;
-      font-size: 68px;
-      opacity: 0.8;
-    }
 
     .finish-icon {
       width: 300px;

@@ -73,6 +73,7 @@ $alpha: 0.55;
       // height: 320px;
       height: 45vh;
       border-radius: 8px;
+      // border: 1px dotted #ffffff78;
     }
 
     .control-bar {
@@ -198,5 +199,9 @@ $alpha: 0.55;
     .opt-4 {
       background: rgba($goldenrod, $alpha);
     }
+  }
+
+  .overlay {
+    @include intro-overlay;
   }
 }

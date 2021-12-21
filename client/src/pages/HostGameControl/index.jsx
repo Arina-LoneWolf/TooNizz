@@ -1,17 +1,48 @@
 import './HostGameControl.scss';
-import React from 'react';
+import { gsap } from 'gsap';
+import React, { useEffect, useRef, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { BsPeopleFill, BsStopFill, BsFillCaretRightFill, BsDisplayFill, BsLaptopFill } from 'react-icons/bs';
 import background from '../../assets/images/space-bg-13.jpg';
+import alternative from '../../assets/images/alternative-media.png';
 
 function HostGameControl() {
+  const { state: question } = useLocation();
+  const [currentQuestion, setCurrentQuestion] = useState(question);
+
+  const navigate = useNavigate();
+
+  const intervalRef = useRef();
+
+  const el = useRef();
+  const q = gsap.utils.selector(el);
+
+  useEffect(() => {
+    console.log(currentQuestion);
+    gsap.timeline({
+      onComplete: () => {
+
+      }
+    })
+      .addLabel('fadeIn')
+      .to(q('.overlay'), { opacity: 0, duration: 1 }, 'fadeIn')
+      .to(q('.overlay'), { display: 'none' })
+      .from(q('.question'), { scale: 0, duration: 0.7,  ease: "back.out(0.8)" })
+      .from(q('.answer'), { scale: 0, duration: 0.8})
+      .from(q('.control-bar'), { opacity: 0, duration: 0.8 })
+      .from(q('.media'), { opacity: 0, duration: 0.8 }, '<')
+      .from(q('.question-time'), { opacity: 0, scale: 0, duration: 1 }, '<')
+      .from(q('.question-time'), { color: 'transparent', duration: 1 })
+  }, []);
+
   return (
-    <div className="host-game-control" style={{ backgroundImage: `url(${background})` }}>
+    <div className="host-game-control" ref={el} style={{ backgroundImage: `url(${background})` }}>
       <div className="blur-overlay">
         <div className="question">Which of the following statements are true?</div>
 
         <div className="middle-wrapper">
           <div className="question-time">30</div>
-          <img src="https://cdn.wallpapersafari.com/45/55/wjCLM0.png" alt="" className="media" />
+          <img src={alternative} alt="" className="media" />
           <div className="control-bar">
             <div className="question-number-display">
               <BsLaptopFill className="icon" />
@@ -40,6 +71,8 @@ function HostGameControl() {
           <div className="answer opt-4">French fries originated in France</div>
         </div>
       </div>
+
+      <div className="overlay" />
     </div>
   );
 }

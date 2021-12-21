@@ -19,8 +19,6 @@ function Entry() {
 
   const navigate = useNavigate();
 
-  // const socket = useReactiveVar(socketVar);
-
   const [placeholder, setPlaceholder] = useState('Enter code here');
   const [buttonInnerText, setButtonInnerText] = useState('Join');
 

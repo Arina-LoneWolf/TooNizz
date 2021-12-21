@@ -16,7 +16,7 @@
   background: {
     repeat: no-repeat;
     size: cover;
-    // position: center;
+    position: center;
     attachment: fixed;
   }
 
@@ -109,6 +109,10 @@
     font-size: 36px;
     border: 2px solid white;
     border-radius: 10px;
+
+    &:hover {
+      text-shadow: 0px 0px 10px #9c90c5;
+    }
   }
 
   .waiting-players {
