@@ -14,6 +14,7 @@ const INCORRECT = 'Incorrect';
 const TIME_UP = 'Time Up';
 
 function PlayerGamePlay() {
+  const navigate = useNavigate();
   const { state: { name, firstQuestion } } = useLocation();
   const [currentQuestion, setCurrentQuestion] = useState(firstQuestion);
   const [questionTime, setQuestionTime] = useState(firstQuestion.time * 1000);
@@ -25,6 +26,7 @@ function PlayerGamePlay() {
   const [totalScore, setTotalScore] = useState(0);
   const [questionScore, setQuestionScore] = useState(0);
   const [resultMessage, setResultMessage] = useState(INCORRECT);
+  const [rank, setRank] = useState('');
 
   const performance = window.performance;
   const [timeStart, setTimeStart] = useState(0);
@@ -34,7 +36,7 @@ function PlayerGamePlay() {
   const tlAnswers = useRef();
 
   useEffect(() => {
-    console.log(currentQuestion);
+    console.log('useeffect render');
     gsap.timeline({
       onComplete: () => {
 
@@ -66,11 +68,13 @@ function PlayerGamePlay() {
       }).to(q('.answer'), { scale: 1, duration: 0.4 })
     });
 
-    socket.on('classic:all-players-answered', (score) => {
-      console.log(score);
+    socket.on('classic:all-players-answered', (questionResult) => {
+      console.log('players tra loi xong het', questionResult);
       clearTimeout(timeoutRef.current);
-      setQuestionScore(score);
-      score ? setResultMessage(CORRECT) : setResultMessage(INCORRECT);
+      setQuestionScore(questionResult.score);
+      setTotalScore(questionResult.totalScore);
+      setRank(questionResult.rank);
+      questionResult.score ? setResultMessage(CORRECT) : setResultMessage(INCORRECT);
       setShowResult(true);
     });
 
@@ -79,6 +83,18 @@ function PlayerGamePlay() {
       setCurrentQuestion(question);
       setQuestionTime(question.time);
     });
+
+    socket.on('classic:host-disconnected', () => {
+      navigate('/');
+    });
+
+    return () => {
+      clearTimeout(timeoutRef.current);
+      socket.off('classic:countdown-start-player');
+      socket.off('classic:all-players-answered');
+      socket.off('classic:sv-send-question');
+      socket.off('classic:host-disconnected');
+    }
   }, []);
 
   useEffect(() => {
@@ -95,6 +111,8 @@ function PlayerGamePlay() {
       answers: [currentQuestion.answers[answerNumber]._id]
     }
 
+    clearTimeout(timeoutRef.current);
+    console.log('emit tra loi');
     socket.emit('classic:player-answer', answer);
 
     tlAnswers.current.reverse();
@@ -124,10 +142,10 @@ function PlayerGamePlay() {
 
       {showResult && <div className="question-result">
         <div className="message">{resultMessage}</div>
-        <RiEmotionSadFill className="result-icon" />
+        {questionScore ? <RiEmotionLaughFill className="result-icon" /> : <RiEmotionSadFill className="result-icon" />}
         <div className="result">+{questionScore}</div>
         <div className="current-rank">
-          <span className="rank-message">Your current rank is 3rd</span>
+          <span className="rank-message">Your current rank is {rank}</span>
           <RiMedalFill className="rank-icon" />
         </div>
       </div>}

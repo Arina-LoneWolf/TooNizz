@@ -18,6 +18,11 @@ function GameControl() {
     socket.on('classic:time-up', (result) => {
       console.log(result);
     });
+
+    return () => {
+      socket.off('classic:sv-send-question');
+      socket.off('classic:time-up');
+    }
   }, []);
 
   return (

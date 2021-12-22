@@ -26,6 +26,12 @@ function PlayerGamePlay() {
     socket.on('classic:host-disconnected', () => {
       navigate('/');
     });
+
+    return () => {
+      socket.off('classic:sv-send-question');
+      socket.off('classic:all-players-answered');
+      socket.off('classic:host-disconnected');
+    }
   }, []);
 
   const submitAnswer= (answerNumber) => {

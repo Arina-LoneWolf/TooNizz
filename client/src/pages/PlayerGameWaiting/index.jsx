@@ -34,7 +34,6 @@ function PlayerGameWaiting() {
         .to(messageRef.current, { opacity: 0 }, 'countdownStart')
         .to(countdownRef.current, { display: 'block', width: '100vw', opacity: 1, duration: 0.8, ease: "circ.easeIn" })
         .to(countdownRef.current, { color: 'white', duration: 0.1 })
-      // navigate('/gameplay', { replace: true, state: name });
     });
 
     socket.on('classic:host-disconnected', () => {
@@ -45,6 +44,12 @@ function PlayerGameWaiting() {
       console.log(question);
       setFirstQuestion(question);
     });
+
+    return () => {
+      socket.off('classic:player-start-game');
+      socket.off('classic:host-disconnected');
+      socket.off('classic:sv-send-question');
+    }
   }, []);
 
   useEffect(() => {

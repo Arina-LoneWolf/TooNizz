@@ -32,7 +32,7 @@ function App() {
           <Route path='/' element={<Entry />} />
           <Route path='/lobby' element={<PlayerGameWaiting />} />
           <Route path='/lobby/admin' element={<HostGameWaiting />} />
-          <Route path='/gameplay/' element={<PlayerGamePlay />} />
+          <Route path='/gameplay' element={<PlayerGamePlay />} />
           {/* <Route path='/gameplay/admin/*' element={<HostGamePlay />} /> */}
           <Route path='/gameplay/admin' element={<HostGameControl />} />
           <Route path='/home' element={<Home />} />

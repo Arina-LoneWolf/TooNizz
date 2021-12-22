@@ -12,7 +12,7 @@ export const auth = (token) => {
 
 	let decodedToken;
 	try {
-		decodedToken = jwt.verify(token, '123');
+		decodedToken = jwt.verify(token, ACCESS_TOKEN_SECRET);
 	} catch (err) {
 		throw new ApolloError('Error token', '401');
 	}

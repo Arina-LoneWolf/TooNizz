@@ -66,6 +66,12 @@ function Entry() {
       console.log('entered the room');
       navigate('/lobby', { state: getValues('input') });
     });
+
+    return () => {
+      socket.off('classic:check-game-pin');
+      socket.off('classic:namesake');
+      socket.off('classic:entered-the-room');
+    }
   }, []);
 
   return (

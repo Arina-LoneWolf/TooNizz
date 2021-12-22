@@ -80,7 +80,15 @@ function HostGameWaiting() {
         .to(q('.members-display-wrapper'), { y: '50vh' }, 'start')
         .to(q('.countdown-start'), { display: 'block', width: '100vw', opacity: 1, duration: 0.8, ease: "circ.easeIn" })
         .to(q('.countdown-start'), { color: 'white', duration: 0.1 })
-    })
+    });
+
+    return () => {
+      socket.off('classic:sv-send-game-pin');
+      socket.off('classic:sv-send-question');
+      socket.off('classic:sv-send-info-list-questions');
+      socket.off('classic:update-list-players');
+      socket.off('classic:player-start-game');
+    }
   }, []);
 
   const handleCopyToClipboard = (e) => {

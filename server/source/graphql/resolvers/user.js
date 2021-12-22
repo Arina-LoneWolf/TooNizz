@@ -1,6 +1,7 @@
 import { ApolloError } from 'apollo-server-express';
 import bcrypt from 'bcrypt';
 import { signJwt } from '../../helper/signjwt.js';
+import { sendMail } from '../../helper/sendmail.js';
 
 export default {
 	Query: {
@@ -26,6 +27,10 @@ export default {
 			try {
 				let user = await User.findOne({ email });
 				if (!user) throw new ApolloError('User does not exist', '404');
+
+				if (!user.confirmed) {
+					throw new ApolloError('Please active account', '403');
+				}
 
 				const isMatch = await bcrypt.compare(password, user.password);
 				if (!isMatch) throw new ApolloError('User does not exist', '404');
@@ -54,7 +59,12 @@ export default {
 					email,
 					password: passwordHash,
 				});
+
 				await newUser.save();
+				const token = signJwt(newUser._id);
+				const url = `http://localhost:4000/api/user/confirm/${token}`;
+				sendMail(email, url);
+
 				return {
 					message: 'Register success',
 				};

@@ -51,6 +51,10 @@ function HostGameControl() {
     socket.on('classic:time-up', (data) => {
       console.log('Question result: ', data);
       setQuestionResult(data);
+    });
+
+    socket.on('classic:number-players-answered', (numOfAnswers) => {
+      setAnsweredPeople(numOfAnswers);
     })
 
     socket.on('classic:sv-send-info-list-questions', (questionSetInfo) => {
@@ -62,6 +66,15 @@ function HostGameControl() {
       setCurrentQuestion(question);
       setCountdown(question.time);
     });
+
+    return () => {
+      socket.off('classic:countdown-start-player');
+      socket.off('classic:update-list-players');
+      socket.off('classic:time-up');
+      socket.off('classic:number-players-answered');
+      socket.off('classic:sv-send-info-list-questions');
+      socket.off('classic:sv-send-question');
+    }
   }, []);
 
   useEffect(() => {
