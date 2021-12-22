@@ -8,8 +8,12 @@ import alternative from '../../assets/images/alternative-media.png';
 import socket from '../../shared/socket';
 
 function HostGameControl() {
-  const { state: firstQuestion } = useLocation();
+  const { state: { firstQuestion, totalQuestions, totalPlayers } } = useLocation();
+  const [questionResult, setQuestionResult] = useState({});
   const [currentQuestion, setCurrentQuestion] = useState(firstQuestion);
+  const [currentQuestionNumber, setCurrentQuestionNumber] = useState(0);
+  const [answeredPeople, setAnsweredPeople] = useState(0);
+  const [players, setPlayers] = useState(totalPlayers);
   const [countdown, setCountdown] = useState(firstQuestion.time);
 
   const navigate = useNavigate();
@@ -40,6 +44,19 @@ function HostGameControl() {
       intervalRef.current = setInterval(handleCountdown, 1000);
     });
 
+    socket.on('classic:update-list-players', (playerList) => {
+      setPlayers(playerList.length);
+    });
+
+    socket.on('classic:time-up', (data) => {
+      console.log('Question result: ', data);
+      setQuestionResult(data);
+    })
+
+    socket.on('classic:sv-send-info-list-questions', (questionSetInfo) => {
+      setCurrentQuestionNumber(questionSetInfo.currentQuestions)
+    });
+
     socket.on('classic:sv-send-question', (question) => {
       console.log(question);
       setCurrentQuestion(question);
@@ -60,7 +77,7 @@ function HostGameControl() {
   return (
     <div className="host-game-control" ref={el} style={{ backgroundImage: `url(${background})` }}>
       <div className="blur-overlay">
-        <div className="question">Which of the following statements are true?</div>
+        <div className="question">{currentQuestion.content}</div>
 
         <div className="middle-wrapper">
           <div className="question-time">{countdown}</div>
@@ -68,12 +85,12 @@ function HostGameControl() {
           <div className="control-bar">
             <div className="question-number-display">
               <BsLaptopFill className="icon" />
-              <div className="question-number">1/15</div>
+              <div className="question-number">{currentQuestionNumber + 1}/{totalQuestions}</div>
             </div>
 
             <div className="people-answers-display">
               <BsPeopleFill className="icon" />
-              <div className="people-answers">11/50</div>
+              <div className="people-answers">{answeredPeople}/{players}</div>
             </div>
 
             <div className="next-question-btn">
@@ -87,10 +104,15 @@ function HostGameControl() {
         </div>
 
         <div className="answer-options">
-          <div className="answer opt-1">It is impossible to lick your own elbow</div>
+          {/* <div className="answer opt-1">It is impossible to lick your own elbow</div>
           <div className="answer opt-2">Saturn is the largest planet by surface area</div>
           <div className="answer opt-3">There's no word in the dictionary that rhymes with orange</div>
-          <div className="answer opt-4">French fries originated in France</div>
+          <div className="answer opt-4">French fries originated in France</div> */}
+
+          <div className="answer opt-1">{currentQuestion?.answers[0]?.content}</div>
+          <div className="answer opt-2">{currentQuestion?.answers[1]?.content}</div>
+          <div className="answer opt-3">{currentQuestion?.answers[2]?.content}</div>
+          <div className="answer opt-4">{currentQuestion?.answers[3]?.content}</div>
         </div>
       </div>
 

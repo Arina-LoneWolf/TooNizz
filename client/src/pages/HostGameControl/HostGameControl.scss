@@ -168,10 +168,8 @@ $alpha: 0.55;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 16px;
-    // margin: 0 16px;
 
     .answer {
-      cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;

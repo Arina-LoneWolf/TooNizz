@@ -7,6 +7,7 @@ export const classisModeAll = (io, socket, players, games) => {
 	});
 
 	socket.on('classic:disconnect', (data) => {
+		console.log('DA NHAN SU KIEN DISCONNECT');
 		let checkGamePin = games.filter(
 			(game) => game.gamePin === socket.gamePin,
 		)[0];
@@ -41,6 +42,8 @@ export const classisModeAll = (io, socket, players, games) => {
 	});
 
 	socket.on('classic:host-join', async (questionSetId) => {
+
+		console.log('questionSetId', questionSetId);
 		let gamePin;
 		while (true) {
 			let sameGamePin = false;
@@ -153,6 +156,13 @@ export const classisModeAll = (io, socket, players, games) => {
 					io.in(socket.infoRoom?.gamePin).allSockets(),
 				);
 			}
+		}
+	});
+
+	socket.on('classic:countdown-start-host', () => {
+		let infoGame = games.filter((game) => game.gamePin === socket.gamePin)[0];
+		if (infoGame) {
+			io.in(infoGame.gamePin).emit('classic:countdown-start-player');
 		}
 	});
 
@@ -309,9 +319,13 @@ export const classisModeAll = (io, socket, players, games) => {
 					//classic:allPlayers-answered
 				}
 
+
+
 				let sortScore = allPlayersInRoom.sort((a, b) =>
-					a.score < b.score ? 1 : -1,
+					a.totalScore < b.totalScore ? 1 : -1,
 				);
+
+
 				if (sortScore.length < 5) {
 					sortScore = sortScore.slice(0, sortScore.length);
 				} else {

@@ -21,6 +21,7 @@ function HostGameWaiting() {
   const [players, setPlayers] = useState([]);
   const [countdown, setCountdown] = useState(3);
   const [firstQuestion, setFirstQuestion] = useState({});
+  const [totalQuestions, setTotalQuestions] = useState(0);
   const intervalRef = useRef();
 
   const el = useRef();
@@ -45,8 +46,12 @@ function HostGameWaiting() {
     });
 
     socket.on('classic:sv-send-question', (question) => {
-      console.log(question.answers[0].content);
+      // console.log(question.answers[0].content);
       setFirstQuestion(question);
+    });
+
+    socket.on('classic:sv-send-info-list-questions', (questionSetInfo) => {
+      setTotalQuestions(questionSetInfo.lengthListQuestions)
     });
 
     socket.on('classic:update-list-players', (playerList) => {
@@ -94,7 +99,7 @@ function HostGameWaiting() {
       setTimeout(() => {
         gsap.timeline({
           onComplete: () => {
-            navigate('/gameplay/admin', { replace: true, state: firstQuestion });
+            navigate('/gameplay/admin', { replace: true, state: { firstQuestion, totalQuestions, totalPlayers: players.length } });
           }
         })
           .to(q('.overlay'), { opacity: 1, duration: 1 })

@@ -17,7 +17,7 @@ $alpha: 0.55;
   background: {
     repeat: no-repeat;
     size: cover;
-    // position: center;
+    position: center;
     attachment: fixed;
   }
 
@@ -95,6 +95,7 @@ $alpha: 0.55;
       display: flex;
       align-items: center;
       justify-content: center;
+      transform: scale(0);
 
       .answer-icon {
         opacity: 0.5;
@@ -134,6 +135,71 @@ $alpha: 0.55;
       .answer-icon {
         width: 95px;
         height: 95px;
+      }
+    }
+  }
+
+  .waiting-others {
+    position: fixed;
+    top: 50vh;
+    left: 50vw;
+    transform: translate(-50%, -50%);
+  }
+
+  .question-result {
+    font-family: "Mali", cursive;
+    position: fixed;
+    top: 50vh;
+    left: 50vw;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 0 10px 0 rgba(white, 0.7);
+    border: 1px solid rgba(white, 0.18);
+    background: rgba(white, 0.06);
+    padding: 20px 48px 30px;
+    padding: 32px 65px 52px;
+    border-radius: 10px;
+    backdrop-filter: blur(5px);
+
+    .message {
+      font-size: 42px;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .result-icon {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 20px;
+    }
+
+    .result {
+      background: rgba(black, 0.3);
+      text-align: center;
+      font-size: 22px;
+      width: 136px;
+      line-height: 38px;
+      border-radius: 4px;
+      margin-bottom: 10px;
+      font-weight: 500;
+    }
+
+    .current-rank {
+      display: flex;
+      align-items: center;
+
+      .rank-message {
+        font-size: 18px;
+        white-space: nowrap;
+      }
+
+      .rank-icon {
+        margin-left: 5px;
+        margin-top: 2px;
+        width: 17px;
+        height: 17px;
       }
     }
   }
