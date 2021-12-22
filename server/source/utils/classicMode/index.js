@@ -188,6 +188,14 @@ export const classisModeAll = (io, socket, players, games) => {
 		}
 	});
 
+	//host gửi lên khi câu hỏi bắt đầu tính thời gian
+	socket.on('classic:countdown-start-host', () => {
+		let infoGame = games.filter((game) => game.gamePin === socket.gamePin)[0];
+		if (infoGame) {
+			io.in(infoGame.gamePin).emit('classic:countdown-start-player');
+		}
+	});
+
 	socket.on('classic:host-start-game', (data) => {
 		let infoGame = games.filter((game) => game.gamePin === socket.gamePin)[0];
 		//console.log(infoGame);
@@ -197,7 +205,7 @@ export const classisModeAll = (io, socket, players, games) => {
 			io.in(infoGame.gamePin).emit('classic:player-start-game');
 			//lấy ra 1 câu hỏi
 			//dùng lodash để deep copy nested object
-			let newListQuestion = _.cloneDeep(infoGame.listQuestions[3]); //{ ...infoGame }; //.listQuestions[0] };
+			let newListQuestion = _.cloneDeep(infoGame.listQuestions[0]); //{ ...infoGame }; //.listQuestions[0] };
 
 			//xóa trường isCorrect trong phần đáp án
 			for (let j = 0; j < newListQuestion.answers.length; j++) {
@@ -251,7 +259,7 @@ export const classisModeAll = (io, socket, players, games) => {
 		)[0];
 
 		let indexQuestion = infoGame.gameData.currentQuestion;
-		let currentQuestion = infoGame.listQuestions[3]; //indexQuestion
+		let currentQuestion = infoGame.listQuestions[/*3*/ indexQuestion]; //indexQuestion
 
 		//danh sách toàn bộ ng chơi
 		let allPlayersInRoom = players.filter(
@@ -450,6 +458,15 @@ export const classisModeAll = (io, socket, players, games) => {
 				let sortScore = allPlayersInRoom.sort((a, b) =>
 					a.totalScore < b.totalScore ? 1 : -1,
 				);
+
+				for (let i = 0; i < sortScore.length; i++) {
+					let indexArr = i + 1;
+					io.to(sortScore[i].id).emit('classic:totalscore-rank-player', {
+						totalScore: sortScore[i].totalScore,
+						rank: ordinalSuffixOf(indexArr),
+					});
+				}
+
 				if (sortScore.length < 5) {
 					sortScore = sortScore.slice(0, sortScore.length);
 				} else {
@@ -470,6 +487,10 @@ export const classisModeAll = (io, socket, players, games) => {
 				}
 				//}
 
+				// là khi mọi ng trả lời xong hết thì sv sẽ gửi sk này
+				// trả về đáp án đúng
+				// số ng trả lời
+				// rank điểm top 5
 				io.to(infoGame.idHost).emit('classic:time-up', {
 					correctAnswer,
 					countAnswer: dataPlayersAnswered,
@@ -482,4 +503,18 @@ export const classisModeAll = (io, socket, players, games) => {
 		}
 	});
 };
-1;
+
+function ordinalSuffixOf(i) {
+	let j = i % 10,
+		k = i % 100;
+	if (j == 1 && k != 11) {
+		return i + 'st';
+	}
+	if (j == 2 && k != 12) {
+		return i + 'nd';
+	}
+	if (j == 3 && k != 13) {
+		return i + 'rd';
+	}
+	return i + 'th';
+}

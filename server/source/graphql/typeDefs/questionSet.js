@@ -12,6 +12,7 @@ export default gql`
 
 	extend type Mutation {
 		createQuestionSet(newQuestionSet: newQuestionSet!): Message!
+		editQuestionSet(questionSetId: String!): Message!
 	}
 
 	input newQuestionSet {

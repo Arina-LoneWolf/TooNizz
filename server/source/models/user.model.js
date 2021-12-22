@@ -24,6 +24,10 @@ const userSchema = new mongoose.Schema(
 			trim: true,
 			default: [],
 		},
+		confirmed: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	{
 		timestamps: true,

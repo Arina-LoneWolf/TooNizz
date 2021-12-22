@@ -1,3 +1,5 @@
+import { ApolloError } from 'apollo-server-express';
+
 export default {
 	Query: {
 		getQuestionSetsByUserId: async (
@@ -47,6 +49,16 @@ export default {
 				return { message: 'Create questionSet success' };
 			} catch (error) {
 				console.log(error);
+			}
+		},
+		editQuestionSet: async (parent, { questionSetId }, { Question }, info) => {
+			try {
+				console.log(questionSetId);
+				return {
+					message: 'Edit questionSet success',
+				};
+			} catch (error) {
+				throw new ApolloError(error.message, '500');
 			}
 		},
 	},
