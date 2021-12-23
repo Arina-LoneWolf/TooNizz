@@ -444,63 +444,202 @@ export const classisModeAll = (io, socket, players, games) => {
 				}
 			} else if (currentQuestion.type === 5) {
 			}
-
-			//nếu mọi ng trả lời xong
-			if (allPlayersInRoom.length === infoGame.gameData.numberPlayerAnswered) {
-				for (let i = 0; i < currentQuestion.listPlayersAnswer.length; i++) {
-					io.to(currentQuestion.listPlayersAnswer[i].id).emit(
-						'classic:all-players-answered',
-						currentQuestion.listPlayersAnswer[i].score,
-					);
-					//classic:allPlayers-answered
-				}
-
-				let sortScore = allPlayersInRoom.sort((a, b) =>
-					a.totalScore < b.totalScore ? 1 : -1,
-				);
-
-				for (let i = 0; i < sortScore.length; i++) {
-					let indexArr = i + 1;
-					io.to(sortScore[i].id).emit('classic:totalscore-rank-player', {
-						totalScore: sortScore[i].totalScore,
-						rank: ordinalSuffixOf(indexArr),
-					});
-				}
-
-				if (sortScore.length < 5) {
-					sortScore = sortScore.slice(0, sortScore.length);
-				} else {
-					sortScore = sortScore.slice(0, 5);
-				}
-				sortScore = sortScore.map((player) => {
-					return { name: player.name, score: player.totalScore };
-				});
-
-				let dataPlayersAnswered = [];
-				let correctAnswer = [];
-				//if (currentQuestion.type === 1 || currentQuestion.type === 3) {
-				for (let i = 0; i < currentQuestion.answers.length; i++) {
-					if (currentQuestion.answers[i].isCorrect) {
-						correctAnswer.push(currentQuestion.answers[i]);
-					}
-					dataPlayersAnswered.push(currentQuestion.answers[i]);
-				}
-				//}
-
-				// là khi mọi ng trả lời xong hết thì sv sẽ gửi sk này
-				// trả về đáp án đúng
-				// số ng trả lời
-				// rank điểm top 5
-				io.to(infoGame.idHost).emit('classic:time-up', {
-					correctAnswer,
-					countAnswer: dataPlayersAnswered,
-					playerRank: sortScore,
-				});
-				console.log('countAnswer', dataPlayersAnswered);
-			} else {
-			}
-			console.log('số ng đa trả lời', infoGame.gameData.numberPlayerAnswered);
 		}
+
+		//nếu mọi ng trả lời xong
+		if (allPlayersInRoom.length === infoGame.gameData.numberPlayerAnswered) {
+			// for (let i = 0; i < currentQuestion.listPlayersAnswer.length; i++) {
+			// 	io.to(currentQuestion.listPlayersAnswer[i].id).emit(
+			// 		'classic:all-players-answered',
+			// 		currentQuestion.listPlayersAnswer[i].score,
+			// 	);
+			// }
+
+			let sortScore = allPlayersInRoom.sort((a, b) =>
+				a.totalScore < b.totalScore ? 1 : -1,
+			);
+
+			for (let i = 0; i < sortScore.length; i++) {
+				let score = 0;
+				for (let j = 0; j < currentQuestion.listPlayersAnswer.length; j++) {
+					if (currentQuestion.listPlayersAnswer[j].id === sortScore[i].id) {
+						score = currentQuestion.listPlayersAnswer[j].score;
+					}
+				}
+				//let indexArr = i + 1;
+				io.to(sortScore[i].id).emit('classic:all-players-answered', {
+					score,
+					totalScore: sortScore[i].totalScore,
+					rank: ordinalSuffixOf(i + 1),
+				});
+			}
+
+			if (sortScore.length < 5) {
+				sortScore = sortScore.slice(0, sortScore.length);
+			} else {
+				sortScore = sortScore.slice(0, 5);
+			}
+			sortScore = sortScore.map((player) => {
+				return { name: player.name, score: player.totalScore };
+			});
+
+			let dataPlayersAnswered = [];
+			let correctAnswer = [];
+			//if (currentQuestion.type === 1 || currentQuestion.type === 3) {
+			for (let i = 0; i < currentQuestion.answers.length; i++) {
+				if (currentQuestion.answers[i].isCorrect) {
+					correctAnswer.push(currentQuestion.answers[i]);
+				}
+				dataPlayersAnswered.push(currentQuestion.answers[i]);
+			}
+			//}
+
+			// là khi mọi ng trả lời xong hết thì sv sẽ gửi sk này
+			// trả về đáp án đúng
+			// số ng trả lời
+			// rank điểm top 5
+			io.to(infoGame.idHost).emit('classic:time-up', {
+				correctAnswer,
+				countAnswer: dataPlayersAnswered,
+				playerRank: sortScore,
+			});
+			console.log('countAnswer', dataPlayersAnswered);
+		} else {
+		}
+
+		//nếu là câu hỏi cuối cùng
+		if (indexQuestion === infoGame.listQuestions.length - 1) {
+			const allQuestions = infoGame.listQuestions;
+
+			let namePlayersArr = [];
+			let nameQuestionsArr = [];
+
+			//currentQuestion.listPlayersAnswer;
+			let sortScore = allPlayersInRoom.sort((a, b) =>
+				a.totalScore < b.totalScore ? 1 : -1,
+			);
+
+			//cho ng chơi
+			for (let i = 0; i < sortScore.length; i++) {
+				let countNoAnswered = 0;
+				let countCorrectAnswered = 0;
+				let detailAllQuestions = [];
+
+				for (let j = 0; j < allQuestions.length; j++) {
+					//cho ng chơi
+					for (let z = 0; z < allQuestions[j].listPlayersAnswer.length; z++) {
+						if (sortScore[i].id === allQuestions[j].listPlayersAnswer[z].id) {
+							detailAllQuestions.push({
+								content: allQuestions[j].content,
+								type: allQuestions[j].type,
+								answered: allQuestions[j].listPlayersAnswer[z].answer,
+								correct: allQuestions[j].listPlayersAnswer[z].correct,
+								time: allQuestions[j].listPlayersAnswer[z].time,
+								score: allQuestions[j].listPlayersAnswer[z].score,
+							});
+
+							if (allQuestions[j].listPlayersAnswer[z].time === -1) {
+								countNoAnswered++;
+							}
+
+							if (allQuestions[j].listPlayersAnswer[z].correct) {
+								countCorrectAnswered++;
+							}
+						}
+					}
+				}
+
+				//tỉ lệ đúng của player
+				let correctPercentAnswers = 0;
+				if (allQuestions.length !== 0) {
+					correctPercentAnswers = Math.round(
+						(countCorrectAnswered / allQuestions.length) * 100,
+					);
+				}
+
+				namePlayersArr.push({
+					name: sortScore[i].name,
+					rank: i + 1,
+					correctPercentAnswers: correctPercentAnswers,
+					unAnswered: countNoAnswered,
+					finalScore: sortScore[i].totalScore,
+					detailAllQuestions: detailAllQuestions,
+				});
+			}
+
+			//cho câu hỏi
+			for (let j = 0; j < allQuestions.length; j++) {
+				let countCorrectForQuestion = 0;
+				let countWrongForQuestion = 0;
+				let avgAnswersTime = 0;
+				let detailAllPlayers = [];
+
+				//cho câu hỏi
+				for (let k = 0; k < allQuestions[j].answers.length; k++) {
+					// đếm những ng trả lời đúng cho 1 câu
+					if (allQuestions[j].answers[k].isCorrect) {
+						countCorrectForQuestion +=
+							allQuestions[j].answers[k].countPlayerAnswer;
+					} else {
+						// đếm những ng trả lời sai cho 1 câu
+						countWrongForQuestion +=
+							allQuestions[j].answers[k].countPlayerAnswer;
+					}
+				}
+				//tỉ lệ đúng của câu hỏi
+				countWrongForQuestion += allQuestions[j].countPlayerNoAnswer;
+				let percentRight = 0;
+				if (countCorrectForQuestion + countWrongForQuestion !== 0) {
+					percentRight = Math.round(
+						(countCorrectForQuestion /
+							(countCorrectForQuestion + countWrongForQuestion)) *
+							100,
+					);
+				}
+
+				for (let z = 0; z < allQuestions[j].listPlayersAnswer.length; z++) {
+					//tính thời gian trlời tb cho 1 câu hỏi (B1)
+					if (allQuestions[j].listPlayersAnswer[z].time !== -1) {
+						avgAnswersTime += allQuestions[j].listPlayersAnswer[z].time;
+					}
+
+					if ((allQuestions[j].type === 1) | (allQuestions[j].type === 3)) {
+						/*nameQuestionsArr*/ detailAllPlayers.push({
+							name: allQuestions[j].listPlayersAnswer[z].name,
+							answered: allQuestions[j].listPlayersAnswer[z].answer,
+							correct: allQuestions[j].listPlayersAnswer[z].correct,
+							time: allQuestions[j].listPlayersAnswer[z].time,
+							score: allQuestions[j].listPlayersAnswer[z].score,
+						});
+					}
+				}
+
+				//tính thời gian trlời tb cho 1 câu hỏi (B2)
+				if (allQuestions[j].listPlayersAnswer.length !== 0) {
+					avgAnswersTime = (
+						avgAnswersTime / allQuestions[j].listPlayersAnswer.length
+					).toFixed(2);
+				}
+
+				let cloneNewQuestion = _.cloneDeep(allQuestions[j]);
+				delete cloneNewQuestion.listPlayersAnswer;
+
+				nameQuestionsArr.push({
+					dataQuestion: cloneNewQuestion,
+					percentRight,
+					avgAnswersTime,
+					playersAnswered:
+						allQuestions[j].listPlayersAnswer.length -
+						allQuestions[j].countPlayerNoAnswer,
+					allPlayers: allQuestions[j].listPlayersAnswer.length,
+					detailAllPlayers: detailAllPlayers,
+				});
+			}
+
+			console.log(namePlayersArr);
+		}
+
+		console.log('số ng đa trả lời', infoGame.gameData.numberPlayerAnswered);
 	});
 };
 

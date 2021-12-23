@@ -117,8 +117,8 @@ function getNumberWithOrdinal(n) {
 }
 
 [
-	-4, -1, 0, 1, 2, 3, 4, 10, 11, 12, 13, 14, 20, 21, 22, 100, 101, 111, 112,
+	-4, -1, 0, 1, 2, 3, 4, 10, 11, 12, 13, 14, 20, 21, 22, 100, 101, 1112, 112,
 	113, 221,
-].forEach((n) => console.log(n + ' -> ' + typeof ordinal_suffix_of(n)));
+].forEach((n) => console.log(n + ' -> ' + ordinal_suffix_of(n)));
 
 //--inspect
