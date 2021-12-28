@@ -100,25 +100,18 @@ function ordinal_suffix_of(i) {
 	return i + 'th';
 }
 
-let rankScore = [900, 805, 741, 620, 400, 324, 236, 172, 90];
-for (let i = 0; i < rankScore.length; i++) {
-	let indexArr = i + 1; //rankScore.indexOf(rankScore[i]) + 1;
-	console.log(indexArr);
-	//if()
-}
+// let rankScore = [900, 805, 741, 620, 400, 324, 236, 172, 90];
+// for (let i = 0; i < rankScore.length; i++) {
+// 	let indexArr = i + 1; //rankScore.indexOf(rankScore[i]) + 1;
+// 	console.log(indexArr);
+// 	//if()
+// }
 
 // console.log('dem un', 0 === undefined);
 //console.log('kool11', kool11);
 
-function getNumberWithOrdinal(n) {
-	let s = ['th', 'st', 'nd', 'rd'],
-		v = n % 100;
-	return n + (s[(v - 20) % 10] || s[v] || s[0]);
-}
-
-[
-	-4, -1, 0, 1, 2, 3, 4, 10, 11, 12, 13, 14, 20, 21, 22, 100, 101, 1112, 112,
-	113, 221,
-].forEach((n) => console.log(n + ' -> ' + ordinal_suffix_of(n)));
+let date = new Date('2021-12-28T18:33:12.633Z');
+date = date.toUTCString().split(' ');
+console.log(date);
 
 //--inspect

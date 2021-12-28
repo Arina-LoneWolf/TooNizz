@@ -2,35 +2,147 @@ import mongoose from 'mongoose';
 
 const reportSchema = new mongoose.Schema(
 	{
-		userId: {
-			type: mongoose.Schema.Types.ObjectId,
-			ref: 'Users',
-			required: true,
-		},
 		name: {
 			type: String,
 			required: true,
 		},
-		tag: {
-			type: [String],
-			trim: true,
-			require: true,
+		gameMode: {
+			type: String,
+			required: true,
 		},
-		cover: {
+		players: [
+			{
+				name: {
+					type: String,
+					require: true,
+				},
+				rank: {
+					type: Number,
+					require: true,
+				},
+				correctPercentAnswers: {
+					type: Number,
+					require: true,
+				},
+				unAnswered: {
+					type: Number,
+					require: true,
+				},
+				finalScore: {
+					type: Number,
+					require: true,
+				},
+				detailAllQuestions: [
+					{
+						content: {
+							type: String,
+							require: true,
+						},
+						type: {
+							type: Number,
+							require: true,
+						},
+						answered: [String],
+						correct: Boolean,
+						time: Number,
+						score: Number,
+					},
+				],
+			},
+		],
+		questions: [
+			{
+				dataQuestion: [
+					{
+						content: {
+							type: String,
+							require: true,
+						},
+						image: {
+							type: String,
+							default: '',
+						},
+						video: {
+							type: String,
+							default: '',
+						},
+						audio: {
+							type: String,
+							default: '',
+						},
+						type: {
+							type: Number,
+							require: true,
+						},
+						answers: [
+							{
+								content: {
+									type: String,
+									require: true,
+								},
+								image: {
+									type: String,
+									default: '',
+								},
+								isCorrect: {
+									type: Boolean,
+									default: false,
+								},
+								votes: {
+									type: Number,
+									default: 0,
+								},
+								countPlayerAnswer: Number,
+							},
+						],
+						time: {
+							type: Number,
+							default: 15,
+						},
+						score: {
+							type: Number,
+						},
+						typeAnswers: {
+							type: [
+								{
+									value: String,
+									countPlayerAnswer: Number,
+								},
+							],
+							trim: true,
+							default: [],
+						},
+						explanation: {
+							type: String,
+							default: '',
+						},
+						doubleScore: {
+							type: Boolean,
+							default: false,
+						},
+						haveScore: {
+							type: Boolean,
+							default: true,
+						},
+						countPlayerNoAnswer: Number,
+					},
+				],
+				percentRight: Number,
+				avgAnswersTime: Number,
+				detailAllPlayers: [
+					{
+						name: String,
+						answered: [String],
+						correct: Boolean,
+						time: Number,
+						score: Number,
+					},
+				],
+			},
+		],
+		exist: {
 			type: String,
 			default: '',
-		},
-		isPublic: {
-			type: Boolean,
-			default: true,
-		},
-		likes: {
-			type: Number,
-			default: 0,
-		},
-		played: {
-			type: Number,
-			default: 0,
 		},
 	},
 	{
