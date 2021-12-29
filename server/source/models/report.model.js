@@ -52,81 +52,80 @@ const reportSchema = new mongoose.Schema(
 		],
 		questions: [
 			{
-				dataQuestion: [
-					{
-						content: {
-							type: String,
-							require: true,
+				dataQuestion: {
+					content: {
+						type: String,
+						require: true,
+					},
+					image: {
+						type: String,
+						default: '',
+					},
+					video: {
+						type: String,
+						default: '',
+					},
+					audio: {
+						type: String,
+						default: '',
+					},
+					type: {
+						type: Number,
+						require: true,
+					},
+					answers: [
+						{
+							content: {
+								type: String,
+								require: true,
+							},
+							image: {
+								type: String,
+								default: '',
+							},
+							isCorrect: {
+								type: Boolean,
+								default: false,
+							},
+							votes: {
+								type: Number,
+								default: 0,
+							},
+							countPlayerAnswer: Number,
 						},
-						image: {
-							type: String,
-							default: '',
-						},
-						video: {
-							type: String,
-							default: '',
-						},
-						audio: {
-							type: String,
-							default: '',
-						},
-						type: {
-							type: Number,
-							require: true,
-						},
-						answers: [
+					],
+					time: {
+						type: Number,
+						default: 15,
+					},
+					score: {
+						type: Number,
+					},
+					typeAnswers: {
+						type: [
 							{
-								content: {
-									type: String,
-									require: true,
-								},
-								image: {
-									type: String,
-									default: '',
-								},
-								isCorrect: {
-									type: Boolean,
-									default: false,
-								},
-								votes: {
-									type: Number,
-									default: 0,
-								},
+								value: String,
 								countPlayerAnswer: Number,
 							},
 						],
-						time: {
-							type: Number,
-							default: 15,
-						},
-						score: {
-							type: Number,
-						},
-						typeAnswers: {
-							type: [
-								{
-									value: String,
-									countPlayerAnswer: Number,
-								},
-							],
-							trim: true,
-							default: [],
-						},
-						explanation: {
-							type: String,
-							default: '',
-						},
-						doubleScore: {
-							type: Boolean,
-							default: false,
-						},
-						haveScore: {
-							type: Boolean,
-							default: true,
-						},
-						countPlayerNoAnswer: Number,
+						trim: true,
+						default: [],
 					},
-				],
+					explanation: {
+						type: String,
+						default: '',
+					},
+					doubleScore: {
+						type: Boolean,
+						default: false,
+					},
+					haveScore: {
+						type: Boolean,
+						default: true,
+					},
+					countPlayerNoAnswer: Number,
+				},
+
 				percentRight: Number,
 				avgAnswersTime: Number,
 				detailAllPlayers: [

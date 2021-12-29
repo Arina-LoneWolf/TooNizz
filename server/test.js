@@ -110,8 +110,26 @@ function ordinal_suffix_of(i) {
 // console.log('dem un', 0 === undefined);
 //console.log('kool11', kool11);
 
-let date = new Date('2021-12-28T18:33:12.633Z');
-date = date.toUTCString().split(' ');
-console.log(date);
+// let date = new Date('2021-12-28T18:33:12.633Z');
+// date = date.toUTCString().split(' ');
+// console.log();
+
+const kokod = [
+	'mình víp',
+	'loo',
+	'lp',
+	'22',
+	'das',
+	'nhật',
+	'nghãi quý',
+	'minh sinh',
+	'12786',
+];
+
+kokod.sort((a, b) => {
+	return a.localeCompare(b);
+});
+
+console.log(kokod[1]);
 
 //--inspect
