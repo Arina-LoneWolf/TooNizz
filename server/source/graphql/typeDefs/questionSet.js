@@ -8,11 +8,32 @@ export default gql`
 			limit: Int
 			sort: Int
 		): QuestionSetPaginator!
+
+		GetQuestionSetsUserLiked: [QuestionSet]! @auth
+
+		SearchQuestionSets(
+			textSearch: String!
+			page: Int
+			limit: Int
+			sort: Int
+			typeSort: typeSortQuestionSetSearch
+			tag: String
+			userId: String
+		): [QuestionSet]!
 	}
 
 	extend type Mutation {
 		createQuestionSet(newQuestionSet: newQuestionSet!): Message!
-		editQuestionSet(questionSetId: String!): Message!
+		editQuestionSet(infoQuestionSet: editQuestionSet): MessageUpdateQuestionSet!
+		likeQuestionSet(questionSetId: String!): MessageUpdateQuestionSet! @auth
+	}
+
+	input editQuestionSet {
+		id: ID!
+		name: String
+		tag: [String]
+		cover: String
+		isPublic: Boolean
 	}
 
 	input newQuestionSet {
@@ -38,7 +59,20 @@ export default gql`
 		cover: String
 		isPublic: Boolean
 		played: Int
+		likes: Int
+		liked: Boolean
 		createdAt: String
 		updatedAt: String
+	}
+
+	type MessageUpdateQuestionSet {
+		message: String!
+		questionSet: QuestionSet!
+	}
+
+	enum typeSortQuestionSetSearch {
+		played
+		createdAt
+		likes
 	}
 `;

@@ -96,6 +96,7 @@ export const classisModeAll = (io, socket, players, games) => {
 		gamePin = gamePin.toString();
 		socket.gamePin = gamePin;
 		games.push({
+			questionSetId,
 			live: false,
 			name: nameQuestionSet.name,
 			mode: 'Classic',
@@ -201,7 +202,7 @@ export const classisModeAll = (io, socket, players, games) => {
 		}
 	});
 
-	socket.on('classic:host-start-game', (data) => {
+	socket.on('classic:host-start-game', async (data) => {
 		let infoGame = games.filter((game) => game.gamePin === socket.gamePin)[0];
 		//console.log(infoGame);
 		if (infoGame) {
@@ -218,6 +219,17 @@ export const classisModeAll = (io, socket, players, games) => {
 			}
 
 			io.in(infoGame.gamePin).emit('classic:sv-send-question', newListQuestion);
+
+			await questionSet.findByIdAndUpdate(
+				{
+					_id: infoGame.questionSetId,
+				},
+				{
+					$inc: {
+						played: 1,
+					},
+				},
+			);
 
 			// if (infoGame.gameData.currentQuestion + 1 < infoGame.listQuestions.length)
 			// 	infoGame.gameData.currentQuestion += 1;

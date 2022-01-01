@@ -25,8 +25,9 @@ const questionSetSchema = new mongoose.Schema(
 			default: true,
 		},
 		likes: {
-			type: Number,
-			default: 0,
+			type: [String],
+			trim: true,
+			default: [],
 		},
 		played: {
 			type: Number,

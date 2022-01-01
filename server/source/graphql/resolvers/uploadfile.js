@@ -4,8 +4,17 @@ import xlsx from 'xlsx';
 import { fileURLToPath } from 'url';
 import { dirname, parse } from 'path';
 import { finished } from 'stream/promises';
+import { ApolloError } from 'apollo-server-express';
+import cloudinary from 'cloudinary';
+import { CLOUD_NAME, CLOUD_KEY, CLOUD_SECRET } from '../../config/index.js';
 
 import { GraphQLUpload } from 'graphql-upload';
+
+cloudinary.config({
+	cloud_name: CLOUD_NAME,
+	api_key: CLOUD_KEY,
+	api_secret: CLOUD_SECRET,
+});
 
 export default {
 	Upload: GraphQLUpload,
@@ -415,6 +424,49 @@ export default {
 				};
 			} catch (error) {
 				console.error(error);
+				throw new ApolloError(error.message, '500');
+			}
+		},
+
+		uploadImage: async (parent, { file }, _) => {
+			try {
+				const { createReadStream, filename, mimetype, encoding } = await file;
+				const { ext, name } = parse(filename);
+				if (ext !== '.jpg' && ext !== '.png' && ext !== '.jpeg') {
+					console.log('vao day image', ext);
+					return {
+						message: 'Wrong ext file',
+					};
+				}
+
+				const stream = createReadStream();
+				const __filename = fileURLToPath(import.meta.url);
+				const __dirname = dirname(__filename);
+				const out = fs.createWriteStream(
+					path.join(__dirname, `../../../FileUpload/${filename}`),
+				);
+
+				let dirFile = path.join(__dirname, `../../../FileUpload/${filename}`);
+				await stream.pipe(out);
+				await finished(out);
+
+				let upload_stream = await cloudinary.v2.uploader.upload(dirFile, {
+					resource_type: 'image',
+				});
+
+				if (fs.existsSync(dirFile)) {
+					console.log('vào xóa file image');
+					fs.unlink(dirFile, (err) => {
+						if (err) throw err;
+						console.log('successfully deleted image');
+					});
+				}
+
+				return {
+					message: upload_stream.secure_url,
+				};
+			} catch (error) {
+				throw new ApolloError(error.message, '500');
 			}
 		},
 	},

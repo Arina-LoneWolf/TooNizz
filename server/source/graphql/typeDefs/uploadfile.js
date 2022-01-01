@@ -9,5 +9,6 @@ export default gql`
 
 	extend type Mutation {
 		uploadFileExcel(file: Upload!, questionSetId: String!): Message
+		uploadImage(file: Upload!): Message
 	}
 `;
