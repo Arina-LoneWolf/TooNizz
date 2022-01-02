@@ -5,33 +5,64 @@ export default {
 	Query: {
 		getQuestionSetsByUserId: async (
 			parent,
-			{ userId, page, limit, sort },
-			{ questionSet },
+			{ page, limit, sort, typeSort },
+			{ idUser, questionSet, Question },
 			info,
 		) => {
 			try {
-				const options = {
-					page: page || 1,
-					limit: limit || 10,
-					sort: {
-						createdAt: sort || -1,
-					},
-				};
-				const startIndex = (options.page - 1) * options.limit;
+				const pageA = page || 1;
+				const limitA = limit || 10;
+				const startIndex = (pageA - 1) * limitA;
+				let sortData = null;
+				if (typeSort) {
+					if (typeSort === 'name') {
+						sortData = { name: sort };
+					} else if (typeSort === 'createdAt') {
+						sortData = { createdAt: sort };
+					}
+				}
 
-				const data = await questionSet
-					.find({ userId })
-					.sort(options.sort)
+				const newQuestionSets = await questionSet
+					.find({ userId: idUser })
+					.populate({
+						path: 'userId',
+						select: 'name -_id',
+					})
 					.skip(startIndex)
-					.limit(options.limit)
+					.limit(limitA)
+					.sort(sortData)
+					.lean()
 					.exec();
-				const countQuestionSets = await questionSet
-					.countDocuments({ userId })
+
+				let countQuestionSets = await questionSet
+					.countDocuments({ userId: idUser })
 					.exec();
+
+				countQuestionSets = Math.ceil(countQuestionSets / limitA);
+
+				//console.log(newQuestionSets);
+
+				for (let i = 0; i < newQuestionSets.length; i++) {
+					newQuestionSets[i].id = newQuestionSets[i]._id;
+					const dataQuestion = await Question.find({
+						questionSetId: newQuestionSets[i]._id,
+					});
+					delete newQuestionSets[i]._id;
+
+					if (newQuestionSets[i].likes.includes(idUser)) {
+						newQuestionSets[i].liked = true;
+					} else {
+						newQuestionSets[i].liked = false;
+					}
+					newQuestionSets[i].likes = newQuestionSets[i].likes.length;
+					newQuestionSets[i].nameUser = newQuestionSets[i].userId.name;
+					newQuestionSets[i].questionLength = dataQuestion.length;
+				}
+
 				return {
-					questionSets: data,
-					totalPages: Math.ceil(countQuestionSets / options.limit),
-					page: options.page,
+					questionSets: newQuestionSets,
+					totalPages: countQuestionSets,
+					page: pageA,
 				};
 			} catch (error) {
 				console.log(error);
@@ -41,25 +72,85 @@ export default {
 
 		GetQuestionSetsUserLiked: async (
 			parent,
-			{ page, limit, sort },
-			{ idUser, questionSet },
+			{ page, limit, sort, typeSort },
+			{ idUser, questionSet, Question },
 			info,
 		) => {
 			try {
+				const pageA = page || 1;
+				const limitA = limit || 10;
+				const startIndex = (pageA - 1) * limitA;
+				let sortData = null;
+				if (typeSort) {
+					if (typeSort === 'name') {
+						sortData = { name: sort };
+					} else if (typeSort === 'createdAt') {
+						sortData = { createdAt: sort };
+					}
+				}
+
+				let countQuestionSets = await questionSet.countDocuments({
+					$or: [
+						{
+							likes: { $in: [idUser] },
+							isPublic: true,
+						},
+						{
+							likes: { $in: [idUser] },
+							userId: idUser,
+						},
+					],
+				});
+				//console.log('TONG', countQuestionSets);
+
+				countQuestionSets = Math.ceil(countQuestionSets / limitA);
+
 				const newQuestionSets = await questionSet
 					.find({
-						likes: { $in: [idUser] },
+						$or: [
+							{
+								likes: { $in: [idUser] },
+								isPublic: true,
+							},
+							{
+								likes: { $in: [idUser] },
+								userId: idUser,
+							},
+						],
 					})
+					.populate({
+						path: 'userId',
+						select: 'name -_id',
+					})
+					.skip(startIndex)
+					.limit(limitA)
+					.sort(sortData)
 					.lean();
 
 				for (let i = 0; i < newQuestionSets.length; i++) {
 					newQuestionSets[i].id = newQuestionSets[i]._id;
+					const dataQuestion = await Question.find({
+						questionSetId: newQuestionSets[i]._id,
+					});
 					delete newQuestionSets[i]._id;
+
+					if (newQuestionSets[i].likes.includes(idUser)) {
+						newQuestionSets[i].liked = true;
+					} else {
+						newQuestionSets[i].liked = false;
+					}
+					newQuestionSets[i].likes = newQuestionSets[i].likes.length;
+					newQuestionSets[i].nameUser = newQuestionSets[i].userId.name;
+					newQuestionSets[i].questionLength = dataQuestion.length;
 				}
 
-				//console.log(newQuestionSets);
+				console.log(newQuestionSets);
 
-				return newQuestionSets;
+				return {
+					questionSets: newQuestionSets,
+					totalPages: countQuestionSets,
+					page: pageA,
+				};
 			} catch (error) {
 				throw new ApolloError(error.message, '500');
 			}
@@ -68,7 +159,7 @@ export default {
 		SearchQuestionSets: async (
 			parent,
 			{ textSearch, page, limit, sort, typeSort, tag, userId },
-			{ questionSet },
+			{ questionSet, Question },
 			info,
 		) => {
 			try {
@@ -87,7 +178,7 @@ export default {
 					}
 				}
 
-				console.log('pageA', pageA);
+				//console.log('pageA', pageA);
 				//console.log('typeSort', typeSort);
 
 				const startIndex = (pageA - 1) * limitA;
@@ -112,6 +203,10 @@ export default {
 							isPublic: true,
 							tag: { $in: [tag] },
 						})
+						.populate({
+							path: 'userId',
+							select: 'name -_id',
+						})
 						.skip(startIndex)
 						.limit(limitA)
 						.sort(sortData)
@@ -130,15 +225,21 @@ export default {
 							name: { $regex, $options: '$i' },
 							isPublic: true,
 						})
+						.populate({
+							path: 'userId',
+							select: 'name -_id',
+						})
 						.skip(startIndex)
 						.limit(limitA)
 						.sort(sortData)
 						.lean();
 				}
 
-				//if (userId) {
 				for (let i = 0; i < newQuestionSets.length; i++) {
 					newQuestionSets[i].id = newQuestionSets[i]._id;
+					const dataQuestion = await Question.find({
+						questionSetId: newQuestionSets[i]._id,
+					});
 					delete newQuestionSets[i]._id;
 					if (newQuestionSets[i].likes.includes(userId)) {
 						newQuestionSets[i].liked = true;
@@ -146,19 +247,19 @@ export default {
 						newQuestionSets[i].liked = false;
 					}
 					newQuestionSets[i].likes = newQuestionSets[i].likes.length;
+					newQuestionSets[i].nameUser = newQuestionSets[i].userId.name;
+					newQuestionSets[i].questionLength = dataQuestion.length;
 				}
-				// } else {
-				// 	for (let i = 0; i < newQuestionSets.length; i++) {
-				// 		newQuestionSets[i].id = newQuestionSets[i]._id;
-				// 		delete newQuestionSets[i]._id;
-				// 		newQuestionSets[i].likes = newQuestionSets[i].likes.length;
-				// 	}
-				// }
 
-				console.log('tong so', countQuestionSets);
-				//console.log(newQuestionSets);
+				//console.log('tong so', countQuestionSets);
+				console.log(newQuestionSets);
 
-				return newQuestionSets;
+				return {
+					questionSets: newQuestionSets,
+					totalPages: countQuestionSets,
+					page: pageA,
+					textSearch,
+				};
 			} catch (error) {
 				throw new ApolloError(error.message, '500');
 			}
@@ -236,7 +337,6 @@ export default {
 				}
 
 				const newLikes = newQuestionSet.likes;
-				newQuestionSet.likes = newQuestionSet.likes.length;
 
 				await questionSet.findByIdAndUpdate(
 					{
@@ -247,6 +347,8 @@ export default {
 					},
 					{ new: true },
 				);
+
+				newQuestionSet.likes = newQuestionSet.likes.length;
 
 				console.log(newQuestionSet);
 				return {

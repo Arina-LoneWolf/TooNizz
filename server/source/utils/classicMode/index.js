@@ -90,13 +90,16 @@ export const classisModeAll = (io, socket, players, games) => {
 		}).lean();
 
 		const nameQuestionSet = await questionSet
-			.findById(questionSetId)
+			.findById({ _id: questionSetId })
 			.select({ name: 1 });
+
+		console.log(questionSetId);
 
 		gamePin = gamePin.toString();
 		socket.gamePin = gamePin;
 		games.push({
 			questionSetId,
+			userHostId: '61c1f9548190d91c9867bf65',
 			live: false,
 			name: nameQuestionSet.name,
 			mode: 'Classic',
@@ -732,6 +735,7 @@ export const classisModeAll = (io, socket, players, games) => {
 				//console.log(namePlayersArr);
 
 				const dataReport = {
+					userId: infoGame.userHostId ? infoGame.userHostId : '',
 					name: infoGame.name,
 					gameMode: infoGame.mode,
 					players: namePlayersArr,
@@ -742,13 +746,14 @@ export const classisModeAll = (io, socket, players, games) => {
 					// playersDidNotFinish, // này thống kê ra đươc ko lưu
 					// difficultQuestions, // này thống kê ra đươc ko lưu
 				};
-
-				Report.create(dataReport, (error, data) => {
-					if (error) {
-						console.log(error);
-						return;
-					}
-				});
+				if (infoGame.userHostId !== '') {
+					Report.create(dataReport, (error, data) => {
+						if (error) {
+							console.log(error);
+							return;
+						}
+					});
+				}
 
 				console.log(dataReport);
 			}

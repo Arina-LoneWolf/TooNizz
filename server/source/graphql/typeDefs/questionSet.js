@@ -3,13 +3,18 @@ import { gql } from 'apollo-server-express';
 export default gql`
 	extend type Query {
 		getQuestionSetsByUserId(
-			userId: String!
 			page: Int
 			limit: Int
 			sort: Int
-		): QuestionSetPaginator!
+			typeSort: typeSortQuestionSet
+		): QuestionSetPaginator! @auth
 
-		GetQuestionSetsUserLiked: [QuestionSet]! @auth
+		GetQuestionSetsUserLiked(
+			page: Int
+			limit: Int
+			sort: Int
+			typeSort: typeSortQuestionSet
+		): QuestionSetPaginator! @auth
 
 		SearchQuestionSets(
 			textSearch: String!
@@ -19,7 +24,7 @@ export default gql`
 			typeSort: typeSortQuestionSetSearch
 			tag: String
 			userId: String
-		): [QuestionSet]!
+		): QuestionSetPaginator!
 	}
 
 	extend type Mutation {
@@ -49,6 +54,7 @@ export default gql`
 		questionSets: [QuestionSet]!
 		totalPages: Int!
 		page: Int!
+		textSearch: String
 	}
 
 	type QuestionSet {
@@ -61,6 +67,8 @@ export default gql`
 		played: Int
 		likes: Int
 		liked: Boolean
+		nameUser: String
+		questionLength: Int
 		createdAt: String
 		updatedAt: String
 	}
@@ -74,5 +82,10 @@ export default gql`
 		played
 		createdAt
 		likes
+	}
+
+	enum typeSortQuestionSet {
+		name
+		createdAt
 	}
 `;
