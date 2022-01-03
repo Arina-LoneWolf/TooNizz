@@ -114,7 +114,7 @@ function ordinal_suffix_of(i) {
 // //date = date.toUTCString(); //.split(' ');
 // console.log(date);
 
-let timeNow = new Date();
+let timeNow = new Date('2022-01-03T16:26:13.088Z');
 let timeAddGMT = new Date(
 	timeNow.getTime() + -timeNow.getTimezoneOffset() * 60000,
 );

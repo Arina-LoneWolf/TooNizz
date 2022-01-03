@@ -19,8 +19,8 @@ export default {
 		DownloadReport: async (parent, { reportId }, { Report }, info) => {
 			try {
 				let dataReport = await Report.findById(reportId).lean();
-				// console.log(dataReport.createdAt);
-				// console.log(dataReport);
+				//console.log(dataReport.createdAt);
+				//console.log(dataReport.gameStart);
 
 				dataReport.players = dataReport.players.sort((a, b) => {
 					return a.name.localeCompare(b.name);
@@ -227,46 +227,27 @@ export default {
 					right: { style: 'thin', color: { argb: 'AAAAAA' } },
 				};
 
-				//A7
-				sheet.getCell('A7').value = 'Total correct answers (%)';
-				sheet.getCell('A7').font = {
+				//A6
+				sheet.getCell('A6').value = 'Game end on';
+				sheet.getCell('A6').font = {
 					name: 'Arial',
 					size: 12,
+					color: {
+						argb: 'FFFFFF',
+					},
+					bold: true,
 				};
-				sheet.getCell('A7').fill = {
+				sheet.getCell('A6').fill = {
 					type: 'pattern',
 					pattern: 'solid',
-					fgColor: { argb: 'F4F4F4' },
+					fgColor: { argb: '7232B1' },
 				};
-				sheet.getRow(7).height = 26;
-				sheet.getCell('A7').alignment = {
+				sheet.getRow(6).height = 26;
+				sheet.getCell('A6').alignment = {
 					vertical: 'middle',
 					horizontal: 'left',
 				};
-				sheet.getCell('A7').border = {
-					top: { style: 'thin', color: { argb: 'AAAAAA' } },
-					left: { style: 'thin', color: { argb: 'AAAAAA' } },
-					bottom: { style: 'thin', color: { argb: 'AAAAAA' } },
-					right: { style: 'thin', color: { argb: 'AAAAAA' } },
-				};
-
-				//A8
-				sheet.getCell('A8').value = 'Total incorrect answers (%)';
-				sheet.getCell('A8').font = {
-					name: 'Arial',
-					size: 12,
-				};
-				sheet.getCell('A8').fill = {
-					type: 'pattern',
-					pattern: 'solid',
-					fgColor: { argb: 'F4F4F4' },
-				};
-				sheet.getRow(8).height = 26;
-				sheet.getCell('A8').alignment = {
-					vertical: 'middle',
-					horizontal: 'left',
-				};
-				sheet.getCell('A8').border = {
+				sheet.getCell('A6').border = {
 					top: { style: 'thin', color: { argb: 'AAAAAA' } },
 					left: { style: 'thin', color: { argb: 'AAAAAA' } },
 					bottom: { style: 'thin', color: { argb: 'AAAAAA' } },
@@ -274,7 +255,7 @@ export default {
 				};
 
 				//A9
-				sheet.getCell('A9').value = 'Average score (points)';
+				sheet.getCell('A9').value = 'Total correct answers (%)';
 				sheet.getCell('A9').font = {
 					name: 'Arial',
 					size: 12,
@@ -290,6 +271,75 @@ export default {
 					horizontal: 'left',
 				};
 				sheet.getCell('A9').border = {
+					top: { style: 'thin', color: { argb: 'AAAAAA' } },
+					left: { style: 'thin', color: { argb: 'AAAAAA' } },
+					bottom: { style: 'thin', color: { argb: 'AAAAAA' } },
+					right: { style: 'thin', color: { argb: 'AAAAAA' } },
+				};
+
+				//A10
+				sheet.getCell('A10').value = 'Total incorrect answers (%)';
+				sheet.getCell('A10').font = {
+					name: 'Arial',
+					size: 12,
+				};
+				sheet.getCell('A10').fill = {
+					type: 'pattern',
+					pattern: 'solid',
+					fgColor: { argb: 'F4F4F4' },
+				};
+				sheet.getRow(10).height = 26;
+				sheet.getCell('A10').alignment = {
+					vertical: 'middle',
+					horizontal: 'left',
+				};
+				sheet.getCell('A10').border = {
+					top: { style: 'thin', color: { argb: 'AAAAAA' } },
+					left: { style: 'thin', color: { argb: 'AAAAAA' } },
+					bottom: { style: 'thin', color: { argb: 'AAAAAA' } },
+					right: { style: 'thin', color: { argb: 'AAAAAA' } },
+				};
+
+				//A9
+				// sheet.getCell('A9').value = 'Average score (points)';
+				// sheet.getCell('A9').font = {
+				// 	name: 'Arial',
+				// 	size: 12,
+				// };
+				// sheet.getCell('A9').fill = {
+				// 	type: 'pattern',
+				// 	pattern: 'solid',
+				// 	fgColor: { argb: 'F4F4F4' },
+				// };
+				// sheet.getRow(9).height = 26;
+				// sheet.getCell('A9').alignment = {
+				// 	vertical: 'middle',
+				// 	horizontal: 'left',
+				// };
+				// sheet.getCell('A9').border = {
+				// 	top: { style: 'thin', color: { argb: 'AAAAAA' } },
+				// 	left: { style: 'thin', color: { argb: 'AAAAAA' } },
+				// 	bottom: { style: 'thin', color: { argb: 'AAAAAA' } },
+				// 	right: { style: 'thin', color: { argb: 'AAAAAA' } },
+				// };
+
+				//A11
+				sheet.getCell('A11').value = 'Average score (points)';
+				sheet.getCell('A11').font = {
+					name: 'Arial',
+					size: 12,
+				};
+				sheet.getCell('A11').fill = {
+					type: 'pattern',
+					pattern: 'solid',
+					fgColor: { argb: 'F4F4F4' },
+				};
+				sheet.getRow(11).height = 26;
+				sheet.getCell('A11').alignment = {
+					vertical: 'middle',
+					horizontal: 'left',
+				};
+				sheet.getCell('A11').border = {
 					top: { style: 'thin', color: { argb: 'AAAAAA' } },
 					left: { style: 'thin', color: { argb: 'AAAAAA' } },
 					bottom: { style: 'thin', color: { argb: 'AAAAAA' } },
@@ -362,7 +412,8 @@ export default {
 				};
 
 				//BCDEFGH2
-				let dateTimeRP = new Date(dataReport.createdAt);
+				// sheetconsole.log(dataReport.gameStart);
+				let dateTimeRP = new Date(dataReport.gameStart);
 				dateTimeRP = dateTimeRP.toUTCString().split(' ');
 				sheet.mergeCells('B2:H2');
 				//sheet.getCell('B2').numFmt = 'dd/mm/yyyy';
@@ -474,11 +525,42 @@ export default {
 					right: { style: 'thin', color: { argb: 'AAAAAA' } },
 				};
 
-				//ABCDEFGH6
-				sheet.mergeCells('A6:H6');
-				sheet.getRow(6).height = 26;
-				sheet.getCell('A6').value = `Overall Performance`;
-				sheet.getCell('A6').font = {
+				//BCDEFGH6
+				let dateTimeRPEnd = new Date(dataReport.createdAt);
+				dateTimeRPEnd = dateTimeRPEnd.toUTCString().split(' ');
+				sheet.mergeCells('B6:H6');
+				sheet.getCell(
+					'B6',
+				).value = `${dateTimeRPEnd[1]} ${dateTimeRPEnd[2]} ${dateTimeRPEnd[3]}, ${dateTimeRPEnd[4]}`;
+				sheet.getCell('B6').font = {
+					name: 'Arial',
+					size: 12,
+					color: {
+						argb: 'FFFFFF',
+					},
+					bold: true,
+				};
+				sheet.getCell('B6').fill = {
+					type: 'pattern',
+					pattern: 'solid',
+					fgColor: { argb: '7232B1' },
+				};
+				sheet.getCell('B6').alignment = {
+					vertical: 'middle',
+					horizontal: 'left',
+				};
+				sheet.getCell('B6').border = {
+					top: { style: 'thin', color: { argb: 'AAAAAA' } },
+					left: { style: 'thin', color: { argb: 'AAAAAA' } },
+					bottom: { style: 'thin', color: { argb: 'AAAAAA' } },
+					right: { style: 'thin', color: { argb: 'AAAAAA' } },
+				};
+
+				//ABCDEFGH8
+				sheet.mergeCells('A8:H8');
+				sheet.getRow(8).height = 26;
+				sheet.getCell('A8').value = `Overall Performance`;
+				sheet.getCell('A8').font = {
 					name: 'Arial',
 					size: 15,
 					color: {
@@ -486,62 +568,16 @@ export default {
 					},
 					bold: true,
 				};
-				sheet.getCell('A6').fill = {
+				sheet.getCell('A8').fill = {
 					type: 'pattern',
 					pattern: 'solid',
 					fgColor: { argb: '7232B1' },
 				};
-				sheet.getCell('A6').alignment = {
+				sheet.getCell('A8').alignment = {
 					vertical: 'middle',
 					horizontal: 'left',
 				};
-				sheet.getCell('A6').border = {
-					top: { style: 'thin', color: { argb: 'AAAAAA' } },
-					left: { style: 'thin', color: { argb: 'AAAAAA' } },
-					bottom: { style: 'thin', color: { argb: 'AAAAAA' } },
-					right: { style: 'thin', color: { argb: 'AAAAAA' } },
-				};
-
-				//BCDEFGH7
-				sheet.mergeCells('B7:H7');
-				sheet.getCell('B7').value = `${totalCorrectAnswers}%`;
-				sheet.getCell('B7').font = {
-					name: 'Arial',
-					size: 12,
-				};
-				sheet.getCell('B7').fill = {
-					type: 'pattern',
-					pattern: 'solid',
-					fgColor: { argb: 'F4F4F4' },
-				};
-				sheet.getCell('B7').alignment = {
-					vertical: 'middle',
-					horizontal: 'left',
-				};
-				sheet.getCell('B7').border = {
-					top: { style: 'thin', color: { argb: 'AAAAAA' } },
-					left: { style: 'thin', color: { argb: 'AAAAAA' } },
-					bottom: { style: 'thin', color: { argb: 'AAAAAA' } },
-					right: { style: 'thin', color: { argb: 'AAAAAA' } },
-				};
-
-				//BCDEFGH8
-				sheet.mergeCells('B8:H8');
-				sheet.getCell('B8').value = `${totalWrongAnswers}%`;
-				sheet.getCell('B8').font = {
-					name: 'Arial',
-					size: 12,
-				};
-				sheet.getCell('B8').fill = {
-					type: 'pattern',
-					pattern: 'solid',
-					fgColor: { argb: 'F4F4F4' },
-				};
-				sheet.getCell('B8').alignment = {
-					vertical: 'middle',
-					horizontal: 'left',
-				};
-				sheet.getCell('B8').border = {
+				sheet.getCell('A8').border = {
 					top: { style: 'thin', color: { argb: 'AAAAAA' } },
 					left: { style: 'thin', color: { argb: 'AAAAAA' } },
 					bottom: { style: 'thin', color: { argb: 'AAAAAA' } },
@@ -550,7 +586,7 @@ export default {
 
 				//BCDEFGH9
 				sheet.mergeCells('B9:H9');
-				sheet.getCell('B9').value = `${averageScore} points`;
+				sheet.getCell('B9').value = `${totalCorrectAnswers}%`;
 				sheet.getCell('B9').font = {
 					name: 'Arial',
 					size: 12,
@@ -565,6 +601,52 @@ export default {
 					horizontal: 'left',
 				};
 				sheet.getCell('B9').border = {
+					top: { style: 'thin', color: { argb: 'AAAAAA' } },
+					left: { style: 'thin', color: { argb: 'AAAAAA' } },
+					bottom: { style: 'thin', color: { argb: 'AAAAAA' } },
+					right: { style: 'thin', color: { argb: 'AAAAAA' } },
+				};
+
+				//BCDEFGH10
+				sheet.mergeCells('B10:H10');
+				sheet.getCell('B10').value = `${totalWrongAnswers}%`;
+				sheet.getCell('B10').font = {
+					name: 'Arial',
+					size: 12,
+				};
+				sheet.getCell('B10').fill = {
+					type: 'pattern',
+					pattern: 'solid',
+					fgColor: { argb: 'F4F4F4' },
+				};
+				sheet.getCell('B10').alignment = {
+					vertical: 'middle',
+					horizontal: 'left',
+				};
+				sheet.getCell('B10').border = {
+					top: { style: 'thin', color: { argb: 'AAAAAA' } },
+					left: { style: 'thin', color: { argb: 'AAAAAA' } },
+					bottom: { style: 'thin', color: { argb: 'AAAAAA' } },
+					right: { style: 'thin', color: { argb: 'AAAAAA' } },
+				};
+
+				//BCDEFGH11
+				sheet.mergeCells('B11:H11');
+				sheet.getCell('B11').value = `${averageScore} points`;
+				sheet.getCell('B11').font = {
+					name: 'Arial',
+					size: 12,
+				};
+				sheet.getCell('B11').fill = {
+					type: 'pattern',
+					pattern: 'solid',
+					fgColor: { argb: 'F4F4F4' },
+				};
+				sheet.getCell('B11').alignment = {
+					vertical: 'middle',
+					horizontal: 'left',
+				};
+				sheet.getCell('B11').border = {
 					top: { style: 'thin', color: { argb: 'AAAAAA' } },
 					left: { style: 'thin', color: { argb: 'AAAAAA' } },
 					bottom: { style: 'thin', color: { argb: 'AAAAAA' } },
@@ -1412,6 +1494,49 @@ export default {
 					countQuestionAccuracy = Number.parseFloat(
 						countQuestionAccuracy / dataReport.questions.length,
 					).toFixed(2);
+				}
+
+				//DÒNG TỔNG KẾT BÊN QUESTION DÀNH CHO NGƯỜI CHƠI
+				let startColumPlayerQuestionSheet = 9;
+				for (let i = 0; i < dataReport.players.length; i++) {
+					sheetQuestion
+						.getRow(countRowDataQuestion)
+						.getCell(startColumPlayerQuestionSheet).value =
+						dataReport.players[i].correctPercentAnswers + '%';
+
+					sheetQuestion
+						.getRow(countRowDataQuestion)
+						.getCell(startColumPlayerQuestionSheet).font = {
+						name: 'Arial',
+						size: 13,
+						color: {
+							argb: 'FFFFFF',
+						},
+						bold: true,
+					};
+					sheetQuestion
+						.getRow(countRowDataQuestion)
+						.getCell(startColumPlayerQuestionSheet).fill = {
+						type: 'pattern',
+						pattern: 'solid',
+						fgColor: { argb: '864CBF' },
+					};
+					sheetQuestion
+						.getRow(countRowDataQuestion)
+						.getCell(startColumPlayerQuestionSheet).alignment = {
+						vertical: 'middle',
+						horizontal: 'center',
+						wrapText: true,
+					};
+					sheetQuestion
+						.getRow(countRowDataQuestion)
+						.getCell(startColumPlayerQuestionSheet).border = {
+						top: { style: 'thin', color: { argb: 'AAAAAA' } },
+						left: { style: 'thin', color: { argb: 'AAAAAA' } },
+						bottom: { style: 'thin', color: { argb: 'AAAAAA' } },
+						right: { style: 'thin', color: { argb: 'AAAAAA' } },
+					};
+					startColumPlayerQuestionSheet++;
 				}
 
 				//dòng tổng kết bên question

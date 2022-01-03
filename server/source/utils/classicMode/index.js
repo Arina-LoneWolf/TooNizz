@@ -592,7 +592,7 @@ export const classisModeAll = (io, socket, players, games) => {
 									type: allQuestions[j].type,
 									answered: allQuestions[j].listPlayersAnswer[z].answer,
 									correct: allQuestions[j].listPlayersAnswer[z].correct,
-									time: allQuestions[j].listPlayersAnswer[z].time,
+									time: allQuestions[j].listPlayersAnswer[z].time.toFixed(2),
 									score: allQuestions[j].listPlayersAnswer[z].score,
 								});
 
