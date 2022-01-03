@@ -2,8 +2,17 @@ import { gql } from 'apollo-server-express';
 
 export default gql`
 	extend type Query {
-		downloadReport(reportId: String!): String
-		getAllReports(
+		DownloadReport(reportId: String!): String
+		GetAllReports(
+			page: Int
+			limit: Int
+			sort: Int
+			typeSort: typeSortReport
+		): ReportPaginator! @auth
+
+		GetDetailReport(reportId: String!): Report! @auth
+		SearchReport(
+			textSearch: String!
 			page: Int
 			limit: Int
 			sort: Int
@@ -13,6 +22,13 @@ export default gql`
 
 	extend type Mutation {
 		helloReport: String
+		DeleteReport(reportId: String!): MessageUpdateReport! @auth
+		EditReport(reportId: String!, name: String!): MessageUpdateReport! @auth
+	}
+
+	type MessageUpdateReport {
+		message: String!
+		report: Report
 	}
 
 	type ReportPaginator {
@@ -25,10 +41,15 @@ export default gql`
 		_id: ID
 		userId: ID
 		name: String
+		nameUser: String
 		gameMode: String
+		gameStart: String
 		createdAt: String
 		players: [PlayerReport]!
 		questions: [QuestionReport]!
+		difficultQuestions: [QuestionReport]!
+		needHelp: [PlayerReport]!
+		playersDidNotFinish: [PlayerReport]!
 	}
 
 	type PlayerReport {

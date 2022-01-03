@@ -110,8 +110,13 @@ function ordinal_suffix_of(i) {
 // console.log('dem un', 0 === undefined);
 //console.log('kool11', kool11);
 
-let date = new Date(1641171361440);
-//date = date.toUTCString(); //.split(' ');
-console.log(date);
+// let date = new Date(1641171361440);
+// //date = date.toUTCString(); //.split(' ');
+// console.log(date);
 
+let timeNow = new Date();
+let timeAddGMT = new Date(
+	timeNow.getTime() + -timeNow.getTimezoneOffset() * 60000,
+);
+console.log(timeAddGMT.toUTCString());
 //--inspect

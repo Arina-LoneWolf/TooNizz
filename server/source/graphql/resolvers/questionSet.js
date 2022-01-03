@@ -359,5 +359,22 @@ export default {
 				throw new ApolloError(error.message, '500');
 			}
 		},
+
+		DeleteQuestionSet: async (
+			parent,
+			{ questionSetId },
+			{ questionSet },
+			info,
+		) => {
+			try {
+				await questionSet.findByIdAndDelete({ _id: questionSetId });
+
+				return {
+					message: 'Delete questionSet success',
+				};
+			} catch (error) {
+				throw new ApolloError(error.message, '500');
+			}
+		},
 	},
 };

@@ -234,6 +234,12 @@ export const classisModeAll = (io, socket, players, games) => {
 				},
 			);
 
+			let timeNow = new Date();
+			let timeAddGMT = new Date(
+				timeNow.getTime() + -timeNow.getTimezoneOffset() * 60000,
+			);
+			infoGame.gameStart = timeAddGMT;
+
 			// if (infoGame.gameData.currentQuestion + 1 < infoGame.listQuestions.length)
 			// 	infoGame.gameData.currentQuestion += 1;
 			//console.log(newListQuestion);
@@ -747,6 +753,7 @@ export const classisModeAll = (io, socket, players, games) => {
 					// difficultQuestions, // này thống kê ra đươc ko lưu
 				};
 				if (infoGame.userHostId !== '') {
+					dataReport.gameStart = infoGame.gameStart;
 					Report.create(dataReport, (error, data) => {
 						if (error) {
 							console.log(error);

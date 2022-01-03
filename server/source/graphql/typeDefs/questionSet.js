@@ -31,6 +31,7 @@ export default gql`
 		createQuestionSet(newQuestionSet: newQuestionSet!): Message!
 		editQuestionSet(infoQuestionSet: editQuestionSet): MessageUpdateQuestionSet!
 		likeQuestionSet(questionSetId: String!): MessageUpdateQuestionSet! @auth
+		DeleteQuestionSet(questionSetId: String!): MessageUpdateQuestionSet! @auth
 	}
 
 	input editQuestionSet {
@@ -75,7 +76,7 @@ export default gql`
 
 	type MessageUpdateQuestionSet {
 		message: String!
-		questionSet: QuestionSet!
+		questionSet: QuestionSet
 	}
 
 	enum typeSortQuestionSetSearch {

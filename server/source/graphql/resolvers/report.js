@@ -1,5 +1,6 @@
 import ExcelJS from 'exceljs';
 import { ApolloError } from 'apollo-server-express';
+import escapeStringRegexp from 'escape-string-regexp';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import path from 'path';
@@ -15,7 +16,7 @@ cloudinary.config({
 
 export default {
 	Query: {
-		downloadReport: async (parent, { reportId }, { Report }, info) => {
+		DownloadReport: async (parent, { reportId }, { Report }, info) => {
 			try {
 				let dataReport = await Report.findById(reportId).lean();
 				// console.log(dataReport.createdAt);
@@ -119,7 +120,7 @@ export default {
 				};
 
 				//A2
-				sheet.getCell('A2').value = 'Played on';
+				sheet.getCell('A2').value = 'Game started on';
 				sheet.getCell('A2').font = {
 					name: 'Arial',
 					size: 12,
@@ -1634,7 +1635,7 @@ export default {
 			}
 		},
 
-		getAllReports: async (
+		GetAllReports: async (
 			parent,
 			{ page, limit, sort, typeSort },
 			{ idUser, Report },
@@ -1681,8 +1682,135 @@ export default {
 				throw new ApolloError(error.message, '500');
 			}
 		},
+
+		GetDetailReport: async (parent, { reportId }, { idUser, Report }, info) => {
+			try {
+				const newReports = await Report.findById({ _id: reportId })
+					.populate({
+						path: 'userId',
+						select: 'name -_id',
+					})
+					.lean()
+					.exec();
+
+				const difficultQuestions = [];
+				const needHelp = [];
+				const playersDidNotFinish = [];
+
+				for (let i = 0; i < newReports.questions.length; i++) {
+					if (newReports.questions[i].percentRight < 30) {
+						difficultQuestions.push(newReports.questions[i]);
+					}
+				}
+
+				for (let i = 0; i < newReports.players.length; i++) {
+					if (newReports.players[i].correctPercentAnswers < 30) {
+						needHelp.push(newReports.players[i]);
+					}
+
+					if (
+						newReports.players[i].unAnswered >
+						newReports.questions.length / 2
+					) {
+						playersDidNotFinish.push(newReports.players[i]);
+					}
+				}
+
+				newReports.nameUser = newReports.userId.name;
+				newReports.difficultQuestions = difficultQuestions;
+				newReports.needHelp = needHelp;
+				newReports.playersDidNotFinish = playersDidNotFinish;
+
+				return newReports;
+			} catch (error) {
+				throw new ApolloError(error.message, '500');
+			}
+		},
+
+		SearchReport: async (
+			parent,
+			{ textSearch, page, limit, sort, typeSort },
+			{ idUser, Report },
+			info,
+		) => {
+			try {
+				const pageA = page || 1;
+				const limitA = limit || 10;
+				const startIndex = (pageA - 1) * limitA;
+
+				let searchText = textSearch.trim();
+				const $regex = escapeStringRegexp(searchText);
+				let sortData = { createdAt: -1 };
+				if (typeSort) {
+					if (typeSort === 'name') {
+						sortData = { name: sort };
+					} else if (typeSort === 'createdAt') {
+						sortData = { createdAt: sort };
+					} else {
+						sortData = {
+							players: sort,
+						};
+					}
+				}
+
+				let countReports = await Report.countDocuments({
+					name: { $regex, $options: '$i' },
+					userId: idUser,
+				}).exec();
+
+				countReports = Math.ceil(countReports / limitA);
+
+				const newReports = await Report.find({
+					name: { $regex, $options: '$i' },
+					userId: idUser,
+				})
+					.skip(startIndex)
+					.limit(limitA)
+					.sort(sortData)
+					.lean()
+					.exec();
+
+				return {
+					reports: newReports,
+					totalPages: countReports,
+					page: pageA,
+				};
+			} catch (error) {
+				throw new ApolloError(error.message, '500');
+			}
+		},
 	},
-	Mutation: {},
+	Mutation: {
+		EditReport: async (parent, { reportId, name }, { Report }, info) => {
+			try {
+				const newReport = await Report.findByIdAndUpdate(
+					{
+						_id: reportId,
+					},
+					{ name },
+					{ new: true },
+				);
+
+				return {
+					message: 'Edit report success',
+					report: newReport,
+				};
+			} catch (error) {
+				throw new ApolloError(error.message, '500');
+			}
+		},
+
+		DeleteReport: async (parent, { reportId, name }, { Report }, info) => {
+			try {
+				await Report.findByIdAndDelete({ _id: reportId });
+				return {
+					message: 'Delete report success',
+				};
+			} catch (error) {
+				throw new ApolloError(error.message, '500');
+			}
+		},
+	},
 };
 
 function checkTypeQuestion(type) {

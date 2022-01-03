@@ -11,6 +11,7 @@ const reportSchema = new mongoose.Schema(
 			type: String,
 			required: true,
 		},
+		gameStart: Date,
 		gameMode: {
 			type: String,
 			required: true,
