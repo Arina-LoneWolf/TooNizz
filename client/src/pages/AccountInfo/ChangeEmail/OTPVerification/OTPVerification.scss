@@ -1,0 +1,76 @@
+@import '../../../../shared/style/color.scss';
+// @import '../../../../shared/style/common.scss';
+
+.otp-verification {
+	display: none;
+
+	&.active {
+		display: block;
+	}
+
+	.otp-verification-body {
+		&.disabled {
+			display: none;
+		}
+
+		#overlay {
+		}
+
+		.otp-verification-container {
+			max-width: 382px;
+			background: $salmon;
+			padding: 12px 12px;
+
+			.otp-message {
+				text-align: justify;
+				background: lighten($salmon, 10);
+				border-radius: 3px;
+				padding: 4px 6px;
+			}
+
+			.otp-input {
+				display: flex;
+				margin-top: 11px;
+				margin-bottom: 3px;
+
+				input {
+					border: 1px solid $salmon;
+					border-radius: 3px;
+					padding: 3px 6px;
+					font-size: 15px;
+					flex-grow: 1;
+				}
+
+				.submit-otp-btn {
+					color: $salmon;
+					background: $salmon;
+					height: 30px;
+					border-radius: 3px;
+					margin-left: 6px;
+					padding: 0 6px;
+					font-weight: 600;
+					cursor: pointer;
+
+					&:hover {
+						background: $salmon;
+					}
+				}
+			}
+
+			span {
+				font-size: 14px;
+			}
+
+			.resend-otp-btn {
+				color: $salmon;
+				margin-left: 4px;
+
+				&:hover {
+					// text-decoration: underline;
+					cursor: pointer;
+					color: $salmon;
+				}
+			}
+		}
+	}
+}
