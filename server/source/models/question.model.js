@@ -68,6 +68,10 @@ const questionSchema = new mongoose.Schema(
 			type: Boolean,
 			default: false,
 		},
+		haveScore: {
+			type: Boolean,
+			default: true,
+		},
 	},
 	{
 		timestamps: {

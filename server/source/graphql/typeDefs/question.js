@@ -6,11 +6,18 @@ export default gql`
 			questionSetId: String!
 			page: Int
 			limit: Int
-		): QuestionPaginator!
+		): QuestionPaginator! @auth
 	}
 
 	extend type Mutation {
-		createQuestion(newQuestion: [newQuestion!]!): Message!
+		createQuestion(newQuestion: [newQuestion!]!): Message! @auth
+		EditQuestion(infoQuestion: EditQuestion!): MessageEditQuestion! @auth
+		DeleteQuestion(questionId: String): MessageEditQuestion! @auth
+	}
+
+	type MessageEditQuestion {
+		message: String
+		question: Question
 	}
 
 	input newQuestion {
@@ -40,6 +47,29 @@ export default gql`
 		questions: [Question]!
 		totalPages: Int!
 		page: Int!
+	}
+
+	input EditQuestion {
+		id: ID!
+		content: String
+		image: String
+		video: String
+		audio: String
+		type: Int
+		answers: [EditAnswer]
+		played: Int
+		time: Float
+		score: Float
+		typeAnswers: [String]
+		explanation: String
+		doubleScore: Boolean
+	}
+
+	input EditAnswer {
+		content: String
+		image: String
+		isCorrect: Boolean
+		votes: Int
 	}
 
 	type Question {

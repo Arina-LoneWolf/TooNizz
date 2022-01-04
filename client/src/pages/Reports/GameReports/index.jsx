@@ -1,5 +1,7 @@
 import './GameReports.scss';
 import React, { useEffect } from 'react';
+import { useQuery } from "@apollo/client";
+import { GET_ALL_REPORTS } from '../../../apis/reportApi';
 import { useNavigate } from 'react-router-dom';
 import { IoMdMore } from 'react-icons/io';
 import { BsChevronDown } from 'react-icons/bs';
@@ -9,6 +11,8 @@ const temp = ['', '', '', '', ''];
 
 function GameReports() {
   const navigate = useNavigate();
+
+  const { data, loading, error } = useQuery(GET_ALL_REPORTS);
 
   const handleReportItemClick = (e, id) => {
     if (!e.target.classList.contains('manipulation-btn')) {
@@ -31,7 +35,6 @@ function GameReports() {
     const handleManip = (e) => {
       const maniBtnList = document.querySelectorAll('.manipulation-btn');
       if (!e.target.classList.contains('manipulation-btn')) {
-        // console.log('vgvuyvu')
         maniBtnList.forEach(maniButton => {
           maniButton.nextSibling?.classList?.remove('active');
         })
@@ -42,6 +45,12 @@ function GameReports() {
 
     return () => document.removeEventListener('click', handleManip);
   }, []);
+
+  const convertDate = (reportDate) => {
+    let date = new Date(parseInt(reportDate));
+    date = date.toUTCString().split(' ');
+    return `${date[1]} ${date[2]} ${date[3]} ${date[4]}`;
+  }
 
   return (
     <div className="game-report">
@@ -65,12 +74,12 @@ function GameReports() {
         </div>
 
         <div className="body">
-          {temp.map((item, index) => (
-            <div className="report-item" key={index} onClick={(e) => handleReportItemClick(e, 1)}>
-              <div className="quiz-name fl-45">Physical Science: The Energy of Holiday Lights</div>
-              <div className="game-mode fl-15">Classic</div>
-              <div className="report-date fl-26">December 1, 2021, 10:33 AM</div>
-              <div className="players fl-10">11</div>
+          {data?.GetAllReports?.reports?.map((report) => (
+            <div className="report-item" key={report._id} onClick={(e) => handleReportItemClick(e, report._id)}>
+              <div className="quiz-name fl-45">{report.name}</div>
+              <div className="game-mode fl-15">{report.gameMode}</div>
+              <div className="report-date fl-26">{convertDate(report.createdAt)}</div>
+              <div className="players fl-10">{report.players.length}</div>
               <div className="manipulation fl-4">
                 <IoMdMore className="manipulation-btn" onClick={handleManipulation} />
                 <ul className="mani-options">

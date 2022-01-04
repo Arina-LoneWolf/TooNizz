@@ -1,6 +1,10 @@
 import { ApolloError } from 'apollo-server-express';
+import { ACCESS_TOKEN_SECRET } from '../config/index.js';
 import jwt from 'jsonwebtoken';
 export const auth = (token) => {
+
+
+	console.log('AAA', token)
 	if (token === '') {
 		throw new ApolloError('You must be login', '404');
 	}

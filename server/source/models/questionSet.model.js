@@ -4,7 +4,7 @@ const questionSetSchema = new mongoose.Schema(
 	{
 		userId: {
 			type: mongoose.Schema.Types.ObjectId,
-			ref: 'Users',
+			ref: 'users',
 			required: true,
 		},
 		name: {
@@ -25,8 +25,9 @@ const questionSetSchema = new mongoose.Schema(
 			default: true,
 		},
 		likes: {
-			type: Number,
-			default: 0,
+			type: [String],
+			trim: true,
+			default: [],
 		},
 		played: {
 			type: Number,

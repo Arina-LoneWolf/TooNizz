@@ -29,6 +29,7 @@ export default {
 				};
 			} catch (error) {
 				console.log(error);
+				throw new ApolloError(error.message, '500');
 			}
 		},
 	},
@@ -39,6 +40,36 @@ export default {
 				return { message: 'Create question success' };
 			} catch (error) {
 				console.log(error);
+			}
+		},
+
+		EditQuestion: async (parent, { infoQuestion }, { Question }, info) => {
+			try {
+				//console.log(infoQuestion);
+				const id = infoQuestion.id;
+				delete infoQuestion.id;
+				const newQuestion = await Question.findByIdAndUpdate(
+					{
+						_id: id,
+					},
+					infoQuestion,
+					{ new: true },
+				);
+
+				return { message: 'Edit question success', question: newQuestion };
+			} catch (error) {
+				throw new ApolloError(error.message, '500');
+			}
+		},
+
+		DeleteQuestion: async (parent, { questionId }, { Question }, info) => {
+			try {
+				await Question.findByIdAndDelete({
+					_id: questionId,
+				});
+				return { message: 'Delete question success' };
+			} catch (error) {
+				throw new ApolloError(error.message, '500');
 			}
 		},
 	},

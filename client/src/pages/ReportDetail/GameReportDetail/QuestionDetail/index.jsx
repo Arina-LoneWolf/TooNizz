@@ -7,7 +7,7 @@ import noImage from '../../../../assets/images/no-image.jpg';
 
 const testImg = 'https://images.unsplash.com/photo-1593642531955-b62e17bdaa9c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=869&q=80';
 
-function QuestionDetail() {
+function QuestionDetail({ question, playerNumbers }) {
   const handleClosing = () => {
     questionDetailShowVar(false);
   }
@@ -17,9 +17,9 @@ function QuestionDetail() {
       <div id="overlay" />
       <div className="popup-container">
         <div className="popup-header">
-          <div className="question-content">When was I born?</div>
+          <div className="question-content">{question.dataQuestion.content}</div>
           <div className="header-end">
-            <span className="question-type">Multiple-choice</span>
+            <span className="question-type">Single-choice</span>
             <MdOutlineClose className="close-icon" onClick={handleClosing} />
           </div>
         </div>
@@ -28,52 +28,42 @@ function QuestionDetail() {
           <div className="question-detail-wrapper">
             <div className="question-detail">
               <div className="media-wrapper">
-                <div className="media" style={{ backgroundImage: `url(${noImage})` }}></div>
+                <div className="media" style={{ backgroundImage: `url(${question.dataQuestion.image})` }}></div>
               </div>
               <div className="question-answers">
-                <div className="answer-opt">
-                  <span className="answer">October 22nd, 1967</span>
-                  <span className="quantity">1</span>
-                </div>
-                <div className="answer-opt">
-                  <span className="answer">March 17th, 1994</span>
-                  <span className="quantity">1</span>
-                </div>
-                <div className="answer-opt correct">
-                  <span className="answer">May 13th, 1996</span>
-                  <span className="quantity">3</span>
-                </div>
-                <div className="answer-opt">
-                  <span className="answer">July 3rd, 1989</span>
-                  <span className="quantity">2</span>
-                </div>
+                {question.dataQuestion.answers.map(answer => (
+                  <div className={"answer-opt " + (answer.isCorrect ? "correct" : "")}>
+                    <span className="answer">{answer.content}</span>
+                    <span className="quantity">{answer.countPlayerAnswer}</span>
+                  </div>
+                ))}
                 <div className="answer-opt no-answer">
                   <span className="answer">No answer</span>
-                  <span className="quantity">5</span>
+                  <span className="quantity">{question.dataQuestion.countPlayerNoAnswer}</span>
                 </div>
               </div>
             </div>
 
             <div className="question-time-limit">
               <BiTimeFive className="icon" />
-              30s time limit
+              {question.dataQuestion.time}s time limit
             </div>
           </div>
 
           <div className="general">
             <div className="correct-answers general-item">
               <span className="title">Correct answers</span>
-              <span className="value">27%</span>
+              <span className="value">{question.percentRight}%</span>
             </div>
 
             <div className="avg-answers-time general-item">
               <span className="title">Avg. answers time</span>
-              <span className="value">24.84s</span>
+              <span className="value">{question.avgAnswersTime}s</span>
             </div>
 
             <div className="players-answered general-item">
               <span className="title">Players answered</span>
-              <span className="value">6 of 11</span>
+              <span className="value">{playerNumbers - question.dataQuestion.countPlayerNoAnswer} of {playerNumbers}</span>
             </div>
           </div>
 
@@ -87,16 +77,18 @@ function QuestionDetail() {
             </div>
 
             <div className="body">
-              <div className="table-item">
-                <div className="player-name fl-25">Arina</div>
-                <div className="answered fl-40">October 22nd, 1967</div>
-                <div className="correct-incorrect fl-20">
-                  <MdOutlineClose className="answer-result-icon incorrect" />
-                  <span className="answer-result">Incorrect</span>
+              {question.detailAllPlayers.map(player => (
+                <div className="table-item" key={player._id}>
+                  <div className="player-name fl-25">{player.name}</div>
+                  <div className="answered fl-40">{player.answered[0]}</div>
+                  <div className="correct-incorrect fl-20">
+                    {player.correct ? <MdOutlineCheck className="answer-result-icon correct" /> : <MdOutlineClose className="answer-result-icon incorrect" />}
+                    <span className="answer-result">{player.correct ? 'Correct' : 'Incorrect'}</span>
+                  </div>
+                  <div className="time fl-5">{player.time.toFixed(2)}s</div>
+                  <div className="score fl-10">{player.score}</div>
                 </div>
-                <div className="time fl-5">15.4s</div>
-                <div className="score fl-10">0</div>
-              </div>
+              ))}
             </div>
           </div>
         </div>

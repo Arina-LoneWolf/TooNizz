@@ -4,6 +4,7 @@ import { useNavigate, useMatch, Link } from 'react-router-dom';
 import { USER_INFO } from '../../apis/userApi';
 import { useReactiveVar, useQuery, useApolloClient } from '@apollo/client';
 import { quizCreationShowVar } from '../apolloLocalState/popupFormState';
+import { userVar } from '../apolloLocalState/userState';
 import { IoSearchOutline } from 'react-icons/io5';
 import { BsList } from 'react-icons/bs';
 import { IoNotificationsOutline } from 'react-icons/io5';
@@ -12,13 +13,18 @@ import QuizCreationForm from './QuizCreationForm';
 const avatar = 'https://i.pinimg.com/564x/0b/97/f5/0b97f53a14d3b0698c1388b013ecabfa.jpg';
 
 function Header() {
-  const { data, loading, error, refetch } = useQuery(USER_INFO);
+  const { data, loading, error, refetch } = useQuery(USER_INFO, {
+    onCompleted: () => {
+      userVar(data.getInfo);
+    }
+  });
 
   const client = useApolloClient();
 
   const navigate = useNavigate();
 
   const quizCreationShow = useReactiveVar(quizCreationShowVar);
+  const user = useReactiveVar(userVar);
 
   const goToGameEntry = () => {
     navigate('/');
@@ -28,33 +34,21 @@ function Header() {
     quizCreationShowVar(true);
   }
 
-  useEffect(() => {
-    if (data) {
-      console.log(data)
-    }
-  }, [data]);
+  // làm đồng bộ đăng nhập nữa
 
-  useEffect(() => {
-    const handleAuthentication = (e) => {
-      console.log(e)
-      if (e.key === 'token') {
-        console.log('wfeqgwhw');
-        if (e.oldValue && !e.newValue) {
-          refetch();
-          client.clearStore();
-        } else if (e.newValue) {
-          console.log('refetch');
-          refetch();
-        }
-      }
+  const handleAvatarClick = (e) => {
+    const userOptions = e.target.querySelector('.user-options');
+    if (userOptions?.classList?.contains('active')) {
+      userOptions.classList.remove('active');
+    } else {
+      userOptions?.classList?.add('active');
     }
+  }
 
-    window.addEventListener('storage', handleAuthentication)
-
-    return function cleanup() {
-      window.removeEventListener('storage', handleAuthentication)
-    }
-  }, []);
+  const handleLogout = () => {
+    localStorage.removeItem('accessToken');
+    userVar({});
+  }
 
   // const atEntry = useMatch('/');
   // const atAuthentication = useMatch('/authentication');
@@ -77,19 +71,24 @@ function Header() {
 
       <div className="join-btn" onClick={goToGameEntry}>Join</div>
 
-      {!data &&
+      {!user.id &&
         <div className="auth-btn-group">
           <Link to="/authentication/login" className="login-btn">Login</Link>
           <Link to="/authentication/signup" className="signup-btn">Sign up</Link>
         </div>}
 
-      {data &&
+      {user?.id &&
         <div className="user-btn-group">
           <IoSearchOutline className="search-btn" />
 
           <IoNotificationsOutline className="noti-icon" />
 
-          <div className="avatar" style={{ backgroundImage: `url(${avatar})` }}></div>
+          <div className="avatar" style={{ backgroundImage: `url(${avatar})` }} onClick={handleAvatarClick}>
+            <ul className="user-options">
+              <li className="option">Account</li>
+              <li className="option" onClick={handleLogout}>Log out</li>
+            </ul>
+          </div>
         </div>}
 
       {quizCreationShow && <QuizCreationForm />}

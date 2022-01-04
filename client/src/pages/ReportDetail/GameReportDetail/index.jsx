@@ -1,8 +1,9 @@
 import './GameReportDetail.scss';
-import React, { useRef } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { GET_REPORT_DETAIL } from '../../../apis/reportApi';
 import { playerDetailShowVar, questionDetailShowVar } from '../../../shared/apolloLocalState/popupFormState';
 import { useReactiveVar, useQuery, useApolloClient } from '@apollo/client';
-import { useLocation } from 'react-router-dom';
 import PlayerDetail from './PlayerDetail';
 import QuestionDetail from './QuestionDetail';
 
@@ -10,14 +11,29 @@ const PLAYERS = 'PLAYERS';
 const QUESTIONS = 'QUESTIONS';
 
 function GameReportDetail() {
+  const { id } = useParams();
+
   const playerDetailShow = useReactiveVar(playerDetailShowVar);
   const questionDetailShow = useReactiveVar(questionDetailShowVar);
 
-  const showPlayerDetail = () => {
+  const [selectedPlayer, setSelectedPlayer] = useState({});
+  const [selectedQuestion, setSelectedQuestion] = useState({});
+
+  console.log('aaaa', typeof id);
+
+  const { data, loading, error } = useQuery(GET_REPORT_DETAIL, {
+    variables: {
+      reportId: id
+    }
+  });
+
+  const showPlayerDetail = (player) => {
+    setSelectedPlayer(player);
     playerDetailShowVar(true);
   }
 
-  const showQuestionDetail = () => {
+  const showQuestionDetail = (question) => {
+    setSelectedQuestion(question);
     questionDetailShowVar(true);
   }
 
@@ -45,10 +61,10 @@ function GameReportDetail() {
       <div className="report-heading">
         <div className="report-lb">Report</div>
         <div className="quiz-name">Birthday party quiz</div>
-        <div className="nav-heading">
-          <div className="nav-item nav-players active" onClick={() => handleChangeReportTab(PLAYERS)} ref={playersTabRef}>Players (11)</div>
-          <div className="nav-item nav-questions" onClick={() => handleChangeReportTab(QUESTIONS)} ref={questionsTabRef}>Questions (10)</div>
-        </div>
+        {data && <div className="nav-heading">
+          <div className="nav-item nav-players active" onClick={() => handleChangeReportTab(PLAYERS)} ref={playersTabRef}>Players ({data.GetDetailReport.players.length})</div>
+          <div className="nav-item nav-questions" onClick={() => handleChangeReportTab(QUESTIONS)} ref={questionsTabRef}>Questions ({data.GetDetailReport.questions.length})</div>
+        </div>}
       </div>
 
       <div className="report-body players-body active" ref={playersReportRef}>
@@ -61,13 +77,15 @@ function GameReportDetail() {
         </div>
 
         <div className="table-body">
-          <div className="table-item" onClick={showPlayerDetail}>
-            <div className="nickname fl-25">Arina</div>
-            <div className="rank fl-20">1</div>
-            <div className="correct-answers fl-20">90%</div>
-            <div className="unanswered fl-20">—</div>
-            <div className="final-score fl-15">5500</div>
-          </div>
+          {data?.GetDetailReport?.players.map(player => (
+            <div className="table-item" key={player._id} onClick={() => showPlayerDetail(player)}>
+              <div className="nickname fl-25">{player.name}</div>
+              <div className="rank fl-20">{player.rank}</div>
+              <div className="correct-answers fl-20">{player.correctPercentAnswers}%</div>
+              <div className="unanswered fl-20">{player.unAnswered > 0 ? player.unAnswered : '—'}</div>
+              <div className="final-score fl-15">{player.finalScore}</div>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -79,16 +97,18 @@ function GameReportDetail() {
         </div>
 
         <div className="table-body">
-          <div className="table-item" onClick={showQuestionDetail}>
-            <div className="question fl-60">What was my first word ever?</div>
-            <div className="question-type fl-20">Multiple-choice</div>
-            <div className="correct-incorrect fl-20">80%</div>
-          </div>
+          {data?.GetDetailReport?.questions.map(question => (
+            <div className="table-item" key={question._id} onClick={() => showQuestionDetail(question)}>
+              <div className="question fl-60">{question.dataQuestion.content}</div>
+              <div className="question-type fl-20">Single-choice</div>
+              <div className="correct-incorrect fl-20">{question.percentRight}%</div>
+            </div>
+          ))}
         </div>
       </div>
 
-      {playerDetailShow && <PlayerDetail />}
-      {questionDetailShow && <QuestionDetail />}
+      {playerDetailShow && <PlayerDetail player={selectedPlayer} playerNumbers={data?.GetDetailReport?.players.length} />}
+      {questionDetailShow && <QuestionDetail question={selectedQuestion} playerNumbers={data?.GetDetailReport?.players.length} />}
     </div>
   );
 }

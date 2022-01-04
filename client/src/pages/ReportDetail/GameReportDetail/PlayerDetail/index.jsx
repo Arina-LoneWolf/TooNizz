@@ -6,7 +6,7 @@ import { MdOutlineClose, MdOutlineCheck } from 'react-icons/md';
 import { RiMedalFill } from 'react-icons/ri';
 import { BsBarChartFill, BsQuestionCircleFill } from 'react-icons/bs';
 
-function PlayerDetail() {
+function PlayerDetail({ player, playerNumbers }) {
   const handleClosing = () => {
     playerDetailShowVar(false);
   }
@@ -18,7 +18,7 @@ function PlayerDetail() {
         <div className="popup-header">
           <div className="player-name-group">
             <BsPerson className="player-icon" />
-            <div className="player-name">Arina</div>
+            <div className="player-name">{player.name}</div>
           </div>
           <MdOutlineClose className="close-icon" onClick={handleClosing} />
         </div>
@@ -26,7 +26,7 @@ function PlayerDetail() {
         <div className="popup-body">
           <div className="general">
             <div className="correct-rate">
-              <div className="rate-number">40%</div>
+              <div className="rate-number">{player.correctPercentAnswers}%</div>
               <div className="des-text">correct</div>
             </div>
 
@@ -35,7 +35,7 @@ function PlayerDetail() {
                 <span className="title">Rank</span>
                 <span className="value">
                   <BsBarChartFill className="icon" />
-                  2 of 11
+                  {player.rank} of {playerNumbers}
                 </span>
               </div>
 
@@ -43,7 +43,7 @@ function PlayerDetail() {
                 <span className="title">Final score</span>
                 <span className="value">
                   <RiMedalFill className="icon" />
-                  3101
+                  {player.finalScore}
                 </span>
               </div>
             </div>
@@ -53,7 +53,7 @@ function PlayerDetail() {
                 <span className="title">Questions answered</span>
                 <span className="value">
                   <BsQuestionCircleFill className="icon" />
-                  9 of 10
+                  {player.detailAllQuestions.length - player.unAnswered} of {player.detailAllQuestions.length}
                 </span>
               </div>
             </div>
@@ -70,17 +70,19 @@ function PlayerDetail() {
             </div>
 
             <div className="body">
-              <div className="table-item">
-                <div className="question-content fl-25">When was I born?</div>
-                <div className="question-type fl-15">Multiple-choice</div>
-                <div className="question-answered fl-25">Going out with friends</div>
-                <div className="correct-incorrect fl-20">
-                  <MdOutlineCheck className="answer-result-icon correct" />
-                  <span className="answer-result">Correct</span>
+              {player?.detailAllQuestions.map(question => (
+                <div className="table-item" key={question._id}>
+                  <div className="question-content fl-25">{question.content}</div>
+                  <div className="question-type fl-15">Single-choice</div>
+                  <div className="question-answered fl-25">{question.answered[0]}</div>
+                  <div className="correct-incorrect fl-20">
+                    {question.correct ? <MdOutlineCheck className="answer-result-icon correct" /> : <MdOutlineClose className="answer-result-icon incorrect" />}
+                    <span className="answer-result">{question.correct ? 'Correct' : 'Incorrect'}</span>
+                  </div>
+                  <div className="question-time fl-5">{question.time}</div>
+                  <div className="question-score fl-10">{question.score}</div>
                 </div>
-                <div className="question-time fl-5">11.7s</div>
-                <div className="question-score fl-10">805</div>
-              </div>
+              ))}
             </div>
           </div>
         </div>

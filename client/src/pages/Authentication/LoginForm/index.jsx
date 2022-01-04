@@ -38,6 +38,7 @@ function LoginForm() {
   });
 
   const onSubmit = (values) => {
+    console.log(values);
     login({
       variables: {
         email: values.email,
@@ -48,9 +49,9 @@ function LoginForm() {
 
   useEffect(() => {
     if (data) {
-      // console.log('Dang nhap thanh cong');
-      // console.log(data.login.accessToken);
-      localStorage.setItem('token', data.login.accessToken);
+      console.log('Dang nhap thanh cong');
+      console.log(data.login.accessToken);
+      localStorage.setItem('accessToken', data.login.accessToken);
       console.log(client)
       // client.resetStore();
       navigate('/home');
