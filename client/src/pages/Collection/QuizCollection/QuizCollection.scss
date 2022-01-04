@@ -15,6 +15,32 @@
     border-bottom: 2px solid #e0e0e0;
   }
 
+  .nav-heading {
+    margin-top: 20px;
+    font-size: 20px;
+    font-weight: 600;
+    display: inline-flex;
+    border-bottom: 3px solid #e6e6e6;
+    width: 100%;
+
+    .nav-item {
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      line-height: 30px;
+      color: #625555;
+      margin-bottom: -3px;
+
+      &.active {
+        border-color: $salmon;
+        color: $salmon;
+      }
+    }
+
+    .nav-liked-quiz {
+      margin-left: 28px;
+    }
+  }
+
   .quiz-list {
     margin-top: 20px;
   }

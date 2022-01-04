@@ -1,14 +1,16 @@
 import './QuizEditorHeader.scss';
-import React from 'react';
+import React, { useState } from 'react';
 import { MdEdit } from 'react-icons/md';
 
-function QuizEditorHeader() {
+function QuizEditorHeader({ quizInitial }) {
+  const [quizName, setQuizName] = useState(quizInitial.quizName);
+
   return (
     <div className="quiz-editor-header">
       <div className="left-part">
         <div className="logo">TooNizz</div>
         <div className="quiz-title-mani">
-          <div className="quiz-title">Chemistry Test</div>
+          <div className="quiz-title" contentEditable>{quizName}</div>
           <MdEdit className="title-edit-icon" />
         </div>
       </div>

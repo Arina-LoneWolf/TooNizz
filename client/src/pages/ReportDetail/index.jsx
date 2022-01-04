@@ -1,16 +1,16 @@
 import React from 'react';
 import Sidebar from '../../shared/Sidebar';
 import Header from '../../shared/Header';
-import QuizViewer from './QuizViewer';
+import GameReportDetail from './GameReportDetail';
 
-function Viewer() {
+function ReportDetail() {
   return (
     <React.Fragment>
       <Sidebar />
       <Header />
-      <QuizViewer />
+      <GameReportDetail />
     </React.Fragment>
   );
 }
 
-export default Viewer;
+export default ReportDetail;

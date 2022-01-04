@@ -6,13 +6,18 @@ import 'swiper/swiper.scss';
 import 'swiper/swiper-bundle.css';
 import QuizCard from './QuizCard';
 
-const quizzes = ['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '']; // 18 elems
+const quizzes = ['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '']; // 18 elems
 
 function QuizSetsList() {
   return (
     <div className="quiz-sets-list">
-      <h1 className="list-title">Chemistry</h1>
-      <QuizCard />
+      <h1 className="list-title">Most Popular</h1>
+      <div className="list-cards">
+        {quizzes.map((quiz, index) => (
+          <QuizCard key={index} />
+        ))}
+      </div>
+      <div className="load-more-btn">More</div>
     </div>
   );
 }

@@ -55,14 +55,11 @@ function PlayerGameWaiting() {
   useEffect(() => {
     if (countdown < 2) {
       clearInterval(intervalRef.current);
-      setTimeout(() => {
-        gsap.timeline({
-          onComplete: () => {
-            navigate('/gameplay', { replace: true, state: { name, firstQuestion } });
-          }
-        })
-          .to(overlayRef.current, { opacity: 1, duration: 1 })
-      }, 1000);
+      gsap.timeline({
+        onComplete: () => {
+          navigate('/gameplay', { replace: true, state: { name, firstQuestion } });
+        }
+      }).to(overlayRef.current, { opacity: 1, duration: 1 })
     }
   }, [countdown]);
 

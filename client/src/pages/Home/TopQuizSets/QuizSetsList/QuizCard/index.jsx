@@ -7,8 +7,13 @@ function QuizCard() {
   return (
     <div className="quiz-card">
       <div className="card-image" style={{ backgroundImage: `url(${cardImage})` }} />
-      <h2 className="card-name">Similar Figures</h2>
-      <div className="card-questions">20 Questions</div>
+      <div className="card-desc">
+        <h2 className="card-name">Similar Figures</h2>
+        <div className="card-sub-info">
+          <div className="questions">20 Questions</div>
+          <div className="card-plays">7 plays</div>
+        </div>
+      </div>
     </div>
   );
 }

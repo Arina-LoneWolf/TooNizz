@@ -12,7 +12,7 @@ import rolling from '../../assets/gifs/rolling.svg';
 const CORRECT = 'Correct';
 const INCORRECT = 'Incorrect';
 const TIME_UP = 'Time Up';
-
+// qua câu hỏi mới thì set lại timeUp = false;
 function PlayerGamePlay() {
   const navigate = useNavigate();
   const { state: { name, firstQuestion } } = useLocation();
@@ -49,12 +49,12 @@ function PlayerGamePlay() {
 
     socket.on('classic:countdown-start-player', () => {
       timeoutRef.current = setTimeout(() => {
+        setResultMessage(TIME_UP);
         console.log('emit het gio')
         const answer = {
           answers: [],
           time: -1
         }
-        setResultMessage(TIME_UP);
         socket.emit('classic:player-answer', answer);
         tlAnswers.current.reverse();
       }, questionTime);
@@ -66,16 +66,6 @@ function PlayerGamePlay() {
           setWaitingOthers(true);
         }
       }).to(q('.answer'), { scale: 1, duration: 0.4 })
-    });
-
-    socket.on('classic:all-players-answered', (questionResult) => {
-      console.log('players tra loi xong het', questionResult);
-      clearTimeout(timeoutRef.current);
-      setQuestionScore(questionResult.score);
-      setTotalScore(questionResult.totalScore);
-      setRank(questionResult.rank);
-      questionResult.score ? setResultMessage(CORRECT) : setResultMessage(INCORRECT);
-      setShowResult(true);
     });
 
     socket.on('classic:sv-send-question', (question) => {
@@ -90,6 +80,7 @@ function PlayerGamePlay() {
 
     return () => {
       clearTimeout(timeoutRef.current);
+
       socket.off('classic:countdown-start-player');
       socket.off('classic:all-players-answered');
       socket.off('classic:sv-send-question');
@@ -98,11 +89,30 @@ function PlayerGamePlay() {
   }, []);
 
   useEffect(() => {
+    socket.on('classic:all-players-answered', (questionResult) => {
+      console.log('players tra loi xong het', questionResult);
+
+      setQuestionScore(questionResult.score);
+      setTotalScore(questionResult.totalScore);
+      setRank(questionResult.rank);
+
+      if (resultMessage !== TIME_UP) {
+        questionResult.score ? setResultMessage(CORRECT) : setResultMessage(INCORRECT);
+      }
+      setShowResult(true);
+    });
+
+    return () => socket.off('classic:all-players-answered');
+  }, [resultMessage]);
+
+  useEffect(() => {
     if (showResult)
       setWaitingOthers(false);
   }, [showResult, waitingOthers])
 
   const submitAnswer = (answerNumber) => {
+    clearTimeout(timeoutRef.current);
+
     const timeEnd = performance.now();
     const answerTime = timeEnd - timeStart;
 
@@ -111,7 +121,6 @@ function PlayerGamePlay() {
       answers: [currentQuestion.answers[answerNumber]._id]
     }
 
-    clearTimeout(timeoutRef.current);
     console.log('emit tra loi');
     socket.emit('classic:player-answer', answer);
 

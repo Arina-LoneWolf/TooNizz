@@ -10,7 +10,7 @@ import { BsMusicNoteBeamed, BsFillVolumeDownFill } from 'react-icons/bs';
 import { IoLockOpen, IoLockClosed, IoLockOpenOutline, IoLockClosedOutline } from 'react-icons/io5'
 import background from '../../assets/images/space-bg-5.jpg';
 
-const quizSetId = '619b6629ad2e4c2a48924f7f';
+const quizSetId = '61d01e683da2ae0a14f54224';
 
 function HostGameWaiting() {
   const navigate = useNavigate();
@@ -104,32 +104,17 @@ function HostGameWaiting() {
   useEffect(() => {
     if (countdown < 2) {
       clearInterval(intervalRef.current);
-      setTimeout(() => {
-        gsap.timeline({
-          onComplete: () => {
-            navigate('/gameplay/admin', { replace: true, state: { firstQuestion, totalQuestions, totalPlayers: players.length } });
-          }
-        })
-          .to(q('.overlay'), { opacity: 1, duration: 1 })
-      }, 1000);
+      gsap.timeline({
+        onComplete: () => {
+          navigate('/gameplay/admin', { replace: true, state: { firstQuestion, totalQuestions, totalPlayers: players.length } });
+        }
+      }).to(q('.overlay'), { opacity: 1, duration: 1 })
     }
   }, [countdown]);
 
 
   const handleStartGame = () => {
     socket.emit('classic:host-start-game');
-
-    // tlStart.current = gsap.timeline({
-    //   onComplete: () => {
-    //     intervalRef.current = setInterval(handleCountdown, 1000);
-    //   }
-    // }).addLabel('start')
-    //   .to(q('.upper-half'), { y: '-100%' }, 'start')
-    //   .to(q('.start-btn'), { opacity: 0 }, 'start')
-    //   .to(q('.members-wrapper'), { opacity: 0 }, 'start')
-    //   .to(q('.members-display-wrapper'), { y: '50vh' }, 'start')
-    //   .to(q('.countdown-start'), { display: 'block', width: '100vw', opacity: 1, duration: 0.8, ease: "circ.easeIn" })
-    //   .to(q('.countdown-start'), { color: 'white', duration: 0.1 })
   }
 
   return (

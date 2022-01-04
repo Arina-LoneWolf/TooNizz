@@ -10,11 +10,11 @@ import subjects from '../../data/subjects';
 
 const schema = yup.object({
   quizName: yup.string().required('*Required'),
-  quizSubject: yup.array().min(1, '*Please choose at least one relevant subject')
+  quizSubjects: yup.array().min(1, '*Please choose at least one relevant subject')
 });
 
 const defaultValues = {
-  quizSubject: []
+  quizSubjects: []
 }
 
 function QuizCreationForm() {
@@ -54,12 +54,12 @@ function QuizCreationForm() {
           <div className="subjects-list">
             {subjects.map(subject => (
               <React.Fragment key={subject}>
-                <input {...register("quizSubject")} type="checkbox" id={subject} value={subject} />
+                <input {...register("quizSubjects")} type="checkbox" id={subject} value={subject} />
                 <label for={subject} className="subject">{subject}</label>
               </React.Fragment>
             ))}
           </div>
-          <TextError>{errors.quizSubject?.message}</TextError>
+          <TextError>{errors.quizSubjects?.message}</TextError>
         </div>
 
         <div className="btn-group">

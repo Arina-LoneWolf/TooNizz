@@ -506,6 +506,8 @@ export const classisModeAll = (io, socket, players, games) => {
 		}
 		console.log('số ng đa trả lời', infoGame.gameData.numberPlayerAnswered);
 	});
+
+
 };
 
 function ordinalSuffixOf(i) {

@@ -8,7 +8,7 @@ function Home() {
     <React.Fragment>
       <Sidebar />
       <Header />
-      {/* <TopQuizSets /> */}
+      <TopQuizSets />
     </React.Fragment>
   );
 }

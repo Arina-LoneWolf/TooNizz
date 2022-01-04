@@ -30,6 +30,11 @@
   z-index: 2;
 }
 
+@mixin flex-width($widthRate) {
+  flex: 0 0 $widthRate;
+  max-width: $widthRate;
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;

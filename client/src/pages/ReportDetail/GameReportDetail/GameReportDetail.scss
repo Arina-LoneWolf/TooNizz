@@ -1,0 +1,170 @@
+@import "../../../shared/style/color.scss";
+@import "../../../shared/style/common.scss";
+
+.game-report-detail {
+  font-family: "Josefin Sans", sans-serif;
+  margin: 58px auto 0;
+
+  .report-heading {
+    background: rgba($salmon, 0.1);
+    padding: 16px 160px 0;
+
+    .report-lb {
+      font-size: 20px;
+      font-weight: 500;
+      color: rgba(137, 137, 137, 0.5);
+    }
+
+    .quiz-name {
+      font-size: 42px;
+      margin: 10px -3px 42px;
+      color: $salmon;
+    }
+
+    .nav-heading {
+      font-size: 20px;
+      font-weight: 600;
+      display: flex;
+
+      .nav-item {
+        cursor: pointer;
+        border-bottom: 3px solid transparent;
+        line-height: 30px;
+        color: #625555;
+
+        &.active {
+          border-color: $salmon;
+          color: $salmon;
+        }
+      }
+
+      .nav-questions {
+        margin-left: 28px;
+      }
+    }
+  }
+
+  .report-body {
+    display: none;
+    margin: 32px 160px 0;
+    border-radius: 4px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+
+    &.active {
+      display: block;
+    }
+
+    .table-heading {
+      display: flex;
+      align-items: center;
+      font-size: 18px;
+      font-weight: 700;
+      background: $whitesmoke;
+      height: 46px;
+      border-bottom: 1px solid #d8d8d8;
+      border-top-left-radius: 4px;
+      border-top-right-radius: 4px;
+
+      div {
+        padding: 0 4px;
+
+        &:first-child {
+          padding-left: 24px;
+        }
+
+        &:last-child {
+          padding-right: 24px;
+          text-align: right;
+        }
+
+        &:not(:first-child):not(:last-child) {
+          text-align: center;
+        }
+      }
+    }
+
+    .table-body {
+      .table-item {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        height: 46px;
+        font-size: 17px;
+        background: white;
+        border-bottom: 1px solid #f2f2f2;
+
+        &:last-child {
+          border-bottom-left-radius: 4px;
+          border-bottom-right-radius: 4px;
+        }
+
+        &:hover {
+          background: #f4f4f4;
+        }
+
+        div {
+          padding: 0 4px;
+
+          &:first-child {
+            padding-left: 24px;
+          }
+
+          &:last-child {
+            padding-right: 24px;
+            text-align: right;
+          }
+
+          &:not(:first-child):not(:last-child) {
+            text-align: center;
+          }
+        }
+      }
+    }
+  }
+
+  .players-body {
+  }
+
+  .questions-body {
+  }
+}
+
+.fl-60 {
+  @include flex-width(60%);
+}
+.fl-45 {
+  @include flex-width(45%);
+}
+.fl-40 {
+  @include flex-width(40%);
+}
+.fl-35 {
+  @include flex-width(35%);
+}
+.fl-15 {
+  @include flex-width(15%);
+}
+.fl-10 {
+  @include flex-width(10%);
+}
+.fl-20 {
+  @include flex-width(20%);
+}
+.fl-25 {
+  @include flex-width(25%);
+}
+.fl-26 {
+  @include flex-width(26%);
+}
+.fl-27 {
+  @include flex-width(27%);
+}
+.fl-28 {
+  @include flex-width(28%);
+}
+.fl-5 {
+  @include flex-width(5%);
+}
+.fl-4 {
+  @include flex-width(4%);
+}

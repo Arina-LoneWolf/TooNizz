@@ -1,0 +1,193 @@
+@import "../../../shared/style/color.scss";
+@import "../../../shared/style/common.scss";
+
+.game-report {
+  font-family: "Josefin Sans", sans-serif;
+  margin: 58px auto 0;
+  width: 76%;
+
+  h1 {
+    display: inline-block;
+    font-size: 28px;
+    width: 100%;
+    margin-top: 24px;
+    padding-bottom: 4px;
+    // border-bottom: 2px solid #e0e0e0;
+  }
+
+  .reports-list {
+    margin-top: 20px;
+    border-radius: 4px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+
+    .heading {
+      display: flex;
+      align-items: center;
+      font-size: 18px;
+      font-weight: 700;
+      background: $whitesmoke;
+      height: 46px;
+      border-bottom: 1px solid #d8d8d8;
+      border-top-left-radius: 4px;
+      border-top-right-radius: 4px;
+
+      div {
+        padding: 0 4px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+
+        &.sort {
+          color: $salmon;
+        }
+
+        &:first-child {
+          padding-left: 12px;
+        }
+
+        .icon {
+          width: 24px;
+          height: 24px;
+
+          &.down {
+            margin-top: -2px;
+          }
+
+          &.up {
+            margin-top: 1px;
+          }
+        }
+      }
+
+      .quiz-name-heading {
+      }
+      .date-heading {
+      }
+      .game-mode-heading {
+        cursor: default;
+      }
+      .players-heading {
+      }
+      .manipulation {
+      }
+    }
+
+    .body {
+      .report-item {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        height: 46px;
+        font-size: 17px;
+        background: white;
+        border-bottom: 1px solid #f2f2f2;
+
+        &:last-child {
+          border-bottom-left-radius: 4px;
+          border-bottom-right-radius: 4px;
+        }
+
+        &:hover {
+          background: #f4f4f4;
+        }
+
+        div {
+          padding: 0 4px;
+
+          &:first-child {
+            padding-left: 12px;
+          }
+        }
+
+        .quiz-name {
+        }
+        .report-date {
+        }
+        .game-mode {
+        }
+        .players {
+          padding-left: 31px;
+        }
+        .manipulation {
+          position: relative;
+          display: flex;
+          justify-content: flex-end;
+
+          .manipulation-btn {
+            cursor: pointer;
+            width: 26px;
+            height: 22px;
+
+            &.active {
+              display: block;
+            }
+          }
+
+          .mani-options {
+            display: none;
+            position: absolute;
+            right: 8px;
+            top: calc(100% + 4px);
+            background: white;
+            box-shadow: rgba(0, 0, 0, 0.15) 0px 0px 3px 0px;
+            list-style: none;
+            width: 160px;
+            border-radius: 4px;
+            z-index: 1;
+
+            .mani-opt {
+              line-height: 32px;
+              cursor: pointer;
+              padding: 0 12px;
+
+              &:hover {
+                background: #f4f4f4;
+              }
+            }
+
+            &.active {
+              display: block;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.fl-45 {
+  @include flex-width(45%);
+}
+.fl-40 {
+  @include flex-width(40%);
+}
+.fl-35 {
+  @include flex-width(35%);
+}
+.fl-15 {
+  @include flex-width(15%);
+}
+.fl-10 {
+  @include flex-width(10%);
+}
+.fl-20 {
+  @include flex-width(20%);
+}
+.fl-25 {
+  @include flex-width(25%);
+}
+.fl-26 {
+  @include flex-width(26%);
+}
+.fl-27 {
+  @include flex-width(27%);
+}
+.fl-28 {
+  @include flex-width(28%);
+}
+.fl-5 {
+  @include flex-width(5%);
+}
+.fl-4 {
+  @include flex-width(4%);
+}
