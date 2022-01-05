@@ -7,6 +7,7 @@ import background from '../../assets/images/space-bg-13.jpg';
 import { BsFillSquareFill, BsFillCircleFill, BsFillTriangleFill, BsFillDiamondFill, BsFillHexagonFill } from 'react-icons/bs';
 import { BiBadgeCheck } from 'react-icons/bi';
 import { RiEmotionSadFill, RiEmotionLaughFill, RiMedalFill, RiMedalLine } from 'react-icons/ri';
+import { GiFinishLine } from 'react-icons/gi';
 import rolling from '../../assets/gifs/rolling.svg';
 
 const CORRECT = 'Correct';
@@ -27,6 +28,7 @@ function PlayerGamePlay() {
   const [questionScore, setQuestionScore] = useState(0);
   const [resultMessage, setResultMessage] = useState(INCORRECT);
   const [rank, setRank] = useState('');
+  const [showFinalResult, setShowFinalResult] = useState(false);
 
   const performance = window.performance;
   const [timeStart, setTimeStart] = useState(0);
@@ -34,6 +36,10 @@ function PlayerGamePlay() {
   const el = useRef();
   const q = gsap.utils.selector(el);
   const tlAnswers = useRef();
+
+  const handleDoneClick = () => {
+    navigate('/', { replace: true });
+  }
 
   useEffect(() => {
     console.log('useeffect render');
@@ -71,11 +77,23 @@ function PlayerGamePlay() {
     socket.on('classic:sv-send-question', (question) => {
       console.log(question);
       setCurrentQuestion(question);
-      setQuestionTime(question.time);
+      // setQuestionTime(question.time);
+      setQuestionTime(5);
+      setShowResult(false);
+      // tlAnswers.current.play();
     });
 
     socket.on('classic:host-disconnected', () => {
       navigate('/');
+    });
+
+    socket.on('classic:sv-send-report', (report) => {
+      console.log(report);
+      const myResult = report.players.filter(player => player.name === name);
+      setRank(myResult[0].rank);
+      setShowResult(false);
+      setWaitingOthers(false);
+      setShowFinalResult(true);
     });
 
     return () => {
@@ -85,6 +103,7 @@ function PlayerGamePlay() {
       socket.off('classic:all-players-answered');
       socket.off('classic:sv-send-question');
       socket.off('classic:host-disconnected');
+      socket.off('classic:sv-send-report');
     }
   }, []);
 
@@ -110,6 +129,11 @@ function PlayerGamePlay() {
       setWaitingOthers(false);
   }, [showResult, waitingOthers])
 
+  useEffect(() => {
+    if (showFinalResult)
+      setWaitingOthers(false);
+  }, [showFinalResult, waitingOthers]);
+
   const submitAnswer = (answerNumber) => {
     clearTimeout(timeoutRef.current);
 
@@ -132,7 +156,7 @@ function PlayerGamePlay() {
       <div className="blur-overlay">
         <div className="status-bar">
           <div className="question-number">1 of 15</div>
-          <div className="question-type">Multiple-choice</div>
+          <div className="question-type">Single-choice</div>
           <div className="score-wrapper">
             <label className="score-lb">Your score</label>
             <span className="player-score">{totalScore}</span>
@@ -145,6 +169,16 @@ function PlayerGamePlay() {
           <div className="answer opt-3" onClick={() => submitAnswer(2)}><BsFillHexagonFill className="answer-icon" /></div>
           <div className="answer opt-4" onClick={() => submitAnswer(3)}><BsFillDiamondFill className="answer-icon" /></div>
         </div>
+
+        {showFinalResult &&
+          <div className="result-wrapper">
+            <GiFinishLine className="finish-icon" />
+            <div className="rank-message">
+              Your rank is {rank}
+              <RiMedalFill className="rank-icon" />
+            </div>
+            <div className="finish-btn" onClick={handleDoneClick}>Done</div>
+          </div>}
       </div>
 
       {waitingOthers && <img src={rolling} className="waiting-others" alt="Waiting others" />}

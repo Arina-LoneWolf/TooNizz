@@ -248,9 +248,13 @@ export const classisModeAll = (io, socket, players, games) => {
 
 	socket.on('classic:host-next-question', (data) => {
 		let infoGame = games.filter((game) => game.gamePin === socket.gamePin)[0];
+		let allPlayersInRoom = players.filter(
+			(player) => player.gamePin === socket.gamePin,
+		);
+		let indexQuestion = infoGame.gameData.currentQuestion;
 		if (infoGame.gameData.currentQuestion + 1 < infoGame.listQuestions.length) {
 			infoGame.gameData.currentQuestion += 1;
-			const indexQuestion = infoGame.gameData.currentQuestion;
+			/*const*/ indexQuestion = infoGame.gameData.currentQuestion;
 			//dùng lodash để deep copy nested object
 			let newListQuestion = _.cloneDeep(infoGame.listQuestions[indexQuestion]);
 
@@ -263,12 +267,220 @@ export const classisModeAll = (io, socket, players, games) => {
 			// 	delete newListQuestion.answers[j].isCorrect;
 			// }
 
+			console.log('indexQ', indexQuestion)
+			infoGame.gameData.numberPlayerAnswered = 0;
+
+
 			socket.emit('classic:sv-send-info-list-questions', {
 				lengthListQuestions: infoGame.listQuestions.length,
 				currentQuestion: indexQuestion,
 			});
 
 			io.in(infoGame.gamePin).emit('classic:sv-send-question', newListQuestion);
+		} else {
+			console.log("vao tra report")
+			if (indexQuestion === infoGame.listQuestions.length - 1) {
+				const allQuestions = infoGame.listQuestions;
+
+				let namePlayersArr = [];
+				let nameQuestionsArr = [];
+				let playersNeedHelp = [];
+				let difficultQuestions = [];
+				let playersDidNotFinish = [];
+
+				//currentQuestion.listPlayersAnswer;
+				let sortScore = allPlayersInRoom.sort((a, b) =>
+					a.totalScore < b.totalScore ? 1 : -1,
+				);
+
+				//cho ng chơi
+				for (let i = 0; i < sortScore.length; i++) {
+					let countNoAnswered = 0;
+					let countCorrectAnswered = 0;
+					let detailAllQuestions = [];
+
+					for (let j = 0; j < allQuestions.length; j++) {
+						//cho ng chơi
+						for (let z = 0; z < allQuestions[j].listPlayersAnswer.length; z++) {
+							if (sortScore[i].id === allQuestions[j].listPlayersAnswer[z].id) {
+								detailAllQuestions.push({
+									content: allQuestions[j].content,
+									type: allQuestions[j].type,
+									answered: allQuestions[j].listPlayersAnswer[z].answer,
+									correct: allQuestions[j].listPlayersAnswer[z].correct,
+									time: allQuestions[j].listPlayersAnswer[z].time.toFixed(2),
+									score: allQuestions[j].listPlayersAnswer[z].score,
+								});
+
+								if (allQuestions[j].listPlayersAnswer[z].time === -1) {
+									countNoAnswered++;
+								}
+
+								if (allQuestions[j].listPlayersAnswer[z].correct) {
+									countCorrectAnswered++;
+								}
+							}
+						}
+					}
+
+					//tỉ lệ đúng của player
+					let correctPercentAnswers = 0;
+					if (allQuestions.length !== 0) {
+						correctPercentAnswers = Math.round(
+							(countCorrectAnswered / allQuestions.length) * 100,
+						);
+					}
+
+					namePlayersArr.push({
+						name: sortScore[i].name,
+						rank: i + 1,
+						correctPercentAnswers: correctPercentAnswers,
+						unAnswered: countNoAnswered,
+						finalScore: sortScore[i].totalScore,
+						detailAllQuestions: detailAllQuestions,
+					});
+
+					if (countNoAnswered > allQuestions.length / 2) {
+						playersDidNotFinish.push({
+							name: sortScore[i].name,
+							rank: i + 1,
+							correctPercentAnswers: correctPercentAnswers,
+							unAnswered: countNoAnswered,
+							finalScore: sortScore[i].totalScore,
+							detailAllQuestions: detailAllQuestions,
+						});
+					}
+
+					if (correctPercentAnswers < 30) {
+						playersNeedHelp.push({
+							name: sortScore[i].name,
+							rank: i + 1,
+							correctPercentAnswers: correctPercentAnswers,
+							unAnswered: countNoAnswered,
+							finalScore: sortScore[i].totalScore,
+							detailAllQuestions: detailAllQuestions,
+						});
+					}
+				}
+
+				//cho câu hỏi
+				for (let j = 0; j < allQuestions.length; j++) {
+					let countCorrectForQuestion = 0;
+					let countWrongForQuestion = 0;
+					let avgAnswersTime = 0;
+					let detailAllPlayers = [];
+
+					//cho câu hỏi
+					for (let k = 0; k < allQuestions[j].answers.length; k++) {
+						// đếm những ng trả lời đúng cho 1 câu
+						if (allQuestions[j].answers[k].isCorrect) {
+							countCorrectForQuestion +=
+								allQuestions[j].answers[k].countPlayerAnswer;
+						} else {
+							// đếm những ng trả lời sai cho 1 câu
+							countWrongForQuestion +=
+								allQuestions[j].answers[k].countPlayerAnswer;
+						}
+					}
+					//tỉ lệ đúng của câu hỏi
+					countWrongForQuestion += allQuestions[j].countPlayerNoAnswer;
+					let percentRight = 0;
+					if (countCorrectForQuestion + countWrongForQuestion !== 0) {
+						percentRight = Math.round(
+							(countCorrectForQuestion /
+								(countCorrectForQuestion + countWrongForQuestion)) *
+							100,
+						);
+					}
+
+					for (let z = 0; z < allQuestions[j].listPlayersAnswer.length; z++) {
+						//tính thời gian trlời tb cho 1 câu hỏi (B1)
+						if (allQuestions[j].listPlayersAnswer[z].time !== -1) {
+							avgAnswersTime += allQuestions[j].listPlayersAnswer[z].time;
+						}
+
+						/*if ((allQuestions[j].type === 1) | (allQuestions[j].type === 3))*/
+						detailAllPlayers.push({
+							name: allQuestions[j].listPlayersAnswer[z].name,
+							answered: allQuestions[j].listPlayersAnswer[z].answer,
+							correct: allQuestions[j].listPlayersAnswer[z].correct,
+							time: allQuestions[j].listPlayersAnswer[z].time,
+							score: allQuestions[j].listPlayersAnswer[z].score,
+						});
+					}
+
+					//tính thời gian trlời tb cho 1 câu hỏi (B2)
+					if (allQuestions[j].listPlayersAnswer.length !== 0) {
+						avgAnswersTime = (
+							avgAnswersTime / allQuestions[j].listPlayersAnswer.length
+						).toFixed(2);
+					}
+
+					let cloneNewQuestion = _.cloneDeep(allQuestions[j]);
+					delete cloneNewQuestion.listPlayersAnswer;
+
+					if (cloneNewQuestion.type === 4) {
+						cloneNewQuestion.typeAnswers = cloneNewQuestion.countTypeAnswers;
+						delete cloneNewQuestion.countTypeAnswers;
+					} else {
+						delete cloneNewQuestion.typeAnswers;
+					}
+
+					nameQuestionsArr.push({
+						dataQuestion: cloneNewQuestion,
+						percentRight,
+						avgAnswersTime,
+						// này thống kê ra đươc ko lưu (detailAllPlayers.length-countPlayerNoAnswer)
+						// playersAnswered:
+						// 	allQuestions[j].listPlayersAnswer.length -
+						// 	allQuestions[j].countPlayerNoAnswer,
+
+						// này thống kê ra đươc ko lưu  (detailAllPlayers.length)
+						//allPlayers: allQuestions[j].listPlayersAnswer.length,
+						detailAllPlayers: detailAllPlayers,
+					});
+
+					if (percentRight < 30) {
+						difficultQuestions.push({
+							dataQuestion: cloneNewQuestion,
+							percentRight,
+							avgAnswersTime,
+							playersAnswered:
+								allQuestions[j].listPlayersAnswer.length -
+								allQuestions[j].countPlayerNoAnswer,
+							//allPlayers: allQuestions[j].listPlayersAnswer.length,
+							detailAllPlayers: detailAllPlayers,
+						});
+					}
+				}
+
+				//console.log(namePlayersArr);
+
+				const dataReport = {
+					userId: infoGame.userHostId ? infoGame.userHostId : '',
+					name: infoGame.name,
+					gameMode: infoGame.mode,
+					players: namePlayersArr,
+					questions: nameQuestionsArr,
+					// numberPlayers: allPlayersInRoom.length, // này thống kê ra đươc ko lưu
+					// numberQuestions: allQuestions.length, // này thống kê ra đươc ko lưu
+					// playersNeedHelp, // này thống kê ra đươc ko lưu
+					// playersDidNotFinish, // này thống kê ra đươc ko lưu
+					// difficultQuestions, // này thống kê ra đươc ko lưu
+				};
+				if (infoGame.userHostId !== '') {
+					dataReport.gameStart = infoGame.gameStart;
+					Report.create(dataReport, (error, data) => {
+						if (error) {
+							console.log(error);
+							return;
+						}
+					});
+				}
+				io.in(infoGame.gamePin).emit('classic:sv-send-report', dataReport);
+				console.log(dataReport);
+			}
+
 		}
 	});
 
@@ -563,208 +775,207 @@ export const classisModeAll = (io, socket, players, games) => {
 			console.log('countAnswer', dataPlayersAnswered);
 
 			//nếu là câu hỏi cuối cùng
-			if (indexQuestion === infoGame.listQuestions.length - 1) {
-				const allQuestions = infoGame.listQuestions;
+			// if (indexQuestion === infoGame.listQuestions.length - 1) {
+			// 	const allQuestions = infoGame.listQuestions;
 
-				let namePlayersArr = [];
-				let nameQuestionsArr = [];
-				let playersNeedHelp = [];
-				let difficultQuestions = [];
-				let playersDidNotFinish = [];
+			// 	let namePlayersArr = [];
+			// 	let nameQuestionsArr = [];
+			// 	let playersNeedHelp = [];
+			// 	let difficultQuestions = [];
+			// 	let playersDidNotFinish = [];
 
-				//currentQuestion.listPlayersAnswer;
-				let sortScore = allPlayersInRoom.sort((a, b) =>
-					a.totalScore < b.totalScore ? 1 : -1,
-				);
+			// 	//currentQuestion.listPlayersAnswer;
+			// 	let sortScore = allPlayersInRoom.sort((a, b) =>
+			// 		a.totalScore < b.totalScore ? 1 : -1,
+			// 	);
 
-				//cho ng chơi
-				for (let i = 0; i < sortScore.length; i++) {
-					let countNoAnswered = 0;
-					let countCorrectAnswered = 0;
-					let detailAllQuestions = [];
+			// 	//cho ng chơi
+			// 	for (let i = 0; i < sortScore.length; i++) {
+			// 		let countNoAnswered = 0;
+			// 		let countCorrectAnswered = 0;
+			// 		let detailAllQuestions = [];
 
-					for (let j = 0; j < allQuestions.length; j++) {
-						//cho ng chơi
-						for (let z = 0; z < allQuestions[j].listPlayersAnswer.length; z++) {
-							if (sortScore[i].id === allQuestions[j].listPlayersAnswer[z].id) {
-								detailAllQuestions.push({
-									content: allQuestions[j].content,
-									type: allQuestions[j].type,
-									answered: allQuestions[j].listPlayersAnswer[z].answer,
-									correct: allQuestions[j].listPlayersAnswer[z].correct,
-									time: allQuestions[j].listPlayersAnswer[z].time.toFixed(2),
-									score: allQuestions[j].listPlayersAnswer[z].score,
-								});
+			// 		for (let j = 0; j < allQuestions.length; j++) {
+			// 			//cho ng chơi
+			// 			for (let z = 0; z < allQuestions[j].listPlayersAnswer.length; z++) {
+			// 				if (sortScore[i].id === allQuestions[j].listPlayersAnswer[z].id) {
+			// 					detailAllQuestions.push({
+			// 						content: allQuestions[j].content,
+			// 						type: allQuestions[j].type,
+			// 						answered: allQuestions[j].listPlayersAnswer[z].answer,
+			// 						correct: allQuestions[j].listPlayersAnswer[z].correct,
+			// 						time: allQuestions[j].listPlayersAnswer[z].time.toFixed(2),
+			// 						score: allQuestions[j].listPlayersAnswer[z].score,
+			// 					});
 
-								if (allQuestions[j].listPlayersAnswer[z].time === -1) {
-									countNoAnswered++;
-								}
+			// 					if (allQuestions[j].listPlayersAnswer[z].time === -1) {
+			// 						countNoAnswered++;
+			// 					}
 
-								if (allQuestions[j].listPlayersAnswer[z].correct) {
-									countCorrectAnswered++;
-								}
-							}
-						}
-					}
+			// 					if (allQuestions[j].listPlayersAnswer[z].correct) {
+			// 						countCorrectAnswered++;
+			// 					}
+			// 				}
+			// 			}
+			// 		}
 
-					//tỉ lệ đúng của player
-					let correctPercentAnswers = 0;
-					if (allQuestions.length !== 0) {
-						correctPercentAnswers = Math.round(
-							(countCorrectAnswered / allQuestions.length) * 100,
-						);
-					}
+			// 		//tỉ lệ đúng của player
+			// 		let correctPercentAnswers = 0;
+			// 		if (allQuestions.length !== 0) {
+			// 			correctPercentAnswers = Math.round(
+			// 				(countCorrectAnswered / allQuestions.length) * 100,
+			// 			);
+			// 		}
 
-					namePlayersArr.push({
-						name: sortScore[i].name,
-						rank: i + 1,
-						correctPercentAnswers: correctPercentAnswers,
-						unAnswered: countNoAnswered,
-						finalScore: sortScore[i].totalScore,
-						detailAllQuestions: detailAllQuestions,
-					});
+			// 		namePlayersArr.push({
+			// 			name: sortScore[i].name,
+			// 			rank: i + 1,
+			// 			correctPercentAnswers: correctPercentAnswers,
+			// 			unAnswered: countNoAnswered,
+			// 			finalScore: sortScore[i].totalScore,
+			// 			detailAllQuestions: detailAllQuestions,
+			// 		});
 
-					if (countNoAnswered > allQuestions.length / 2) {
-						playersDidNotFinish.push({
-							name: sortScore[i].name,
-							rank: i + 1,
-							correctPercentAnswers: correctPercentAnswers,
-							unAnswered: countNoAnswered,
-							finalScore: sortScore[i].totalScore,
-							detailAllQuestions: detailAllQuestions,
-						});
-					}
+			// 		if (countNoAnswered > allQuestions.length / 2) {
+			// 			playersDidNotFinish.push({
+			// 				name: sortScore[i].name,
+			// 				rank: i + 1,
+			// 				correctPercentAnswers: correctPercentAnswers,
+			// 				unAnswered: countNoAnswered,
+			// 				finalScore: sortScore[i].totalScore,
+			// 				detailAllQuestions: detailAllQuestions,
+			// 			});
+			// 		}
 
-					if (correctPercentAnswers < 30) {
-						playersNeedHelp.push({
-							name: sortScore[i].name,
-							rank: i + 1,
-							correctPercentAnswers: correctPercentAnswers,
-							unAnswered: countNoAnswered,
-							finalScore: sortScore[i].totalScore,
-							detailAllQuestions: detailAllQuestions,
-						});
-					}
-				}
+			// 		if (correctPercentAnswers < 30) {
+			// 			playersNeedHelp.push({
+			// 				name: sortScore[i].name,
+			// 				rank: i + 1,
+			// 				correctPercentAnswers: correctPercentAnswers,
+			// 				unAnswered: countNoAnswered,
+			// 				finalScore: sortScore[i].totalScore,
+			// 				detailAllQuestions: detailAllQuestions,
+			// 			});
+			// 		}
+			// 	}
 
-				//cho câu hỏi
-				for (let j = 0; j < allQuestions.length; j++) {
-					let countCorrectForQuestion = 0;
-					let countWrongForQuestion = 0;
-					let avgAnswersTime = 0;
-					let detailAllPlayers = [];
+			// 	//cho câu hỏi
+			// 	for (let j = 0; j < allQuestions.length; j++) {
+			// 		let countCorrectForQuestion = 0;
+			// 		let countWrongForQuestion = 0;
+			// 		let avgAnswersTime = 0;
+			// 		let detailAllPlayers = [];
 
-					//cho câu hỏi
-					for (let k = 0; k < allQuestions[j].answers.length; k++) {
-						// đếm những ng trả lời đúng cho 1 câu
-						if (allQuestions[j].answers[k].isCorrect) {
-							countCorrectForQuestion +=
-								allQuestions[j].answers[k].countPlayerAnswer;
-						} else {
-							// đếm những ng trả lời sai cho 1 câu
-							countWrongForQuestion +=
-								allQuestions[j].answers[k].countPlayerAnswer;
-						}
-					}
-					//tỉ lệ đúng của câu hỏi
-					countWrongForQuestion += allQuestions[j].countPlayerNoAnswer;
-					let percentRight = 0;
-					if (countCorrectForQuestion + countWrongForQuestion !== 0) {
-						percentRight = Math.round(
-							(countCorrectForQuestion /
-								(countCorrectForQuestion + countWrongForQuestion)) *
-								100,
-						);
-					}
+			// 		//cho câu hỏi
+			// 		for (let k = 0; k < allQuestions[j].answers.length; k++) {
+			// 			// đếm những ng trả lời đúng cho 1 câu
+			// 			if (allQuestions[j].answers[k].isCorrect) {
+			// 				countCorrectForQuestion +=
+			// 					allQuestions[j].answers[k].countPlayerAnswer;
+			// 			} else {
+			// 				// đếm những ng trả lời sai cho 1 câu
+			// 				countWrongForQuestion +=
+			// 					allQuestions[j].answers[k].countPlayerAnswer;
+			// 			}
+			// 		}
+			// 		//tỉ lệ đúng của câu hỏi
+			// 		countWrongForQuestion += allQuestions[j].countPlayerNoAnswer;
+			// 		let percentRight = 0;
+			// 		if (countCorrectForQuestion + countWrongForQuestion !== 0) {
+			// 			percentRight = Math.round(
+			// 				(countCorrectForQuestion /
+			// 					(countCorrectForQuestion + countWrongForQuestion)) *
+			// 				100,
+			// 			);
+			// 		}
 
-					for (let z = 0; z < allQuestions[j].listPlayersAnswer.length; z++) {
-						//tính thời gian trlời tb cho 1 câu hỏi (B1)
-						if (allQuestions[j].listPlayersAnswer[z].time !== -1) {
-							avgAnswersTime += allQuestions[j].listPlayersAnswer[z].time;
-						}
+			// 		for (let z = 0; z < allQuestions[j].listPlayersAnswer.length; z++) {
+			// 			//tính thời gian trlời tb cho 1 câu hỏi (B1)
+			// 			if (allQuestions[j].listPlayersAnswer[z].time !== -1) {
+			// 				avgAnswersTime += allQuestions[j].listPlayersAnswer[z].time;
+			// 			}
 
-						/*if ((allQuestions[j].type === 1) | (allQuestions[j].type === 3))*/
-						detailAllPlayers.push({
-							name: allQuestions[j].listPlayersAnswer[z].name,
-							answered: allQuestions[j].listPlayersAnswer[z].answer,
-							correct: allQuestions[j].listPlayersAnswer[z].correct,
-							time: allQuestions[j].listPlayersAnswer[z].time,
-							score: allQuestions[j].listPlayersAnswer[z].score,
-						});
-					}
+			// 			/*if ((allQuestions[j].type === 1) | (allQuestions[j].type === 3))*/
+			// 			detailAllPlayers.push({
+			// 				name: allQuestions[j].listPlayersAnswer[z].name,
+			// 				answered: allQuestions[j].listPlayersAnswer[z].answer,
+			// 				correct: allQuestions[j].listPlayersAnswer[z].correct,
+			// 				time: allQuestions[j].listPlayersAnswer[z].time,
+			// 				score: allQuestions[j].listPlayersAnswer[z].score,
+			// 			});
+			// 		}
 
-					//tính thời gian trlời tb cho 1 câu hỏi (B2)
-					if (allQuestions[j].listPlayersAnswer.length !== 0) {
-						avgAnswersTime = (
-							avgAnswersTime / allQuestions[j].listPlayersAnswer.length
-						).toFixed(2);
-					}
+			// 		//tính thời gian trlời tb cho 1 câu hỏi (B2)
+			// 		if (allQuestions[j].listPlayersAnswer.length !== 0) {
+			// 			avgAnswersTime = (
+			// 				avgAnswersTime / allQuestions[j].listPlayersAnswer.length
+			// 			).toFixed(2);
+			// 		}
 
-					let cloneNewQuestion = _.cloneDeep(allQuestions[j]);
-					delete cloneNewQuestion.listPlayersAnswer;
+			// 		let cloneNewQuestion = _.cloneDeep(allQuestions[j]);
+			// 		delete cloneNewQuestion.listPlayersAnswer;
 
-					if (cloneNewQuestion.type === 4) {
-						cloneNewQuestion.typeAnswers = cloneNewQuestion.countTypeAnswers;
-						delete cloneNewQuestion.countTypeAnswers;
-					} else {
-						delete cloneNewQuestion.typeAnswers;
-					}
+			// 		if (cloneNewQuestion.type === 4) {
+			// 			cloneNewQuestion.typeAnswers = cloneNewQuestion.countTypeAnswers;
+			// 			delete cloneNewQuestion.countTypeAnswers;
+			// 		} else {
+			// 			delete cloneNewQuestion.typeAnswers;
+			// 		}
 
-					nameQuestionsArr.push({
-						dataQuestion: cloneNewQuestion,
-						percentRight,
-						avgAnswersTime,
-						// này thống kê ra đươc ko lưu (detailAllPlayers.length-countPlayerNoAnswer)
-						// playersAnswered:
-						// 	allQuestions[j].listPlayersAnswer.length -
-						// 	allQuestions[j].countPlayerNoAnswer,
+			// 		nameQuestionsArr.push({
+			// 			dataQuestion: cloneNewQuestion,
+			// 			percentRight,
+			// 			avgAnswersTime,
+			// 			// này thống kê ra đươc ko lưu (detailAllPlayers.length-countPlayerNoAnswer)
+			// 			// playersAnswered:
+			// 			// 	allQuestions[j].listPlayersAnswer.length -
+			// 			// 	allQuestions[j].countPlayerNoAnswer,
 
-						// này thống kê ra đươc ko lưu  (detailAllPlayers.length)
-						//allPlayers: allQuestions[j].listPlayersAnswer.length,
-						detailAllPlayers: detailAllPlayers,
-					});
+			// 			// này thống kê ra đươc ko lưu  (detailAllPlayers.length)
+			// 			//allPlayers: allQuestions[j].listPlayersAnswer.length,
+			// 			detailAllPlayers: detailAllPlayers,
+			// 		});
 
-					if (percentRight < 30) {
-						difficultQuestions.push({
-							dataQuestion: cloneNewQuestion,
-							percentRight,
-							avgAnswersTime,
-							playersAnswered:
-								allQuestions[j].listPlayersAnswer.length -
-								allQuestions[j].countPlayerNoAnswer,
-							//allPlayers: allQuestions[j].listPlayersAnswer.length,
-							detailAllPlayers: detailAllPlayers,
-						});
-					}
-				}
+			// 		if (percentRight < 30) {
+			// 			difficultQuestions.push({
+			// 				dataQuestion: cloneNewQuestion,
+			// 				percentRight,
+			// 				avgAnswersTime,
+			// 				playersAnswered:
+			// 					allQuestions[j].listPlayersAnswer.length -
+			// 					allQuestions[j].countPlayerNoAnswer,
+			// 				//allPlayers: allQuestions[j].listPlayersAnswer.length,
+			// 				detailAllPlayers: detailAllPlayers,
+			// 			});
+			// 		}
+			// 	}
 
-				//console.log(namePlayersArr);
+			// 	//console.log(namePlayersArr);
 
-				const dataReport = {
-					userId: infoGame.userHostId ? infoGame.userHostId : '',
-					name: infoGame.name,
-					gameMode: infoGame.mode,
-					players: namePlayersArr,
-					questions: nameQuestionsArr,
-					// numberPlayers: allPlayersInRoom.length, // này thống kê ra đươc ko lưu
-					// numberQuestions: allQuestions.length, // này thống kê ra đươc ko lưu
-					// playersNeedHelp, // này thống kê ra đươc ko lưu
-					// playersDidNotFinish, // này thống kê ra đươc ko lưu
-					// difficultQuestions, // này thống kê ra đươc ko lưu
-				};
-				if (infoGame.userHostId !== '') {
-					dataReport.gameStart = infoGame.gameStart;
-					Report.create(dataReport, (error, data) => {
-						if (error) {
-							console.log(error);
-							return;
-						}
-					});
-				}
-
-				console.log(dataReport);
-			}
-		} else {
+			// 	const dataReport = {
+			// 		userId: infoGame.userHostId ? infoGame.userHostId : '',
+			// 		name: infoGame.name,
+			// 		gameMode: infoGame.mode,
+			// 		players: namePlayersArr,
+			// 		questions: nameQuestionsArr,
+			// 		// numberPlayers: allPlayersInRoom.length, // này thống kê ra đươc ko lưu
+			// 		// numberQuestions: allQuestions.length, // này thống kê ra đươc ko lưu
+			// 		// playersNeedHelp, // này thống kê ra đươc ko lưu
+			// 		// playersDidNotFinish, // này thống kê ra đươc ko lưu
+			// 		// difficultQuestions, // này thống kê ra đươc ko lưu
+			// 	};
+			// 	if (infoGame.userHostId !== '') {
+			// 		dataReport.gameStart = infoGame.gameStart;
+			// 		Report.create(dataReport, (error, data) => {
+			// 			if (error) {
+			// 				console.log(error);
+			// 				return;
+			// 			}
+			// 		});
+			// 	}
+			// 	io.in(infoGame.gamePin).emit('classic:sv-send-report', dataReport);
+			// 	console.log(dataReport);
+			// }
 		}
 
 		console.log('số ng đa trả lời', infoGame.gameData.numberPlayerAnswered);

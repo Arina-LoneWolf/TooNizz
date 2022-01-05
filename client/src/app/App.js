@@ -11,6 +11,7 @@ import Reports from '../pages/Reports';
 import ReportDetail from '../pages/ReportDetail';
 import Viewer from '../pages/Viewer';
 import Settings from '../pages/Settings';
+import Dialog from '../shared/Dialog';
 import Preloader from '../shared/Preloader';
 import GetExchangeRates from './ExchangeRates';
 
@@ -50,6 +51,7 @@ function App() {
           <Route path='game-result/admin' element={<HostGameResult />} />
           <Route path='game-result' element={<PlayerGameResult />} />
         </Routes>
+        <Dialog />
       </Suspense>
     </Router>
   );

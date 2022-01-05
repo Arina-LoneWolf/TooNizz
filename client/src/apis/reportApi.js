@@ -63,3 +63,16 @@ export const GET_REPORT_DETAIL = gql`
     }
   }
 `
+export const DOWNLOAD_REPORT = gql`
+  query DownloadReport($reportId: String!) {
+    DownloadReport(reportId: $reportId)
+  }
+`;
+
+export const DELETE_REPORT = gql`
+  mutation DeleteReport($reportId: String!) {
+    DeleteReport(reportId: $reportId) {
+      message
+    }
+  }
+`;

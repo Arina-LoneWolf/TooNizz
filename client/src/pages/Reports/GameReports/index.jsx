@@ -1,7 +1,8 @@
 import './GameReports.scss';
 import React, { useEffect } from 'react';
-import { useQuery } from "@apollo/client";
-import { GET_ALL_REPORTS } from '../../../apis/reportApi';
+import { useQuery, useLazyQuery, useReactiveVar } from "@apollo/client";
+import { dialogVar } from '../../../shared/apolloLocalState/popupAlertState';
+import { GET_ALL_REPORTS, DOWNLOAD_REPORT, DELETE_REPORT } from '../../../apis/reportApi';
 import { useNavigate } from 'react-router-dom';
 import { IoMdMore } from 'react-icons/io';
 import { BsChevronDown } from 'react-icons/bs';
@@ -13,9 +14,19 @@ function GameReports() {
   const navigate = useNavigate();
 
   const { data, loading, error } = useQuery(GET_ALL_REPORTS);
+  const [downloadReport, { data: reportLink }] = useLazyQuery(DOWNLOAD_REPORT, {
+    onCompleted: () => {
+      window.open(reportLink.DownloadReport);
+    }
+  });
+  const [deleteReport, { data: deleteMessage }] = useLazyQuery(DELETE_REPORT, {
+    onCompleted: () => {
+      console.log(deleteMessage);
+    }
+  })
 
   const handleReportItemClick = (e, id) => {
-    if (!e.target.classList.contains('manipulation-btn')) {
+    if (!e.target.classList.contains('manipulation-btn') && !e.target.classList.contains('mani-opt')) {
       navigate(`/reports/detail/${id}`);
     }
   }
@@ -52,6 +63,29 @@ function GameReports() {
     return `${date[1]} ${date[2]} ${date[3]} ${date[4]}`;
   }
 
+  const handleDownloadReport = (reportId) => {
+    downloadReport({
+      variables: {
+        reportId
+      }
+    });
+  }
+
+  const handleDeleteReport = (reportId) => {
+    dialogVar({
+      show: true,
+      message: 'Are you sure you want to delete the report?',
+      acceptButtonName: 'Delete',
+      func: () => {
+        // deleteReport({
+        //   variables: {
+        //     reportId
+        //   }
+        // });
+      }
+    });
+  }
+
   return (
     <div className="game-report">
       <h1>My Reports</h1>
@@ -84,8 +118,8 @@ function GameReports() {
                 <IoMdMore className="manipulation-btn" onClick={handleManipulation} />
                 <ul className="mani-options">
                   <li className="mani-opt">Play again</li>
-                  <li className="mani-opt">Download report</li>
-                  <li className="mani-opt">Move to trash</li>
+                  <li className="mani-opt" onClick={() => handleDownloadReport(report._id)}>Download report</li>
+                  <li className="mani-opt" onClick={() => handleDeleteReport(report._id)}>Move to trash</li>
                 </ul>
               </div>
             </div>

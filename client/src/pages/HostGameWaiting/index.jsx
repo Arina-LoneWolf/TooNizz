@@ -51,7 +51,7 @@ function HostGameWaiting() {
     });
 
     socket.on('classic:sv-send-info-list-questions', (questionSetInfo) => {
-      setTotalQuestions(questionSetInfo.lengthListQuestions)
+      setTotalQuestions(questionSetInfo.lengthListQuestions);
     });
 
     socket.on('classic:update-list-players', (playerList) => {

@@ -17,6 +17,7 @@ function PlayerGameWaiting() {
 
   const [countdown, setCountdown] = useState(3);
   const [firstQuestion, setFirstQuestion] = useState({});
+  const [totalQuestions, setTotalQuestions] = useState(0);
 
   useEffect(() => {
     gsap.timeline()
