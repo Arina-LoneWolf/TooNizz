@@ -72,7 +72,9 @@ export const classisModeAll = (io, socket, players, games) => {
 		}
 	});
 
-	socket.on('classic:host-join', async (questionSetId) => {
+	socket.on('classic:host-join', async ({ questionSetId, userHostId }) => {
+
+		console.log('ID CUA HOST', userHostId)
 		let gamePin;
 		while (true) {
 			let sameGamePin = false;
@@ -99,7 +101,7 @@ export const classisModeAll = (io, socket, players, games) => {
 		socket.gamePin = gamePin;
 		games.push({
 			questionSetId,
-			userHostId: '61c1f9548190d91c9867bf65',
+			userHostId: userHostId ? userHostId : '',//'61c1f9548190d91c9867bf65',
 			live: false,
 			name: nameQuestionSet.name,
 			mode: 'Classic',
@@ -754,12 +756,27 @@ export const classisModeAll = (io, socket, players, games) => {
 
 			let dataPlayersAnswered = [];
 			let correctAnswer = [];
+
+			let percentAnsweredArr = [];
 			//if (currentQuestion.type === 1 || currentQuestion.type === 3) {
 			for (let i = 0; i < currentQuestion.answers.length; i++) {
 				if (currentQuestion.answers[i].isCorrect) {
 					correctAnswer.push(currentQuestion.answers[i]);
 				}
+
+				percentAnsweredArr.push(currentQuestion.answers[i].countPlayerAnswer);
 				dataPlayersAnswered.push(currentQuestion.answers[i]);
+			}
+
+
+			let maxPercentAnswered = Math.max(...percentAnsweredArr);
+			let cloneCurrentQuestion = _.cloneDeep(currentQuestion);
+
+			for (let i = 0; i < cloneCurrentQuestion.answers.length; i++) {
+				let percentAnswered = (
+					cloneCurrentQuestion.answers[i].countPlayerAnswer / maxPercentAnswered
+				) * 100;
+				cloneCurrentQuestion.answers[i].percentAnswered = percentAnswered;
 			}
 			//}
 
@@ -769,7 +786,7 @@ export const classisModeAll = (io, socket, players, games) => {
 			// rank điểm top 5
 			io.to(infoGame.idHost).emit('classic:time-up', {
 				correctAnswer,
-				countAnswer: dataPlayersAnswered,
+				countAnswer: cloneCurrentQuestion,//dataPlayersAnswered,
 				playerRank: sortScore,
 			});
 			console.log('countAnswer', dataPlayersAnswered);

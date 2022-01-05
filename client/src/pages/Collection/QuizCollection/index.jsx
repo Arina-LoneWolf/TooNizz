@@ -1,6 +1,8 @@
 import './QuizCollection.scss';
 import React, { useRef } from 'react';
 import MyQuizCard from './MyQuizCard';
+import { useQuery, useLazyQuery, useReactiveVar, useMutation } from "@apollo/client";
+import { GET_QUESTION_SETS_USER_CREATED, GET_QUESTION_SETS_USER_LIKED } from '../../../apis/questionSetApi';
 
 const MY_QUIZ = 'MY_QUIZ';
 const LIKED_QUIZ = 'LIKED_QUIZ';
@@ -10,6 +12,14 @@ const quizzes = ['', '', '', '', '', '', '', '', '', ''];
 function QuizCollection() {
   const myQuizRef = useRef(null);
   const likedQuizRef = useRef(null);
+
+  const { data, loading, error } = useQuery(GET_QUESTION_SETS_USER_CREATED, {
+    onCompleted: () => console.log(data),
+    variables: {
+      limit: 100,
+      page: 1
+    }
+  });
 
   const handleChangeCollectionTab = (e, selectedTab) => {
     if (selectedTab === MY_QUIZ) {
@@ -29,8 +39,8 @@ function QuizCollection() {
         <div className="nav-item nav-liked-quiz" onClick={(e) => handleChangeCollectionTab(e, LIKED_QUIZ)} ref={likedQuizRef}>Liked Quiz</div>
       </div>
       <div className="quiz-list">
-        {quizzes.map((quiz, index) => (
-          <MyQuizCard key={index} />
+        {data?.getQuestionSetsByUserId?.questionSets?.map((questionSet) => (
+          <MyQuizCard key={questionSet.id} questionSet={questionSet} />
         ))}
       </div>
     </div>

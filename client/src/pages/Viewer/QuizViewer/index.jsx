@@ -1,6 +1,8 @@
 import './QuizViewer.scss';
-import React, { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
+import { useQuery } from '@apollo/client';
+import { GET_QUESTIONS_BY_QUESTION_SET_ID } from '../../../apis/questionSetApi';
 import { FaRegHeart, FaHeart } from 'react-icons/fa';
 import { GrEdit } from 'react-icons/gr';
 import { MdPublic } from 'react-icons/md';
@@ -12,9 +14,20 @@ const avatar = 'https://i.pinimg.com/564x/0b/97/f5/0b97f53a14d3b0698c1388b013eca
 
 function QuizViewer() {
   const navigate = useNavigate();
-  const { id } = useLocation();
+  const { state: questionSet } = useLocation();
+
+  const { data, loading, error } = useQuery(GET_QUESTIONS_BY_QUESTION_SET_ID, {
+    variables: {
+      questionSetId: questionSet.id
+    }
+  });
 
   const [showAnswers, setShowAnswers] = useState(false);
+
+  useEffect(() => {
+    console.log('id ', questionSet.id)
+    if (data) console.log(data)
+  }, [data])
 
   const handleShowAnswers = (e) => {
     const answers = e.currentTarget.querySelector('.question-answers');
@@ -42,11 +55,12 @@ function QuizViewer() {
   }
 
   const handleEditQuiz = () => {
-    navigate(`/editor/${id}`);
+    // navigate(`/editor/${id}`);
   }
 
   const handlePlayQuiz = () => {
-    navigate(`/lobby/admin/${id}`);
+    // navigate(`/lobby/admin/${id}`);
+    navigate(`/lobby/admin/1`);
   }
 
   const handleAddToFavorite = () => {
@@ -57,11 +71,11 @@ function QuizViewer() {
   return (
     <div className="quiz-viewer">
       <div className="quiz-info">
-        <img src={testImg} alt="" className="quiz-cover" />
+        <img src={questionSet.cover || testImg} alt="" className="quiz-cover" />
 
         <div className="quiz-detail-info-wrapper">
           <div className="quiz-title">
-            <span className="quiz-name">Birthday party quiz</span>
+            <span className="quiz-name">{questionSet.name}</span>
             <span className="mani-group">
               <GrEdit className="edit-icon icon" onClick={handleEditQuiz} />
               <FaRegHeart className="heart-icon icon" onClick={handleAddToFavorite} />
@@ -77,7 +91,7 @@ function QuizViewer() {
           <div className="author-group">
             <div className="author-avatar" style={{ backgroundImage: `url(${avatar})` }}></div>
             <div className="creation-info">
-              <div className="author-name">Arina</div>
+              <div className="author-name">{questionSet.nameUser}</div>
               <div className="updated-date">Update 2 months ago</div>
             </div>
           </div>
@@ -88,44 +102,36 @@ function QuizViewer() {
 
       <div className="quiz-content">
         <div className="viewer-header">
-          <div className="num-questions">Question (10)</div>
+          <div className="num-questions">Question ({data?.getQuestionByQuestionSetId.questions.length})</div>
           <div className="show-answers-btn" onClick={handleShowAllAnswers}>{showAnswers ? 'Hide answers' : 'Show answers'}</div>
         </div>
 
         <div className="viewer-body">
-          <div className="viewer-card" onClick={handleShowAnswers}>
-            <div className="main-info">
-              <div className="question">
-                <div className="question-num-type">1-Multiple-choice</div>
-                <div className="content">When was I born?</div>
+          {data?.getQuestionByQuestionSetId.questions.map((question, index) => (
+            <div className="viewer-card" onClick={handleShowAnswers}>
+              <div className="main-info">
+                <div className="question">
+                  <div className="question-num-type">{index + 1}-Single-choice</div>
+                  <div className="content">{question.content}</div>
+                </div>
+
+                <div className="question-media-wrapper">
+                  <img src={testImg} alt="" className="media" />
+                </div>
+
+                <div className="question-time"></div>
               </div>
 
-              <div className="question-media-wrapper">
-                <img src={testImg} alt="" className="media" />
-              </div>
-
-              <div className="question-time"></div>
-            </div>
-
-            <div className="question-answers">
-              <div className="answer-opt">
-                <span className="answer">October 22nd, 1967</span>
-                <MdOutlineClose className="result-icon incorrect" />
-              </div>
-              <div className="answer-opt">
-                <span className="answer">October 22nd, 1967</span>
-                <MdOutlineCheck className="result-icon correct" />
-              </div>
-              <div className="answer-opt">
-                <span className="answer">October 22nd, 1967</span>
-                <MdOutlineClose className="result-icon incorrect" />
-              </div>
-              <div className="answer-opt">
-                <span className="answer">October 22nd, 1967</span>
-                <MdOutlineClose className="result-icon incorrect" />
+              <div className="question-answers">
+                {question.answers.map(answer => (
+                  <div className="answer-opt">
+                    <span className="answer">{answer.content}</span>
+                    {answer.isCorrect ? <MdOutlineCheck className="result-icon correct" /> : <MdOutlineClose className="result-icon incorrect" />}
+                  </div>
+                ))}
               </div>
             </div>
-          </div>
+          ))}
         </div>
       </div>
     </div>

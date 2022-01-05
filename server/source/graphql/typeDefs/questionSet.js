@@ -9,6 +9,13 @@ export default gql`
 			typeSort: typeSortQuestionSet
 		): QuestionSetPaginator! @auth
 
+		getQuestionSetsHome(
+			page: Int
+			limit: Int
+			sort: Int
+			typeSort: typeSortQuestionSet
+		): QuestionSetPaginator! @auth
+
 		GetQuestionSetsUserLiked(
 			page: Int
 			limit: Int
@@ -60,7 +67,7 @@ export default gql`
 
 	type QuestionSet {
 		id: ID!
-		userId: ID!
+		userId: ID
 		name: String!
 		tag: [String!]!
 		cover: String

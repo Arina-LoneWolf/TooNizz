@@ -155,7 +155,7 @@ function PlayerGamePlay() {
     <div className="player-game-play" ref={el} style={{ backgroundImage: `url(${background})` }}>
       <div className="blur-overlay">
         <div className="status-bar">
-          <div className="question-number">1 of 15</div>
+          {/* <div className="question-number">1 of 15</div> */}
           <div className="question-type">Single-choice</div>
           <div className="score-wrapper">
             <label className="score-lb">Your score</label>

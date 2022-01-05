@@ -1929,6 +1929,7 @@ export default {
 
 		DeleteReport: async (parent, { reportId, name }, { Report }, info) => {
 			try {
+				console.log("ID report", reportId)
 				await Report.findByIdAndDelete({ _id: reportId });
 				return {
 					message: 'Delete report success',

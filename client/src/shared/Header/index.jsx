@@ -60,7 +60,7 @@ function Header() {
     <div className="header">
       <BsList className="side-btn" />
 
-      <div className="logo">LOGO</div>
+      <div className="logo">TOONIZZ</div>
 
       <div className="create-btn" onClick={showQuizCreationForm}>Create +</div>
 

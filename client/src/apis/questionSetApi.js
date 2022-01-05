@@ -5,7 +5,7 @@ export const GET_QUESTION_SETS_USER_CREATED = gql`
     getQuestionSetsByUserId(page: $page, limit: $limit, sort: $sort, typeSort: $typeSort) {
       questionSets {
         id
-        userId
+        nameUser
         name
         cover
         tag
@@ -18,6 +18,8 @@ export const GET_QUESTION_SETS_USER_CREATED = gql`
         createdAt
         updatedAt
       }
+      page
+      totalPages
     }
   }
 `;
@@ -56,7 +58,6 @@ export const GET_QUESTIONS_BY_QUESTION_SET_ID = gql`
         audio
         type
         answers {
-          id
           content
           image
           isCorrect
@@ -74,7 +75,7 @@ export const GET_QUESTIONS_BY_QUESTION_SET_ID = gql`
 `;
 
 export const SEARCH_QUESTION_SET = gql`
-  query SearchQuestionSets($textSearch: String!, $page: Int, $limit: Int, $sort: Int, $typeSort: typeSortQuestionSetSearch, tag: String, userId: String) {
+  query SearchQuestionSets($textSearch: String!, $page: Int, $limit: Int, $sort: Int, $typeSort: typeSortQuestionSetSearch, $tag: String, $userId: String) {
     SearchQuestionSets(textSearch: $textSearch, page: $page, limit: $limit, sort: $sort, typeSort: $typeSort, tag: $tag, userId: $userId) {
       textSearch
       questionSets {
@@ -100,6 +101,30 @@ export const LIKE_QUESTION_SET = gql`
   mutation likeQuestionSet($questionSetId: String!) {
     likeQuestionSet(questionSetId: $questionSetId) {
       message
+    }
+  }
+`;
+
+export const GET_HOME_QUESTION_SETS = gql`
+  query GetHomeQuestionSets($page: Int, $limit: Int, $sort: Int, $typeSort: typeSortQuestionSet) {
+    getQuestionSetsHome(page: $page, limit: $limit, sort: $sort, typeSort: $typeSort) {
+      questionSets {
+        id
+        nameUser
+        name
+        cover
+        tag
+        isPublic
+        played
+        likes
+        liked
+        nameUser
+        questionLength
+        createdAt
+        updatedAt
+      }
+      page
+      totalPages
     }
   }
 `;

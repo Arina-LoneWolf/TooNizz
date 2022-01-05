@@ -4,6 +4,8 @@ import { TextPlugin } from "gsap/TextPlugin";
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import socket from '../../shared/socket';
+import { useReactiveVar } from '@apollo/client';
+import { userVar } from '../../shared/apolloLocalState/userState';
 import { MdGroup, MdMusicNote } from 'react-icons/md';
 import { RiMusic2Line, RiMusic2Fill } from 'react-icons/ri';
 import { BsMusicNoteBeamed, BsFillVolumeDownFill } from 'react-icons/bs';
@@ -14,6 +16,7 @@ const quizSetId = '61d01e683da2ae0a14f54224';
 
 function HostGameWaiting() {
   const navigate = useNavigate();
+  const user = useReactiveVar(userVar);
 
   gsap.registerPlugin(TextPlugin);
 
@@ -39,14 +42,13 @@ function HostGameWaiting() {
     //   return e.returnValue = '';
     // });
 
-    socket.emit('classic:host-join', quizSetId);
+    socket.emit('classic:host-join', { questionSetId: quizSetId, userHostId: user.id });
 
     socket.on('classic:sv-send-game-pin', (code) => {
       setGameCode(code);
     });
 
     socket.on('classic:sv-send-question', (question) => {
-      // console.log(question.answers[0].content);
       setFirstQuestion(question);
     });
 
@@ -61,7 +63,7 @@ function HostGameWaiting() {
         gsap.timeline()
           .addLabel('playerJoin')
           .to(q('.waiting-players'), { opacity: 0, duration: 0.5 }, 'playerJoin')
-          .to(q('.waiting-players'), { display: 'none'})
+          .to(q('.waiting-players'), { display: 'none' })
           .from(q('.start-btn'), { opacity: 0, scale: 0, duration: 1, ease: "back.out(2.0)" }, 'playerJoin')
           .from(q('.members-wrapper'), { opacity: 0, duration: 0.5 })
           .from(q('.members-display-wrapper'), { opacity: 0, duration: 0.5 })

@@ -1,6 +1,6 @@
 import './GameReports.scss';
 import React, { useEffect } from 'react';
-import { useQuery, useLazyQuery, useReactiveVar } from "@apollo/client";
+import { useQuery, useLazyQuery, useReactiveVar, useMutation } from "@apollo/client";
 import { dialogVar } from '../../../shared/apolloLocalState/popupAlertState';
 import { GET_ALL_REPORTS, DOWNLOAD_REPORT, DELETE_REPORT } from '../../../apis/reportApi';
 import { useNavigate } from 'react-router-dom';
@@ -19,7 +19,7 @@ function GameReports() {
       window.open(reportLink.DownloadReport);
     }
   });
-  const [deleteReport, { data: deleteMessage }] = useLazyQuery(DELETE_REPORT, {
+  const [deleteReport, { data: deleteMessage }] = useMutation(DELETE_REPORT, {
     onCompleted: () => {
       console.log(deleteMessage);
     }
@@ -77,11 +77,11 @@ function GameReports() {
       message: 'Are you sure you want to delete the report?',
       acceptButtonName: 'Delete',
       func: () => {
-        // deleteReport({
-        //   variables: {
-        //     reportId
-        //   }
-        // });
+        deleteReport({
+          variables: {
+            reportId
+          }
+        });
       }
     });
   }

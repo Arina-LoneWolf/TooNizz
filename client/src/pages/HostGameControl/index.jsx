@@ -189,21 +189,14 @@ function HostGameControl() {
 
         {showResult &&
           <div className="answers-analysis">
-            <div className="answer-bar opt-1">
-              <span>8</span>
-            </div>
-            <div className="answer-bar opt-2 tick">
-              <span>
-                4
-                <BsCheck className="tick-icon" />
-              </span>
-            </div>
-            <div className="answer-bar opt-3">
-              <span>2</span>
-            </div>
-            <div className="answer-bar opt-4">
-              <span>6</span>
-            </div>
+            {questionResult?.countAnswer?.answers?.map((answer, index) => (
+              <div key={answer._id} className={`answer-bar opt-${index + 1} ` + (answer.isCorrect ? "tick" : "")} style={{ height: `${answer.percentAnswered}%` }}>
+                <span>
+                  {answer.countPlayerAnswer}
+                  {answer.isCorrect && <BsCheck className="tick-icon" />}
+                </span>
+              </div>
+            ))}
           </div>}
 
         {(showResult || showLeaders) && <div className="next-btn" onClick={handleShowLeaders}>Next</div>}

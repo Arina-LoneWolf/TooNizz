@@ -70,6 +70,72 @@ export default {
 			}
 		},
 
+
+		getQuestionSetsHome: async (
+			parent,
+			{ page, limit, sort, typeSort },
+			{ idUser, questionSet, Question },
+			info,
+		) => {
+			try {
+				const pageA = page || 1;
+				const limitA = limit || 100;
+				const startIndex = (pageA - 1) * limitA;
+				let sortData = null;
+				if (typeSort) {
+					if (typeSort === 'name') {
+						sortData = { name: sort };
+					} else if (typeSort === 'createdAt') {
+						sortData = { createdAt: sort };
+					}
+				}
+
+				const newQuestionSets = await questionSet
+					.find()
+					.populate({
+						path: 'userId',
+						select: 'name -_id',
+					})
+					.skip(startIndex)
+					.limit(limitA)
+					.sort(sortData)
+					.lean()
+					.exec();
+
+				let countQuestionSets = await questionSet.countDocuments().exec();
+
+				countQuestionSets = Math.ceil(countQuestionSets / limitA);
+
+				//console.log(newQuestionSets);
+
+				for (let i = 0; i < newQuestionSets.length; i++) {
+					newQuestionSets[i].id = newQuestionSets[i]._id;
+					const dataQuestion = await Question.find({
+						questionSetId: newQuestionSets[i]._id,
+					});
+					delete newQuestionSets[i]._id;
+
+					if (newQuestionSets[i].likes.includes(idUser)) {
+						newQuestionSets[i].liked = true;
+					} else {
+						newQuestionSets[i].liked = false;
+					}
+					newQuestionSets[i].likes = newQuestionSets[i].likes.length;
+					newQuestionSets[i].nameUser = newQuestionSets[i].userId.name;
+					newQuestionSets[i].questionLength = dataQuestion.length;
+				}
+
+				return {
+					questionSets: newQuestionSets,
+					totalPages: countQuestionSets,
+					page: pageA,
+				};
+			} catch (error) {
+				console.log(error);
+				throw new ApolloError(error.message, '500');
+			}
+		},
+
 		GetQuestionSetsUserLiked: async (
 			parent,
 			{ page, limit, sort, typeSort },
